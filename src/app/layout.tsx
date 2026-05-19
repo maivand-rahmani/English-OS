@@ -40,6 +40,26 @@ export default function RootLayout({
       data-theme="light"
       suppressHydrationWarning
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var raw = localStorage.getItem('english-os:appearance-preferences');
+                  if (!raw) return;
+                  var p = JSON.parse(raw);
+                  var el = document.documentElement;
+                  if (p.theme) el.setAttribute('data-theme', p.theme);
+                  if (p.textSize) el.setAttribute('data-text-size', p.textSize);
+                  if (p.density) el.setAttribute('data-density', p.density);
+                  if (p.motion) el.setAttribute('data-motion', p.motion);
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );

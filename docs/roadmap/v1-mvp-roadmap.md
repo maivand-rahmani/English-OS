@@ -32,7 +32,7 @@ Current state:
 
 The project documentation foundation is complete. Product, UX, system, engineering, AI, brand, decisions, and roadmap documentation have been created.
 
-Implementation has started. Phase 1 foundation is complete, and the next unfinished work begins with the application shell phase.
+Implementation has started. Phases 1, 2, and 3 are complete. The local-first learner state foundation (IndexedDB persistence, event queue, progress store, draft store, appearance preferences, React hooks, and sync interface) is built. The next unfinished work begins with the curated content model phase.
 
 ## V1 Build Strategy
 
@@ -117,7 +117,7 @@ Related docs:
 
 Status:
 
-- [ ] Not started
+- [x] Complete
 
 Goal:
 
@@ -125,21 +125,21 @@ Build the product container.
 
 Tasks:
 
-- [ ] Build authenticated app layout
-- [ ] Build top pill navigation
-- [ ] Build vertical sidebar
-- [ ] Build main content shell
-- [ ] Build responsive shell behavior for desktop and mobile web
-- [ ] Build route placeholders for all top-level sections
-- [ ] Add shell-level motion transitions
-- [ ] Add theme attributes at root level
+- [x] Build authenticated app layout
+- [x] Build top pill navigation
+- [x] Build vertical sidebar
+- [x] Build main content shell
+- [x] Build responsive shell behavior for desktop and mobile web
+- [x] Build route placeholders for all top-level sections
+- [x] Add shell-level motion transitions
+- [x] Add theme attributes at root level
 
 Done when:
 
-- [ ] user can move through the main product sections
-- [ ] shell feels stable and reusable
-- [ ] shell works on desktop browser and mobile web
-- [ ] routes are thin and composed from widgets
+- [x] user can move through the main product sections
+- [x] shell feels stable and reusable
+- [x] shell works on desktop browser and mobile web
+- [x] routes are thin and composed from widgets
 
 Related docs:
 
@@ -151,7 +151,7 @@ Related docs:
 
 Status:
 
-- [ ] Not started
+- [x] Complete
 
 Goal:
 
@@ -159,19 +159,19 @@ Create the client-first persistence foundation.
 
 Tasks:
 
-- [ ] Add browser persistence adapter
-- [ ] Add local learning event queue
-- [ ] Add local progress state model
-- [ ] Add local draft storage
-- [ ] Add appearance preference storage
-- [ ] Add state update helpers
-- [ ] Define future sync interface
+- [x] Add browser persistence adapter
+- [x] Add local learning event queue
+- [x] Add local progress state model
+- [x] Add local draft storage
+- [x] Add appearance preference storage
+- [x] Add state update helpers
+- [x] Define future sync interface
 
 Done when:
 
-- [ ] learner actions can update UI without backend calls
-- [ ] local events are recorded consistently
-- [ ] future server sync has a clear boundary
+- [x] learner actions can update UI without backend calls
+- [x] local events are recorded consistently
+- [x] future server sync has a clear boundary
 
 Related docs:
 

@@ -79,6 +79,23 @@
   --sidebar-border: oklch(0.9 0.004 270);
   --sidebar-ring: oklch(0.65 0.015 270);
   --radius: 0.75rem;
+  --surface-1: rgba(255, 252, 255, 0.74);
+  --surface-2: rgba(255, 255, 255, 0.58);
+  --surface-3: rgba(255, 255, 255, 0.84);
+  --surface-highlight: rgba(255, 255, 255, 0.66);
+  --shadow-soft:
+    0 18px 45px rgba(56, 45, 93, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  --shell-shadow:
+    0 38px 110px rgba(67, 48, 97, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38);
+  --app-shell-max-width: 96rem;
+  --icon-rail-width: 6.75rem;
+  --section-sidebar-width: 18rem;
+  --layout-gap: 1.25rem;
+  --motion-duration-fast: 180ms;
+  --motion-duration-slow: 360ms;
+  --motion-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 [data-theme="dark"] {
@@ -113,6 +130,16 @@
   --sidebar-accent-foreground: oklch(0.96 0.004 270);
   --sidebar-border: oklch(0.3 0.01 270);
   --sidebar-ring: oklch(0.72 0.01 270);
+  --surface-1: rgba(23, 25, 34, 0.82);
+  --surface-2: rgba(33, 35, 46, 0.7);
+  --surface-3: rgba(40, 42, 54, 0.88);
+  --surface-highlight: rgba(255, 255, 255, 0.08);
+  --shadow-soft:
+    0 22px 50px rgba(7, 9, 16, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shell-shadow:
+    0 38px 110px rgba(6, 8, 16, 0.56),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 [data-text-size="small"] {
@@ -121,6 +148,16 @@
 
 [data-text-size="large"] {
   font-size: 17px;
+}
+
+[data-density="compact"] {
+  --section-sidebar-width: 16.5rem;
+  --layout-gap: 1rem;
+}
+
+[data-motion="reduced"] {
+  --motion-duration-fast: 1ms;
+  --motion-duration-slow: 1ms;
 }
 
 @layer base {
@@ -133,8 +170,14 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     min-height: 100vh;
+    background-color: var(--background);
+    background-image:
+      radial-gradient(circle at top left, rgba(255, 199, 214, 0.46), transparent 28%),
+      radial-gradient(circle at top right, rgba(191, 205, 255, 0.42), transparent 24%),
+      radial-gradient(circle at bottom left, rgba(255, 232, 182, 0.36), transparent 24%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(246, 244, 252, 0.94));
   }
 
   ::selection {
@@ -144,8 +187,11 @@
   a,
   button {
     transition:
-      color 150ms ease,
-      background-color 150ms ease,
-      border-color 150ms ease;
+      color var(--motion-duration-fast) var(--motion-ease-standard),
+      background-color var(--motion-duration-fast) var(--motion-ease-standard),
+      border-color var(--motion-duration-fast) var(--motion-ease-standard),
+      transform var(--motion-duration-fast) var(--motion-ease-standard),
+      box-shadow var(--motion-duration-fast) var(--motion-ease-standard);
   }
 }
+

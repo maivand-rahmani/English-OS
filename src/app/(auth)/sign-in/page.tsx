@@ -30,9 +30,9 @@ export default async function SignInPage() {
             Authentication scaffold
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">
-            The styled auth page has been removed. This route is now a simple
-            working screen for GitHub sign-in and guest access while the final
-            direction is still undecided.
+            This screen keeps GitHub sign-in and guest access working while the
+            main authenticated shell is already available across the product.
+            Later auth polish can layer on top without changing the flow.
           </p>
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">

@@ -4,16 +4,16 @@ export default function DashboardPage() {
   return (
     <RoutePlaceholder
       sectionKey="dashboard"
-      title="Dashboard is back to a neutral scaffold."
-      description="The styled command-center version has been removed. This route is now just a simple placeholder until a new visual direction is defined."
+      title="Daily command center"
+      description="Dashboard now sits inside the persistent English OS shell, ready for the first real control-center widgets. The next build phases can focus on what the learner should do next instead of rebuilding layout structure."
       focusPoints={[
-        "Today plan",
-        "Review queue",
-        "Progress snapshot",
-        "Recent activity",
+        "Today plan and next action stack",
+        "Review queue preview",
+        "Progress snapshot and momentum signals",
+        "Recent activity with contextual jump-offs",
       ]}
       nextStepHref="/roadmap"
-      nextStepLabel="Open roadmap placeholder"
+      nextStepLabel="Open the roadmap shell"
     />
   );
 }

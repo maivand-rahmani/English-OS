@@ -5,14 +5,14 @@ export default function ResourcesPage() {
     <RoutePlaceholder
       sectionKey="resources"
       title="Curated discovery layer"
-      description="Resources has its route group, sidebar structure, and shell placement in place. The next build steps will connect structured metadata, recommendation context, and collection views."
+      description="Resources is now mounted inside the product shell with room for filters, collection views, and recommendation context. The route can stay thin while the real library widgets arrive later."
       focusPoints={[
         "Recommended resource lists",
         "Collection and topic filters",
         "Context-aware links from roadmap and dashboard",
       ]}
       nextStepHref="/writing"
-      nextStepLabel="Preview the writing workspace"
+      nextStepLabel="Open the writing shell"
     />
   );
 }

@@ -16,7 +16,7 @@ export default async function HomePage() {
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="overflow-hidden rounded-[2rem] border border-white/60 bg-[var(--surface-1)] p-6 shadow-[var(--shell-shadow)] backdrop-blur-xl sm:p-8">
         <div className="inline-flex items-center rounded-full border border-border/70 bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-          Phase 1 foundation
+          Phase 2 application shell
         </div>
 
         <div className="mt-6 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
@@ -30,9 +30,10 @@ export default async function HomePage() {
                 resources, and guided practice built in.
               </h1>
               <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-                The project foundation is now wired for App Router, Tailwind,
-                shadcn/ui, Prisma, and Auth.js. The next phases can build on
-                stable routes instead of starting from a blank repo.
+                The shared English OS shell is now in place across the main
+                product sections. The next phases can focus on learner state,
+                curated content, and real workflows instead of rebuilding the
+                frame.
               </p>
             </div>
 
@@ -61,7 +62,7 @@ export default async function HomePage() {
                 >
                   <span className="font-medium text-foreground">{item.title}</span>
                   <span className="text-sm text-muted-foreground">
-                    Placeholder route
+                    Shell route ready
                   </span>
                 </li>
               ))}

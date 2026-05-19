@@ -5,14 +5,14 @@ export default function SettingsPage() {
     <RoutePlaceholder
       sectionKey="settings"
       title="Preferences and profile surface"
-      description="Settings is already wired into the shell so future appearance controls, account settings, and learner preferences can land in a dedicated home."
+      description="Settings is now part of the shared application shell, which means appearance controls and learner preferences can plug directly into the root theme attributes already on the document."
       focusPoints={[
         "Theme, text size, and density controls",
         "Profile and goals management",
         "Local-first preference persistence",
       ]}
       nextStepHref="/dashboard"
-      nextStepLabel="Return to the dashboard shell"
+      nextStepLabel="Return to dashboard"
     />
   );
 }

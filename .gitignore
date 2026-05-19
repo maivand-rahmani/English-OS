@@ -46,3 +46,5 @@ tmp-next-app
 .codex-artifacts
 
 /src/server/generated/prisma
+.vscode
+.sisyphus
