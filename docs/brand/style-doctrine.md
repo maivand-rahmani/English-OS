@@ -14,6 +14,32 @@ Soft Liquid OS.
 
 English OS uses a Soft Liquid OS interface: a motion-led, token-based, glass-tactile productivity dashboard style with calm premium surfaces, strong black active states, customizable themes, and rich but purposeful animation.
 
+## Canonical Reference Rule
+
+The supplied dashboard reference is the canonical V1 desktop visual frame.
+
+For desktop V1, the implementation should closely match the reference's:
+
+- outer atmospheric background
+- large rounded app canvas
+- left vertical icon rail
+- centered pill navigation
+- right utility cluster
+- large greeting area
+- main two-column dashboard grid
+- dominant large analytics/control panel
+- stacked right-side recommendation cards
+- lower secondary cards
+- soft rounded panels
+- black active states and primary actions
+- minimal icon-led controls
+
+This does not mean copying literal content, avatars, logo marks, or course-platform meaning.
+
+It does mean the layout grammar, spacing logic, surface treatment, navigation shape, and first-glance feeling should be recognizably close to the reference.
+
+If an implementation does not visually feel related to the reference at first glance, it is off-direction.
+
 ## Why This Style Fits English OS
 
 English OS is a personal operating system for learning English.
@@ -73,6 +99,25 @@ The default style can be Soft Liquid OS, but the system must support future them
 - Use a dense but breathable dashboard layout.
 - Use right-side contextual panels where useful.
 - Use charts, progress states, and learning signals as visual content.
+
+## Minimalism And Information Discipline
+
+Soft Liquid OS should be minimal, not empty.
+
+The interface should feel premium because it is edited, calm, and intentional.
+
+Rules:
+
+- show fewer things, but make each thing useful
+- prefer one dominant panel over many equal panels
+- keep secondary cards quiet and compact
+- avoid decorative widgets that do not change learner behavior
+- use whitespace and soft surfaces to reduce anxiety
+- use charts and progress only when they clarify what to do next
+- keep copy short and directive
+- do not overload the dashboard with analytics, badges, streaks, or random stats
+
+The product should never become a noisy widget wall.
 
 ## Responsive Style Requirement
 
@@ -155,6 +200,8 @@ Do not use motion as random decoration.
 
 Avoid:
 
+- overbuilt dashboards with too many competing widgets
+- dense information without clear hierarchy
 - pure glassmorphism with poor readability
 - pure neumorphism
 - childish gamified edtech visuals

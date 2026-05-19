@@ -46,6 +46,30 @@ The product should use a strong application-shell structure:
 
 This structure should feel like a serious operating system, not a marketing website.
 
+For V1 desktop, the supplied dashboard reference is the structural baseline.
+
+Agents should not invent a different shell unless the decision log is updated first.
+
+## Minimalism Principle
+
+Minimalism is a product requirement, not a decoration style.
+
+English OS should reduce the learner's anxiety by editing the interface down to what matters.
+
+This means:
+
+- fewer visible choices
+- stronger hierarchy
+- less explanatory copy
+- no decorative metrics
+- no crowded widget grids
+- no random feature cards
+- one clear next action whenever possible
+
+Minimalism here does not mean flat, empty, or boring.
+
+It means the product feels calm because everything visible has a job.
+
 ## Motion Principle
 
 Animation should be a core part of the English OS experience.
@@ -137,10 +161,11 @@ This means:
 - restrained but memorable visual language
 - no random decorative noise
 - no childish gamification patterns
+- no overloaded dashboard surfaces
 
 ## Status
 
-Active, first structure references received.
+Active, canonical desktop reference selected.
 
 ## Related Docs
 

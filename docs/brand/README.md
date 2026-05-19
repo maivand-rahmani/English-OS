@@ -4,7 +4,7 @@ This section defines how English OS should feel, look, sound, and move.
 
 Use this section for design principles, visual direction, motion direction, voice of product copy, and later style references.
 
-The final visual style will be refined after reference images are added.
+The V1 desktop visual frame is now anchored to the supplied dashboard reference.
 
 ## Documents In This Section
 
@@ -14,6 +14,7 @@ The final visual style will be refined after reference images are added.
 - [Motion Direction](./motion-direction.md)
 - [Theme System](./theme-system.md)
 - [Reference Notes](./reference-notes.md)
+- [Style Acceptance Checklist](./style-acceptance-checklist.md)
 - [Voice And Tone](./voice-and-tone.md)
 
 ## Reading Order
@@ -24,7 +25,8 @@ The final visual style will be refined after reference images are added.
 4. [Motion Direction](./motion-direction.md)
 5. [Theme System](./theme-system.md)
 6. [Reference Notes](./reference-notes.md)
-7. [Voice And Tone](./voice-and-tone.md)
+7. [Style Acceptance Checklist](./style-acceptance-checklist.md)
+8. [Voice And Tone](./voice-and-tone.md)
 
 ## Known Brand Direction
 
@@ -49,7 +51,7 @@ This means a motion-led, token-based, glass-tactile productivity dashboard style
 
 ## Current Reference Direction
 
-The first visual references point toward:
+The canonical dashboard reference defines:
 
 - a large rounded application canvas
 - centered pill top navigation
@@ -60,6 +62,12 @@ The first visual references point toward:
 - large dashboard cards
 - motion-heavy interactive transitions
 - token-based theming and appearance customization
+
+The structure should stay close to the reference.
+
+Colors, typography details, and English OS-specific content can be refined.
+
+Minimalism is mandatory: the product should feel edited and calm, not like an overloaded widget wall.
 
 ## Related Docs
 

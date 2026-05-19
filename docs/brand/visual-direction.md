@@ -4,7 +4,9 @@
 
 This document defines the known visual and motion direction for English OS.
 
-The final style should be refined after visual references are provided.
+The V1 desktop visual frame is now anchored to the supplied dashboard reference.
+
+Future implementation should refine colors, content, typography, and responsive behavior without drifting away from the reference's structure and first-glance feeling.
 
 ## Current Direction
 
@@ -20,7 +22,7 @@ The canonical visual style is [Soft Liquid OS](./style-doctrine.md).
 
 ## Reference-Informed Structure
 
-The first structure references suggest this layout direction:
+The supplied dashboard reference defines this desktop layout direction:
 
 - full-page atmospheric pastel background
 - large centered rounded app canvas
@@ -31,6 +33,10 @@ The first structure references suggest this layout direction:
 - card-based content inside a single app canvas
 - black active states for selected controls and primary actions
 
+For desktop V1, this is not optional styling inspiration.
+
+It is the expected frame.
+
 This should be adapted to English OS sections:
 
 - Dashboard
@@ -40,7 +46,53 @@ This should be adapted to English OS sections:
 - Speaking
 - Settings
 
-The final product should borrow the structure and interaction feel, not copy the exact education-course content.
+The final product should closely borrow the structure and interaction feel, while replacing the education-course content with English OS roadmap, resource, progress, review, writing, and speaking concepts.
+
+## Desktop Dashboard Frame
+
+The desktop dashboard should follow this composition:
+
+- atmospheric background outside the product shell
+- large rounded app canvas with generous margin
+- left icon rail separated from content
+- centered pill navigation at the top
+- right utility controls
+- large greeting/title row
+- main content area split into a wide left area and narrower right column
+- wide primary intelligence/progress panel on the left
+- stacked recommendation/resource cards on the right
+- two or three secondary cards below the primary panel
+
+The page should feel like the reference at a glance.
+
+If the screen looks like a normal admin template, generic dashboard, or default shadcn page, it is wrong.
+
+## Minimalist Control Center Rule
+
+Minimalism is required.
+
+English OS should not show every possible metric just because the data exists.
+
+Good screens should have:
+
+- one dominant visual focus
+- two to four supporting modules
+- short text
+- obvious next action
+- calm whitespace
+- strong hierarchy
+
+Bad screens have:
+
+- too many equal cards
+- too many colors
+- too many borders
+- too many competing charts
+- long explanatory text
+- random decorative widgets
+- unclear next action
+
+The product should feel like a premium control center, not an analytics landfill.
 
 ## Motion-Led Interface
 
@@ -100,6 +152,8 @@ The dashboard should be dense enough to feel like a control center.
 
 It should not become a sparse landing page.
 
+It also should not become overloaded.
+
 Good density:
 
 - several panels visible at once
@@ -107,6 +161,15 @@ Good density:
 - secondary right column for recommendations or context
 - compact navigation controls
 - strong visual hierarchy
+
+Maximum useful density:
+
+- one primary panel
+- one right-side column
+- two or three secondary panels
+- one clear primary action path
+
+Anything beyond that should be justified by learner value.
 
 ## Responsive Direction
 
@@ -152,16 +215,21 @@ References should guide style, not override product usability.
 
 Avoid:
 
+- drifting away from the canonical reference frame
+- making desktop V1 look unrelated to the supplied reference
 - default shadcn look
 - generic SaaS dashboard blandness
 - childish edtech styling
 - noisy gamification
 - oversized marketing hero patterns inside the app
 - purely decorative motion with no product meaning
+- overloaded dashboards with no visual discipline
 
-## Open Visual Decisions
+## Remaining Visual Decisions
 
-These should be decided after references are provided:
+The structural frame is decided.
+
+These details can still be refined during implementation:
 
 - color palette
 - typography pairing
@@ -174,7 +242,8 @@ These should be decided after references are provided:
 
 Current leaning:
 
-- soft pastel atmosphere is acceptable
+- canonical desktop frame should closely follow the supplied dashboard reference
+- soft pastel atmosphere is acceptable, but colors may become more elegant
 - black active states are desirable
 - rounded app-shell canvas is desirable
 - animation should be central

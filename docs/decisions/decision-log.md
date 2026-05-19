@@ -146,6 +146,26 @@ Related docs:
 - [Motion Direction](../brand/motion-direction.md)
 - [Theme System](../brand/theme-system.md)
 
+### 2026-05-19: Dashboard Reference Is The Canonical V1 Desktop Frame
+
+Status: accepted.
+
+The supplied dashboard reference should be treated as the canonical V1 desktop frame for English OS.
+
+The implementation should closely match its structure, spacing logic, app shell silhouette, left icon rail, centered pill navigation, right utility cluster, soft rounded panels, black active states, and calm two-column dashboard composition.
+
+The product may change colors, content, typography details, and English OS-specific modules, but it should not drift into a generic admin dashboard, default shadcn layout, or overloaded analytics wall.
+
+Minimalism is also accepted as a core visual discipline: the interface should feel edited, calm, and purposeful, with one dominant focus and a small number of supporting modules.
+
+Related docs:
+
+- [Reference Notes](../brand/reference-notes.md)
+- [Style Doctrine](../brand/style-doctrine.md)
+- [Visual Direction](../brand/visual-direction.md)
+- [Dashboard UX](../ux/dashboard.md)
+- [Release Criteria](../roadmap/release-criteria.md)
+
 ## Status
 
 Active.

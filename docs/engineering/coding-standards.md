@@ -103,6 +103,17 @@ Do not store secrets, provider keys, or sensitive server-only data in browser st
 - Do not hardcode theme colors, font families, motion durations, or major radius values inside components.
 - Make appearance preferences compatible with theme, font, text scale, density, and motion settings.
 
+## Visual Implementation Rules
+
+- Treat the supplied dashboard reference as the canonical V1 desktop frame.
+- Do not implement a generic dashboard and call it Soft Liquid OS.
+- Do not let default shadcn component styling define the product look.
+- Match the reference's shell silhouette, pill navigation, left rail rhythm, panel softness, and black active states.
+- Keep screens minimal and edited; do not add widgets just because data exists.
+- Prefer one strong primary panel and a small number of supporting panels.
+- Keep visual decisions tokenized even when matching the reference closely.
+- If a screen looks unrelated to the reference at first glance, revise the layout before adding features.
+
 ## AI Rules
 
 - Never call OpenAI directly from client components.

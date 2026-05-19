@@ -85,7 +85,10 @@ V1 content is ready when:
 V1 visual polish is ready when:
 
 - app shell feels stable and intentional
+- desktop shell clearly resembles the canonical dashboard reference
+- dashboard uses the reference's app canvas, left rail, pill nav, panel rhythm, and right column structure
 - dashboard has clear hierarchy
+- dashboard feels minimal, edited, and calm
 - animations make the interface feel alive and intelligent
 - motion does not block usability
 - transitions help the user understand state changes
@@ -102,6 +105,9 @@ Do not launch if:
 - AI keys can be exposed
 - app only works on one viewport size
 - mobile feels like an afterthought
+- desktop UI looks like a generic shadcn/admin dashboard
+- dashboard is overloaded with too many competing widgets
+- implementation does not visually relate to the canonical reference
 - core navigation feels confusing
 
 ## Launch Definition

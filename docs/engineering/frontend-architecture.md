@@ -173,6 +173,24 @@ The product should not visually feel like a default shadcn demo.
 
 The default visual direction should follow the Soft Liquid OS style doctrine.
 
+The supplied dashboard reference is the canonical V1 desktop frame.
+
+Frontend implementation should start from that frame, not from a generic dashboard template.
+
+Desktop components should preserve:
+
+- large rounded app canvas
+- left icon rail
+- centered pill navigation
+- right utility cluster
+- wide primary panel
+- right recommendation/context column
+- lower secondary cards
+- black active controls
+- soft panel surfaces
+
+Mobile can adapt the frame into focused stacked flows, but the product should still feel like the same system.
+
 ## Responsive Architecture
 
 The frontend should be built for desktop browser and mobile web from the first implementation pass.

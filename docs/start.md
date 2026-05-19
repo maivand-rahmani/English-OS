@@ -48,8 +48,11 @@ For UI work, read:
 1. [Information Architecture](./ux/information-architecture.md)
 2. [Navigation](./ux/navigation.md)
 3. [Style Doctrine](./brand/style-doctrine.md)
-4. [Motion Direction](./brand/motion-direction.md)
-5. [Theme System](./brand/theme-system.md)
+4. [Visual Direction](./brand/visual-direction.md)
+5. [Reference Notes](./brand/reference-notes.md)
+6. [Style Acceptance Checklist](./brand/style-acceptance-checklist.md)
+7. [Motion Direction](./brand/motion-direction.md)
+8. [Theme System](./brand/theme-system.md)
 
 For engineering work, read:
 
