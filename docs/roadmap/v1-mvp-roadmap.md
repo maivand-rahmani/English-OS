@@ -32,7 +32,7 @@ Current state:
 
 The project documentation foundation is complete. Product, UX, system, engineering, AI, brand, decisions, and roadmap documentation have been created.
 
-Implementation has started. Phases 1, 2, and 3 are complete. The local-first learner state foundation (IndexedDB persistence, event queue, progress store, draft store, appearance preferences, React hooks, and sync interface) is built. The next unfinished work begins with the curated content model phase.
+Implementation has started. Phases 1, 2, 3, 4, and 5 are complete. The local-first learner state foundation, curated content model, and first dashboard control center are built. The next unfinished work begins with roadmap and resources UI.
 
 ## V1 Build Strategy
 
@@ -183,7 +183,7 @@ Related docs:
 
 Status:
 
-- [ ] Not started
+- [x] Complete
 
 Goal:
 
@@ -191,19 +191,19 @@ Define the initial learning inventory.
 
 Tasks:
 
-- [ ] Define skills and subskills seed structure
-- [ ] Define roadmap template data
-- [ ] Define resource metadata model
-- [ ] Add initial curated resources
-- [ ] Define writing task model
-- [ ] Define speaking prompt model
-- [ ] Add recommendation context fields
+- [x] Define skills and subskills seed structure
+- [x] Define roadmap template data
+- [x] Define resource metadata model
+- [x] Add initial curated resources
+- [x] Define writing task model
+- [x] Define speaking prompt model
+- [x] Add recommendation context fields
 
 Done when:
 
-- [ ] dashboard and roadmap can be powered by structured content
-- [ ] resources are not just static links
-- [ ] each resource has recommendation context
+- [x] dashboard and roadmap can be powered by structured content
+- [x] resources are not just static links
+- [x] each resource has recommendation context
 
 Related docs:
 
@@ -215,7 +215,7 @@ Related docs:
 
 Status:
 
-- [ ] Not started
+- [x] Complete
 
 Goal:
 
@@ -223,20 +223,20 @@ Build the control center.
 
 Tasks:
 
-- [ ] Build learner summary widget
-- [ ] Build today plan widget
-- [ ] Build best next resource widget
-- [ ] Build review preview widget
-- [ ] Build progress snapshot widget
-- [ ] Build writing and speaking quick actions
-- [ ] Build recent activity widget
-- [ ] Add dashboard motion and animated state updates
+- [x] Build learner summary widget
+- [x] Build today plan widget
+- [x] Build best next resource widget
+- [x] Build review preview widget
+- [x] Build progress snapshot widget
+- [x] Build writing and speaking quick actions
+- [x] Build recent activity widget
+- [x] Add dashboard motion and animated state updates
 
 Done when:
 
-- [ ] user lands on dashboard after onboarding
-- [ ] dashboard answers what to do next
-- [ ] dashboard uses local state and curated data
+- [x] user lands on dashboard after onboarding
+- [x] dashboard answers what to do next
+- [x] dashboard uses local state and curated data
 
 Related docs:
 
