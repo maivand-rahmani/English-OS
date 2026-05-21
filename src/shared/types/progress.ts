@@ -29,5 +29,7 @@ export type ProgressState = {
 export type ProgressUpdate = {
   id: string;
   state: BlockState;
+  entryType?: ProgressEntryType;
   meta?: Record<string, string>;
+  updatedAt?: number;
 };

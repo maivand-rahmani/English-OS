@@ -100,9 +100,9 @@ export async function updateProgress(
 ): Promise<void> {
   const entry: ProgressEntry = {
     id: update.id,
-    entryType: "block",
+    entryType: update.entryType ?? "block",
     state: update.state,
-    updatedAt: Date.now(),
+    updatedAt: update.updatedAt ?? Date.now(),
     meta: update.meta,
   };
 

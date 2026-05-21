@@ -35,10 +35,30 @@ export function useLearningEvents(limit = 50) {
     }
   }, [limit]);
 
-  // Load on mount
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    let cancelled = false;
+
+    async function loadEvents() {
+      try {
+        const result = await getEvents({ limit, order: "desc" });
+        if (!cancelled) {
+          setEvents(result);
+        }
+      } catch (error) {
+        console.error("Failed to load learning events:", error);
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void loadEvents();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [limit]);
 
   const recordEvent = useCallback(
     async (input: EventInput) => {

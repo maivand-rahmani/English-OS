@@ -23,10 +23,22 @@ export function useAppearancePreferences() {
 
   // Hydrate from localStorage on mount
   useEffect(() => {
-    const stored = getAppearancePreferences();
-    setPreferences(stored);
-    applyAttrs(stored);
-    setIsLoaded(true);
+    let cancelled = false;
+
+    queueMicrotask(() => {
+      if (cancelled) {
+        return;
+      }
+
+      const stored = getAppearancePreferences();
+      setPreferences(stored);
+      applyAttrs(stored);
+      setIsLoaded(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const updatePreferences = useCallback(

@@ -1,5 +1,5 @@
 import { getDb } from "./idb-database";
-import type { LearningEvent } from "@/shared/types";
+import type { LearningEvent, LearningEventType } from "@/shared/types";
 
 /**
  * Append a learning event to the local queue.
@@ -68,8 +68,6 @@ export async function markEventsSynced(ids: string[]): Promise<void> {
     const tx = db.transaction("learning_events", "readwrite");
     const store = tx.objectStore("learning_events");
 
-    let remaining = ids.length;
-
     for (const id of ids) {
       const getRequest = store.get(id);
       getRequest.onsuccess = () => {
@@ -77,14 +75,11 @@ export async function markEventsSynced(ids: string[]): Promise<void> {
         if (event) {
           store.put({ ...event, synced: true });
         }
-        remaining--;
-        if (remaining === 0) resolve();
       };
       getRequest.onerror = () => reject(getRequest.error);
     }
 
-    if (ids.length === 0) resolve();
-
+    tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });
 }
@@ -93,7 +88,7 @@ export async function markEventsSynced(ids: string[]): Promise<void> {
  * Query events with optional filters.
  */
 export async function getEvents(options?: {
-  type?: string;
+  type?: LearningEventType;
   limit?: number;
   order?: "asc" | "desc";
 }): Promise<LearningEvent[]> {

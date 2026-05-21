@@ -32,8 +32,29 @@ export function useDrafts() {
   }, []);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    let cancelled = false;
+
+    async function loadDrafts() {
+      try {
+        const result = await listDrafts();
+        if (!cancelled) {
+          setDrafts(result);
+        }
+      } catch (error) {
+        console.error("Failed to load drafts:", error);
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void loadDrafts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   /** Create a new draft and persist immediately. */
   const createDraft = useCallback(
@@ -54,15 +75,14 @@ export function useDrafts() {
 
       try {
         await putDraft(draft);
-        setDrafts((prev) => [
-          {
+        setDrafts((prev) =>
+          upsertDraftSummary(prev, {
             id: draft.id,
             title: draft.title,
             taskId: draft.taskId,
             updatedAt: draft.updatedAt,
-          },
-          ...prev,
-        ]);
+          })
+        );
         return draft;
       } catch (error) {
         console.error("Failed to create draft:", error);
@@ -78,30 +98,14 @@ export function useDrafts() {
 
     try {
       await putDraft(updated);
-      setDrafts((prev) => {
-        const exists = prev.find((d) => d.id === updated.id);
-        if (exists) {
-          return prev.map((d) =>
-            d.id === updated.id
-              ? {
-                  id: updated.id,
-                  title: updated.title,
-                  taskId: updated.taskId,
-                  updatedAt: updated.updatedAt,
-                }
-              : d
-          );
-        }
-        return [
-          {
-            id: updated.id,
-            title: updated.title,
-            taskId: updated.taskId,
-            updatedAt: updated.updatedAt,
-          },
-          ...prev,
-        ];
-      });
+      setDrafts((prev) =>
+        upsertDraftSummary(prev, {
+          id: updated.id,
+          title: updated.title,
+          taskId: updated.taskId,
+          updatedAt: updated.updatedAt,
+        })
+      );
     } catch (error) {
       console.error("Failed to save draft:", error);
     }
@@ -138,4 +142,12 @@ export function useDrafts() {
     removeDraft,
     refresh,
   } as const;
+}
+
+function upsertDraftSummary(
+  drafts: DraftSummary[],
+  nextDraft: DraftSummary
+): DraftSummary[] {
+  return [...drafts.filter((draft) => draft.id !== nextDraft.id), nextDraft]
+    .sort((left, right) => right.updatedAt - left.updatedAt);
 }

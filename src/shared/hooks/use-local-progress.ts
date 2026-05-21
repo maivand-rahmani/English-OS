@@ -9,7 +9,11 @@ import {
   putProgressEntry,
   deleteProgressEntry,
 } from "@/shared/persistence";
-import type { BlockState, ProgressEntry } from "@/shared/types";
+import type {
+  BlockState,
+  ProgressEntry,
+  ProgressEntryType,
+} from "@/shared/types";
 
 /**
  * Hook for reading and updating local progress state.
@@ -34,28 +38,52 @@ export function useLocalProgress() {
   }, []);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    let cancelled = false;
+
+    async function loadEntries() {
+      try {
+        const result = await getAllProgressEntries();
+        if (!cancelled) {
+          setEntries(result);
+        }
+      } catch (error) {
+        console.error("Failed to load progress entries:", error);
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void loadEntries();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   /** Update a single progress entry. Optimistic inline update. */
   const updateEntry = useCallback(
     async (
       id: string,
       state: BlockState,
-      meta?: Record<string, string>
+      meta?: Record<string, string>,
+      entryType?: ProgressEntryType
     ) => {
       const now = Date.now();
+      let nextEntry: ProgressEntry | undefined;
 
       // Optimistic inline update
       setEntries((prev) => {
         const existing = prev.find((e) => e.id === id);
         const entry: ProgressEntry = {
           id,
-          entryType: existing?.entryType ?? "block",
+          entryType: existing?.entryType ?? entryType ?? "block",
           state,
           updatedAt: now,
           meta: meta ?? existing?.meta,
         };
+        nextEntry = entry;
 
         if (existing) {
           return prev.map((e) => (e.id === id ? entry : e));
@@ -65,7 +93,13 @@ export function useLocalProgress() {
 
       // Persist to IndexedDB
       try {
-        await updateProgressStore({ id, state, meta });
+        await updateProgressStore({
+          id,
+          state,
+          entryType: nextEntry?.entryType ?? entryType,
+          meta: nextEntry?.meta,
+          updatedAt: now,
+        });
       } catch (error) {
         console.error("Failed to update progress entry:", error);
       }
