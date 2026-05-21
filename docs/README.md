@@ -24,6 +24,7 @@ Read only the section that matches the task.
 - For visual style and product feel, go to `brand/`.
 - For major decisions and decision history, go to `decisions/`.
 - For the path from concept to MVP, go to `roadmap/`.
+- For post-V1 roadmap planning, go to `roadmap/futures/`.
 
 ## Sections
 
@@ -36,6 +37,7 @@ Read only the section that matches the task.
 - [Brand](./brand/README.md)
 - [Decisions](./decisions/README.md)
 - [Roadmap](./roadmap/README.md)
+- [Roadmap Futures](./roadmap/futures/README.md)
 
 ## Source Of Truth
 
@@ -75,8 +77,15 @@ For implementation planning:
 5. [Tech Stack](./engineering/tech-stack.md)
 6. [Roadmap README](./roadmap/README.md)
 
+For post-V1 planning:
+
+1. [Roadmap README](./roadmap/README.md)
+2. [Roadmap Futures](./roadmap/futures/README.md)
+3. [V2 MVP Roadmap](./roadmap/futures/v2-mvp-roadmap.md)
+
 ## Related Docs
 
 - [Start Here](./start.md)
 - [Product](./product/README.md)
 - [Roadmap](./roadmap/README.md)
+- [Roadmap Futures](./roadmap/futures/README.md)

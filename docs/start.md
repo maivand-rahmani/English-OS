@@ -28,6 +28,7 @@ Main sections:
 - [Brand](./brand/README.md)
 - [Decisions](./decisions/README.md)
 - [Roadmap](./roadmap/README.md)
+- [Roadmap Futures](./roadmap/futures/README.md)
 
 ## Required Reading Before Work
 
@@ -36,6 +37,11 @@ For any task, read:
 1. [Decision Log](./decisions/decision-log.md)
 2. [V1 MVP Roadmap](./roadmap/v1-mvp-roadmap.md)
 3. the section README that matches the task
+
+For post-V1 planning only, also read:
+
+1. [Roadmap Futures](./roadmap/futures/README.md)
+2. [V2 MVP Roadmap](./roadmap/futures/v2-mvp-roadmap.md)
 
 For product work, read:
 
@@ -71,6 +77,11 @@ Before starting:
 3. Read the related docs for that phase.
 4. Continue from there.
 5. After completing work, update the roadmap checkboxes.
+
+Important:
+
+- [V1 MVP Roadmap](./roadmap/v1-mvp-roadmap.md) remains the active implementation tracker until V1 is fully complete.
+- [V2 MVP Roadmap](./roadmap/futures/v2-mvp-roadmap.md) is a future planning document for post-V1 work and should not replace the active V1 execution path early.
 
 If a task changes architecture, update:
 
@@ -149,3 +160,4 @@ Active.
 - [Docs Home](./README.md)
 - [V1 MVP Roadmap](./roadmap/v1-mvp-roadmap.md)
 - [Decision Log](./decisions/decision-log.md)
+- [Roadmap Futures](./roadmap/futures/README.md)
