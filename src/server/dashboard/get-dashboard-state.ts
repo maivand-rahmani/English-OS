@@ -54,6 +54,7 @@ export async function getDashboardState(): Promise<DashboardContentState> {
       stageTitle: stage.title,
       stageSummary: stage.summary,
       stageTypeLabel: humanizeEnum(stage.stageType),
+      blockTypeLabel: humanizeEnum(block.blockType),
       skills: mapBlockSkills(block),
       resources: block.resourceLinks.map((resourceLink) => ({
         id: resourceLink.resource.id,
@@ -72,6 +73,15 @@ export async function getDashboardState(): Promise<DashboardContentState> {
         note: resourceLink.note,
         role: resourceRoleLabel(resourceLink.role),
         skills: mapResourceSkills(resourceLink.resource.skillMaps),
+        isFeatured: resourceLink.resource.isFeatured,
+        url: resourceLink.resource.url,
+        description: resourceLink.resource.description,
+        accessTypeLabel: humanizeEnum(resourceLink.resource.accessType),
+        difficultyLabel: humanizeEnum(resourceLink.resource.difficulty),
+        cefrLabel: formatCefrRange(
+          resourceLink.resource.cefrStart,
+          resourceLink.resource.cefrEnd,
+        ),
       })),
       writingTasks: block.writingTasks.map((task) => ({
         id: task.id,
@@ -82,6 +92,8 @@ export async function getDashboardState(): Promise<DashboardContentState> {
         wordCountMin: task.wordCountMin,
         wordCountMax: task.wordCountMax,
         blockTitle: block.title,
+        instructions: task.instructions,
+        successCriteria: task.successCriteria,
       })),
       speakingPrompts: block.speakingPrompts.map((prompt) => ({
         id: prompt.id,
@@ -92,6 +104,8 @@ export async function getDashboardState(): Promise<DashboardContentState> {
         estimatedMinutes: prompt.estimatedMinutes,
         targetDurationSeconds: prompt.targetDurationSeconds,
         blockTitle: block.title,
+        prepHint: prompt.prepHint,
+        followUpQuestion: prompt.followUpQuestion,
       })),
     })),
   }));

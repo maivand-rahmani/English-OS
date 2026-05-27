@@ -19,6 +19,12 @@ export type DashboardResource = {
   note: string | null;
   role: "core" | "supporting" | "stretch";
   skills: DashboardSkill[];
+  isFeatured: boolean;
+  url: string;
+  description: string | null;
+  accessTypeLabel: string;
+  difficultyLabel: string;
+  cefrLabel: string | null;
 };
 
 export type DashboardWritingTask = {
@@ -30,6 +36,8 @@ export type DashboardWritingTask = {
   wordCountMin: number | null;
   wordCountMax: number | null;
   blockTitle: string;
+  instructions: string;
+  successCriteria: string | null;
 };
 
 export type DashboardSpeakingPrompt = {
@@ -41,6 +49,8 @@ export type DashboardSpeakingPrompt = {
   estimatedMinutes: number | null;
   targetDurationSeconds: number | null;
   blockTitle: string;
+  prepHint: string | null;
+  followUpQuestion: string | null;
 };
 
 export type DashboardBlock = {
@@ -57,6 +67,7 @@ export type DashboardBlock = {
   stageTitle: string;
   stageSummary: string | null;
   stageTypeLabel: string;
+  blockTypeLabel: string;
   skills: DashboardSkill[];
   resources: DashboardResource[];
   writingTasks: DashboardWritingTask[];

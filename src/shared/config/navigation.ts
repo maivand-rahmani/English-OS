@@ -92,8 +92,8 @@ const appSections: Record<AppSectionKey, AppSection> = {
     title: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
-    eyebrow: "Daily command center",
-    description: "The home base for daily clarity and the next best action.",
+    eyebrow: "Dashboard",
+    description: "Overview of your workspace.",
     sidebarTitle: "Dashboard lanes",
     sidebarDescription: "Daily planning, review, and momentum signals.",
     sidebarItems: [
