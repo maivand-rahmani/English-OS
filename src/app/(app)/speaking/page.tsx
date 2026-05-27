@@ -1,18 +1,8 @@
-import { RoutePlaceholder } from "@/widgets/route-placeholder";
+import { getDashboardState } from "@/server/dashboard/get-dashboard-state";
+import { SpeakingOverview } from "@/widgets/speaking-overview";
 
-export default function SpeakingPage() {
-  return (
-    <RoutePlaceholder
-      sectionKey="speaking"
-      title="Speaking practice workspace"
-      description="Speaking now lives in the same composed shell as the rest of the product, with enough room for a primary practice area and later contextual feedback panels."
-      focusPoints={[
-        "Prompt and recording flows",
-        "Feedback history and reflection",
-        "Future transcript and speaking pattern data",
-      ]}
-      nextStepHref="/settings"
-      nextStepLabel="Open settings"
-    />
-  );
+export default async function SpeakingPage() {
+  const dashboardState = await getDashboardState();
+
+  return <SpeakingOverview content={dashboardState} />;
 }

@@ -1,18 +1,8 @@
-import { RoutePlaceholder } from "@/widgets/route-placeholder";
+import { getDashboardState } from "@/server/dashboard/get-dashboard-state";
+import { ResourcesLibrary } from "@/widgets/resources-library";
 
-export default function ResourcesPage() {
-  return (
-    <RoutePlaceholder
-      sectionKey="resources"
-      title="Curated discovery layer"
-      description="Resources is now mounted inside the product shell with room for filters, collection views, and recommendation context. The route can stay thin while the real library widgets arrive later."
-      focusPoints={[
-        "Recommended resource lists",
-        "Collection and topic filters",
-        "Context-aware links from roadmap and dashboard",
-      ]}
-      nextStepHref="/writing"
-      nextStepLabel="Open the writing shell"
-    />
-  );
+export default async function ResourcesPage() {
+  const dashboardState = await getDashboardState();
+
+  return <ResourcesLibrary content={dashboardState} />;
 }

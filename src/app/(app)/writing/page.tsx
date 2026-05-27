@@ -1,18 +1,8 @@
-import { RoutePlaceholder } from "@/widgets/route-placeholder";
+import { getDashboardState } from "@/server/dashboard/get-dashboard-state";
+import { WritingOverview } from "@/widgets/writing-overview";
 
-export default function WritingPage() {
-  return (
-    <RoutePlaceholder
-      sectionKey="writing"
-      title="Writing practice workspace"
-      description="Writing now has a dedicated shell surface with stable navigation around it. Draft flows, tasks, and feedback UI can arrive without reshaping the global app frame."
-      focusPoints={[
-        "Task and draft flows",
-        "Local draft persistence",
-        "Server-side AI feedback entry points",
-      ]}
-      nextStepHref="/speaking"
-      nextStepLabel="Open the speaking shell"
-    />
-  );
+export default async function WritingPage() {
+  const dashboardState = await getDashboardState();
+
+  return <WritingOverview content={dashboardState} />;
 }
