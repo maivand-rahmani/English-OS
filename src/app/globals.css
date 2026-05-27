@@ -43,6 +43,36 @@
   --radius-md: calc(var(--radius) * 0.9);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.2);
+  
+  /* EnglishOS surface colors */
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-highlight: var(--surface-highlight);
+  --color-surface-panel: var(--surface-panel);
+  --color-surface-panel-strong: var(--surface-panel-strong);
+  --color-surface-panel-muted: var(--surface-panel-muted);
+  --color-surface-module-pink: var(--surface-module-pink);
+  --color-surface-module-lavender: var(--surface-module-lavender);
+  --color-surface-module-blue: var(--surface-module-blue);
+  --color-surface-module-green: var(--surface-module-green);
+  --color-surface-module-cream: var(--surface-module-cream);
+  --color-surface-stroke: var(--surface-stroke);
+  --color-surface-stroke-strong: var(--surface-stroke-strong);
+  --color-surface-pill: var(--surface-pill);
+  --color-surface-dark-control: var(--surface-dark-control);
+  
+  /* EnglishOS shadows */
+  --shadow-soft: var(--shadow-soft);
+  --shadow-shell: var(--shell-shadow);
+  --shadow-float: var(--shadow-float);
+  --shadow-panel: var(--shadow-panel);
+  --shadow-control: var(--shadow-control);
+  
+  /* EnglishOS motion */
+  --animate-duration-fast: var(--motion-duration-fast);
+  --animate-duration-slow: var(--motion-duration-slow);
+  --animate-ease-standard: var(--motion-ease-standard);
 }
 
 :root,
@@ -78,7 +108,7 @@
   --sidebar-accent-foreground: oklch(0.23 0.01 270);
   --sidebar-border: oklch(0.9 0.004 270);
   --sidebar-ring: oklch(0.65 0.015 270);
-  --radius: 0.75rem;
+  --radius: 0.875rem;
   --surface-1: rgba(255, 252, 255, 0.74);
   --surface-2: rgba(255, 255, 255, 0.58);
   --surface-3: rgba(255, 255, 255, 0.84);
@@ -96,6 +126,25 @@
   --motion-duration-fast: 180ms;
   --motion-duration-slow: 360ms;
   --motion-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* EnglishOS — surface tokens */
+  --surface-panel: rgba(255, 255, 255, 0.82);
+  --surface-panel-strong: rgba(255, 255, 255, 0.92);
+  --surface-panel-muted: rgba(245, 243, 250, 0.72);
+  --surface-module-pink: rgba(255, 217, 229, 0.72);
+  --surface-module-lavender: rgba(220, 216, 255, 0.62);
+  --surface-module-blue: rgba(216, 236, 255, 0.68);
+  --surface-module-green: rgba(223, 244, 213, 0.66);
+  --surface-module-cream: rgba(250, 240, 216, 0.72);
+  --surface-stroke: rgba(255, 255, 255, 0.55);
+  --surface-stroke-strong: rgba(255, 255, 255, 0.72);
+  --surface-pill: rgba(255, 255, 255, 0.68);
+  --surface-dark-control: oklch(0.17 0.01 270);
+
+  /* EnglishOS — shadow tokens */
+  --shadow-float: 0 24px 80px rgba(31, 35, 48, 0.10);
+  --shadow-panel: 0 12px 32px rgba(20, 20, 30, 0.06);
+  --shadow-control: 0 10px 24px rgba(0, 0, 0, 0.12);
 }
 
 [data-theme="dark"] {
@@ -140,6 +189,25 @@
   --shell-shadow:
     0 38px 110px rgba(6, 8, 16, 0.56),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  /* EnglishOS — surface tokens (dark) */
+  --surface-panel: rgba(23, 25, 34, 0.82);
+  --surface-panel-strong: rgba(30, 32, 42, 0.92);
+  --surface-panel-muted: rgba(18, 20, 28, 0.78);
+  --surface-module-pink: rgba(80, 40, 55, 0.42);
+  --surface-module-lavender: rgba(55, 45, 90, 0.42);
+  --surface-module-blue: rgba(40, 60, 95, 0.42);
+  --surface-module-green: rgba(40, 75, 45, 0.38);
+  --surface-module-cream: rgba(75, 65, 40, 0.38);
+  --surface-stroke: rgba(255, 255, 255, 0.06);
+  --surface-stroke-strong: rgba(255, 255, 255, 0.10);
+  --surface-pill: rgba(255, 255, 255, 0.08);
+  --surface-dark-control: rgba(255, 255, 255, 0.12);
+
+  /* EnglishOS — shadow tokens (dark) */
+  --shadow-float: 0 20px 60px rgba(0, 0, 0, 0.45);
+  --shadow-panel: 0 12px 32px rgba(0, 0, 0, 0.35);
+  --shadow-control: 0 8px 20px rgba(0, 0, 0, 0.40);
 }
 
 [data-text-size="small"] {
@@ -165,12 +233,50 @@
     @apply border-border outline-ring/50;
   }
 
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  h5 {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  h6 {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
   html {
     @apply font-sans antialiased;
   }
 
   body {
     @apply text-foreground;
+    letter-spacing: -0.01em;
     min-height: 100vh;
     background-color: var(--background);
     background-image:
@@ -193,5 +299,64 @@
       transform var(--motion-duration-fast) var(--motion-ease-standard),
       box-shadow var(--motion-duration-fast) var(--motion-ease-standard);
   }
+
+  small {
+    letter-spacing: 0;
+  }
+
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-from-bottom {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes stagger-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  .animate-slide-in-from-bottom {
+    animation: slide-in-from-bottom 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .animate-stagger-fade-in {
+    animation: stagger-fade-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    animation-fill-mode: both;
+  }
+
+  /* Stagger delays for card grids */
+  .stagger-1 { animation-delay: 0.05s; }
+  .stagger-2 { animation-delay: 0.1s; }
+  .stagger-3 { animation-delay: 0.15s; }
+  .stagger-4 { animation-delay: 0.2s; }
+  .stagger-5 { animation-delay: 0.25s; }
+  .stagger-6 { animation-delay: 0.3s; }
 }
 
