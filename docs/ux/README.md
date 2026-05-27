@@ -10,6 +10,7 @@ This section translates the product thesis into user-facing structure.
 
 - [Information Architecture](./information-architecture.md)
 - [Navigation](./navigation.md)
+- [Mobile V1 Design](./mobile-v1-design.md)
 - [Onboarding](./onboarding.md)
 - [Dashboard](./dashboard.md)
 - [Roadmap](./roadmap.md)
@@ -22,13 +23,14 @@ This section translates the product thesis into user-facing structure.
 
 1. [Information Architecture](./information-architecture.md)
 2. [Navigation](./navigation.md)
-3. [Onboarding](./onboarding.md)
-4. [Dashboard](./dashboard.md)
-5. [Roadmap](./roadmap.md)
-6. [Resources](./resources.md)
-7. [Writing](./writing.md)
-8. [Speaking](./speaking.md)
-9. [Settings](./settings.md)
+3. [Mobile V1 Design](./mobile-v1-design.md)
+4. [Onboarding](./onboarding.md)
+5. [Dashboard](./dashboard.md)
+6. [Roadmap](./roadmap.md)
+7. [Resources](./resources.md)
+8. [Writing](./writing.md)
+9. [Speaking](./speaking.md)
+10. [Settings](./settings.md)
 
 ## Document Responsibilities
 
@@ -36,6 +38,8 @@ This section translates the product thesis into user-facing structure.
   Defines the top-level product structure and major zones.
 - [Navigation](./navigation.md)
   Defines top bar, sidebars, route logic, and movement rules.
+- [Mobile V1 Design](./mobile-v1-design.md)
+  Defines the phone-first mobile web translation of the current V1 product surfaces.
 - [Onboarding](./onboarding.md)
   Defines how a first-time learner enters the system.
 - [Dashboard](./dashboard.md)
@@ -57,6 +61,7 @@ The most important files in this section are:
 
 - [Information Architecture](./information-architecture.md)
 - [Navigation](./navigation.md)
+- [Mobile V1 Design](./mobile-v1-design.md)
 - [Dashboard](./dashboard.md)
 - [Roadmap](./roadmap.md)
 - [Resources](./resources.md)

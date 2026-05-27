@@ -7,6 +7,7 @@ import { DashboardEmptyState } from "./dashboard-empty-state";
 import { DashboardFocusSidebar } from "./dashboard-focus-sidebar";
 import { DashboardHeroSection } from "./dashboard-hero-section";
 import { DashboardPracticeSection } from "./dashboard-practice-section";
+import { DashboardProgressSection } from "./dashboard-progress-section";
 
 export function DashboardOverview({ content }: DashboardOverviewProps) {
   const overview = useDashboardOverview(content);
@@ -61,8 +62,20 @@ export function DashboardOverview({ content }: DashboardOverviewProps) {
         </div>
       </div>
 
-      <div className="grid gap-[var(--layout-gap)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+      <div className="grid gap-[var(--layout-gap)] xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)_minmax(0,1fr)]">
         <div className="animate-stagger-fade-in stagger-3">
+          <DashboardProgressSection
+            activeDaysThisWeek={overview.activeDaysThisWeek}
+            completedBlocks={overview.completedBlocks}
+            consistencyLabel={overview.consistencyLabel}
+            content={content}
+            roadmapCompletion={overview.roadmapCompletion}
+            strongestSkill={overview.strongestSkill}
+            weakestSkill={overview.weakestSkill}
+          />
+        </div>
+
+        <div className="animate-stagger-fade-in stagger-4">
           <DashboardPracticeSection
             busyAction={overview.busyAction}
             draftCount={overview.drafts.length}
@@ -75,7 +88,7 @@ export function DashboardOverview({ content }: DashboardOverviewProps) {
           />
         </div>
 
-        <div className="animate-stagger-fade-in stagger-4">
+        <div className="animate-stagger-fade-in stagger-5">
           <DashboardActivitySection
             blockProgressCount={overview.blockProgressCount}
             localStateLoading={overview.localStateLoading}

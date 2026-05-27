@@ -189,12 +189,18 @@ Tasks:
 - [ ] Define section-level URL and state persistence rules
 - [ ] Define mobile navigation behavior for subpage-heavy sections
 
+Mobile version:
+
+- [ ] Define a shared V2 mobile subpage shell using bottom navigation, top chips, and sequential section flows
+- [ ] Define mobile return-path behavior between overview pages and deep workflow subpages
+
 Done when:
 
 - [ ] every sidebar item has a clear route contract
 - [ ] root pages and subpages have non-overlapping roles
 - [ ] nested routing rules are consistent across sections
 - [ ] mobile and desktop navigation behavior are both defined
+- [ ] shared mobile subpage navigation rules are explicit enough for every later phase
 
 Related docs:
 
@@ -222,12 +228,18 @@ Tasks:
 - [ ] Preserve `/dashboard` as the section overview and command-center return point
 - [ ] Add deep links from overview cards into exact dashboard subpages
 
+Mobile version:
+
+- [ ] Define one-dominant-action mobile hierarchy across dashboard subpages
+- [ ] Define mobile ordering for review, weak-area, and recent-activity continuity views
+
 Done when:
 
 - [ ] dashboard root works as a command view rather than duplicating every subpage
 - [ ] each dashboard subpage answers a distinct daily decision
 - [ ] the learner can move from dashboard overview into focused follow-up views without friction
 - [ ] dashboard subpages are more than filtered cards from one page
+- [ ] each dashboard subpage remains readable and decisive on phone
 
 Related docs:
 
@@ -256,12 +268,18 @@ Tasks:
 - [ ] Preserve `/roadmap` as the strategic overview page
 - [ ] Define direct routes from roadmap blocks into linked resources and practice tasks
 
+Mobile version:
+
+- [ ] Define stage-first mobile progression with compact skill pivots and milestone interpretation
+- [ ] Define mobile transitions between roadmap detail, linked resources, and practice entries
+
 Done when:
 
 - [ ] roadmap supports both stage-first and skill-first navigation
 - [ ] current and upcoming work are separated clearly
 - [ ] milestones have a dedicated interpretation surface
 - [ ] roadmap subpages feel like workflow areas, not duplicate filters
+- [ ] roadmap subpages preserve strategic clarity on phone without side-by-side dependence
 
 Related docs:
 
@@ -289,12 +307,18 @@ Tasks:
 - [ ] Define how recommendation context, why-now logic, and follow-up actions appear inside each subpage
 - [ ] Define routes from roadmap and dashboard into exact resource subpages or cards
 
+Mobile version:
+
+- [ ] Define filter sheet behavior, compact card density, and full-width mobile resource actions
+- [ ] Define how recommendation reasons and follow-up actions remain visible above the fold on phone
+
 Done when:
 
 - [ ] resource browsing is organized by real user intent, not only one generic list
 - [ ] recommendation context survives across deeper routes
 - [ ] level and skill pages serve different jobs cleanly
 - [ ] resources subpages remain editorial and guided rather than database-like
+- [ ] resource subpages stay trustworthy and easy to act on in mobile layouts
 
 Related docs:
 
@@ -322,12 +346,18 @@ Tasks:
 - [ ] Preserve `/writing` as the overview and workspace entry page
 - [ ] Define direct reopening of exact drafts, feedback states, and history entries
 
+Mobile version:
+
+- [ ] Define task-first mobile writing flow with dominant draft continuation and stacked feedback states
+- [ ] Define compact mobile hierarchy between active drafting, mistake review, and writing history
+
 Done when:
 
 - [ ] writing has a clear start-to-feedback workflow across routes
 - [ ] draft continuation is route-backed and recoverable
 - [ ] mistake review is separated from single-draft feedback
 - [ ] writing history helps the learner continue, not only archive old work
+- [ ] writing routes remain low-friction and readable on phone
 
 Related docs:
 
@@ -355,12 +385,18 @@ Tasks:
 - [ ] Preserve `/speaking` as the overview and workspace entry page
 - [ ] Define reopening rules for prompt, recording, transcript, feedback, and history continuity
 
+Mobile version:
+
+- [ ] Define prompt-first mobile speaking flow with a dominant record or continue action
+- [ ] Define compact phone hierarchy between active session, reflection, and continuity history
+
 Done when:
 
 - [ ] speaking supports a repeatable route-backed session flow
 - [ ] recording and post-session review are clearly separated
 - [ ] reflection is treated as its own product moment
 - [ ] history supports confidence-building continuity across sessions
+- [ ] speaking routes remain approachable and confidence-building on phone
 
 Related docs:
 
@@ -388,12 +424,18 @@ Tasks:
 - [ ] Preserve `/settings` as the overview and settings home
 - [ ] Define how appearance, study, and reminder preferences affect the rest of the system visibly
 
+Mobile version:
+
+- [ ] Define stacked mobile settings flows with touch-friendly grouped controls
+- [ ] Define how profile, goals, preferences, notifications, and account pages prioritize high-frequency changes on phone
+
 Done when:
 
 - [ ] each settings subpage owns a clear configuration job
 - [ ] appearance and learning preferences are not mixed into one catch-all form
 - [ ] settings changes can be understood in terms of product impact
 - [ ] settings remains calm and focused rather than becoming a feature dump
+- [ ] settings stays easy to scan and edit on phone without long unfocused forms
 
 Related docs:
 
@@ -420,12 +462,18 @@ Tasks:
 - [ ] Define resume behavior for interrupted onboarding
 - [ ] Define how onboarding summary hands off into the first live dashboard state
 
+Mobile version:
+
+- [ ] Define phone-first auth and onboarding step rhythm with one clear action per screen
+- [ ] Define compact mobile error, pending, and resume states for interrupted onboarding
+
 Done when:
 
 - [ ] auth has explicit pending and error states
 - [ ] onboarding is step-based and resumable
 - [ ] onboarding steps map directly to the required learner profile inputs
 - [ ] the final onboarding handoff creates a meaningful first-dashboard state
+- [ ] auth and onboarding remain calm and readable in mobile step-by-step flows
 
 Related docs:
 
@@ -452,12 +500,18 @@ Tasks:
 - [ ] Add loading, empty, and error states for subpage-heavy workflows
 - [ ] Review whether any subpage still behaves like a thin filtered duplicate instead of a real workflow area
 
+Mobile version:
+
+- [ ] Polish bottom navigation, top chips, and return-path continuity for deeper phone workflows
+- [ ] Verify that exact deep links open usable mobile workflow states instead of desktop-biased layouts
+
 Done when:
 
 - [ ] moving across subpages feels continuous
 - [ ] mobile and desktop both support deep workflows cleanly
 - [ ] cross-links open exact relevant workflow entries
 - [ ] V2 feels like a coherent deeper English OS, not a set of unrelated nested routes
+- [ ] deep mobile workflows feel intentional rather than patched together
 
 Related docs:
 

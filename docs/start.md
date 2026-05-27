@@ -53,12 +53,18 @@ For UI work, read:
 
 1. [Information Architecture](./ux/information-architecture.md)
 2. [Navigation](./ux/navigation.md)
-3. [Style Doctrine](./brand/style-doctrine.md)
-4. [Visual Direction](./brand/visual-direction.md)
-5. [Reference Notes](./brand/reference-notes.md)
-6. [Style Acceptance Checklist](./brand/style-acceptance-checklist.md)
-7. [Motion Direction](./brand/motion-direction.md)
-8. [Theme System](./brand/theme-system.md)
+3. [Mobile V1 Design](./ux/mobile-v1-design.md)
+4. [Style Doctrine](./brand/style-doctrine.md)
+5. [Visual Direction](./brand/visual-direction.md)
+6. [Reference Notes](./brand/reference-notes.md)
+7. [Style Acceptance Checklist](./brand/style-acceptance-checklist.md)
+8. [Motion Direction](./brand/motion-direction.md)
+9. [Theme System](./brand/theme-system.md)
+
+For mobile or responsive UI work, also read:
+
+1. the current phase's `Mobile version` block in [V1 MVP Roadmap](./roadmap/v1-mvp-roadmap.md)
+2. [Mobile V1 Design](./ux/mobile-v1-design.md)
 
 For engineering work, read:
 
@@ -82,6 +88,7 @@ Important:
 
 - [V1 MVP Roadmap](./roadmap/v1-mvp-roadmap.md) remains the active implementation tracker until V1 is fully complete.
 - [V2 MVP Roadmap](./roadmap/futures/v2-mvp-roadmap.md) is a future planning document for post-V1 work and should not replace the active V1 execution path early.
+- V1 phases 1 through 5 may be reopened for mobile design backlog even when earlier desktop or foundation work already exists.
 
 If a task changes architecture, update:
 
@@ -93,6 +100,7 @@ If a task changes style direction, update:
 - [Visual Direction](./brand/visual-direction.md)
 - [Motion Direction](./brand/motion-direction.md)
 - [Theme System](./brand/theme-system.md)
+- [Mobile V1 Design](./ux/mobile-v1-design.md)
 
 If a task changes product scope, update:
 
@@ -159,5 +167,6 @@ Active.
 
 - [Docs Home](./README.md)
 - [V1 MVP Roadmap](./roadmap/v1-mvp-roadmap.md)
+- [Mobile V1 Design](./ux/mobile-v1-design.md)
 - [Decision Log](./decisions/decision-log.md)
 - [Roadmap Futures](./roadmap/futures/README.md)
