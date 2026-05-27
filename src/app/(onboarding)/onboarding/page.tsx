@@ -5,7 +5,7 @@ import { buttonVariants } from "@/shared/ui/button";
 export default function OnboardingPage() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="rounded-[2rem] border border-white/60 bg-[var(--surface-1)] p-6 shadow-[var(--shell-shadow)] backdrop-blur-xl sm:p-8">
+      <div className="rounded-[2rem] border border-white/60 bg-surface-1 p-6 shadow-[var(--shell-shadow)] backdrop-blur-xl sm:p-8">
         <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
           Onboarding placeholder
         </p>

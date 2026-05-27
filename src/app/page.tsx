@@ -14,11 +14,7 @@ export default async function HomePage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="overflow-hidden rounded-[2rem] border border-white/60 bg-[var(--surface-1)] p-6 shadow-[var(--shell-shadow)] backdrop-blur-xl sm:p-8">
-        <div className="inline-flex items-center rounded-full border border-border/70 bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-          Phase 2 application shell
-        </div>
-
+      <div className="overflow-hidden rounded-[2rem] border border-white/60 bg-surface-1 p-6 shadow-[var(--shell-shadow)] backdrop-blur-xl sm:p-8">
         <div className="mt-6 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-6">
             <div className="space-y-4">
@@ -30,29 +26,27 @@ export default async function HomePage() {
                 resources, and guided practice built in.
               </h1>
               <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-                The shared English OS shell is now in place across the main
-                product sections. The next phases can focus on learner state,
-                curated content, and real workflows instead of rebuilding the
-                frame.
+                A calm, focused workspace for structured English learning.
+                Roadmap, resources, writing, and speaking — all in one place.
               </p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link href="/dashboard" className={buttonVariants({ size: "lg" })}>
-                Open the app shell
+                Get started
               </Link>
               <Link
                 href="/sign-in"
                 className={buttonVariants({ size: "lg", variant: "outline" })}
               >
-                Check auth setup
+                Sign in
               </Link>
             </div>
           </div>
 
           <div className="rounded-[1.6rem] border border-border/80 bg-white/75 p-5 shadow-sm backdrop-blur dark:bg-black/20">
             <p className="text-sm font-semibold text-foreground">
-              Base sections ready
+              What's inside
             </p>
             <ul className="mt-4 space-y-3">
               {appNavigation.map((item) => (
@@ -62,7 +56,7 @@ export default async function HomePage() {
                 >
                   <span className="font-medium text-foreground">{item.title}</span>
                   <span className="text-sm text-muted-foreground">
-                    Shell route ready
+                    Ready
                   </span>
                 </li>
               ))}
