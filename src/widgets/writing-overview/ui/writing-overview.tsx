@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ElementType } from "react";
 import { useState } from "react";
 import { AlertCircle, History, PenSquare, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
@@ -58,7 +59,7 @@ export function WritingOverview({ content }: WritingOverviewProps) {
   );
 
   const reduced = useReducedMotion();
-  const Wrapper = (reduced ? "section" : motion.section) as any;
+  const Wrapper: ElementType = reduced ? "section" : motion.section;
 
   async function handleCreateDraft() {
     if (!nextTask) {
@@ -107,24 +108,30 @@ export function WritingOverview({ content }: WritingOverviewProps) {
             ) : null}
           </div>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mobile-stacked-actions mt-8">
             {nextTask && !draftForNextTask ? (
               <button
                 type="button"
                 onClick={() => void handleCreateDraft()}
-                className={buttonVariants({ size: "lg" })}
+                className={cn(buttonVariants({ size: "lg" }), "sm:w-auto")}
               >
                 Start draft
               </button>
             ) : (
-              <Link href="#draft-stack" className={buttonVariants({ size: "lg" })}>
-                Continue draft stack
+              <Link
+                href="#draft-stack"
+                className={cn(buttonVariants({ size: "lg" }), "sm:w-auto")}
+              >
+                {draftForNextTask ? "Continue current draft" : "Continue draft stack"}
               </Link>
             )}
             {focusBlock ? (
               <Link
                 href={`/roadmap#block-${focusBlock.id}`}
-                className={buttonVariants({ size: "lg", variant: "outline" })}
+                className={cn(
+                  buttonVariants({ size: "lg", variant: "outline" }),
+                  "sm:w-auto",
+                )}
               >
                 Open roadmap context
               </Link>

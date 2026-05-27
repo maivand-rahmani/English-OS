@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ElementType } from "react";
 import { Bell, Shield, SlidersHorizontal, Target, UserRound } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -33,7 +34,7 @@ export function SettingsOverview() {
     useAppearancePreferences();
 
   const reduced = useReducedMotion();
-  const Wrapper = (reduced ? "section" : motion.section) as any;
+  const Wrapper: ElementType = reduced ? "section" : motion.section;
 
   return (
     <Wrapper
@@ -46,71 +47,42 @@ export function SettingsOverview() {
             transition: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
           })}
     >
-      <div className="grid gap-[var(--layout-gap)] xl:grid-cols-[minmax(0,1.2fr)_20rem]">
-        <DashboardCard tone="cream" className="p-6 sm:p-7">
-          <SectionEyebrow icon={SlidersHorizontal}>Settings studio</SectionEyebrow>
-          <h2 className="mt-5 max-w-3xl text-3xl font-semibold tracking-tight text-foreground sm:text-[2.6rem]">
-            Shape the product around your study rhythm.
-          </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-            Keep appearance, profile, goals, and account controls in one calm
-            settings workspace so the product stays personal and easy to return to.
-          </p>
+      <DashboardCard tone="cream" className="p-6 sm:p-7">
+        <SectionEyebrow icon={SlidersHorizontal}>Settings studio</SectionEyebrow>
+        <h2 className="mt-5 max-w-3xl text-3xl font-semibold tracking-tight text-foreground sm:text-[2.6rem]">
+          Shape the product around your study rhythm.
+        </h2>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+          Keep appearance, profile, goals, and account controls in one calm
+          settings workspace so the product stays personal and easy to return to.
+        </p>
 
-          <div className="mt-5 flex flex-wrap gap-2">
-            <SmallTag>{capitalize(preferences.theme)} theme</SmallTag>
-            <SmallTag>{capitalize(preferences.textSize)} text</SmallTag>
-            <SmallTag>{capitalize(preferences.density)} density</SmallTag>
-            <SmallTag>{capitalize(preferences.motion)} motion</SmallTag>
-          </div>
+        <div className="mt-5 flex flex-wrap gap-2">
+          <SmallTag>{capitalize(preferences.theme)} theme</SmallTag>
+          <SmallTag>{capitalize(preferences.textSize)} text</SmallTag>
+          <SmallTag>{capitalize(preferences.density)} density</SmallTag>
+          <SmallTag>{capitalize(preferences.motion)} motion</SmallTag>
+        </div>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
-              onClick={() => resetPreferences()}
-              className={buttonVariants({ size: "lg" })}
-            >
-              Reset appearance
-            </button>
-            <Link
-              href="/dashboard"
-              className={buttonVariants({ size: "lg", variant: "outline" })}
-            >
-              Preview dashboard
-            </Link>
-          </div>
-        </DashboardCard>
-
-        <DashboardCard tone="green" className="p-5">
-          <SectionEyebrow icon={UserRound}>Applied now</SectionEyebrow>
-          <div className="mt-5 grid gap-3">
-            <InsetPanel className="p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Theme
-              </p>
-              <p className="mt-2 text-sm font-semibold text-foreground">
-                {capitalize(preferences.theme)}
-              </p>
-            </InsetPanel>
-            <InsetPanel tone="cream" className="p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Text size
-              </p>
-              <p className="mt-2 text-sm font-semibold text-foreground">
-                {capitalize(preferences.textSize)}
-              </p>
-            </InsetPanel>
-            <InsetPanel tone="green" className="p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                Density and motion
-              </p>
-              <p className="mt-2 text-sm font-semibold text-foreground">
-                {capitalize(preferences.density)} / {capitalize(preferences.motion)}
-              </p>
-            </InsetPanel>
-          </div>
-        </DashboardCard>
-      </div>
+        <div className="mobile-stacked-actions mt-8">
+          <button
+            type="button"
+            onClick={() => resetPreferences()}
+            className={cn(buttonVariants({ size: "lg" }), "sm:w-auto")}
+          >
+            Reset appearance
+          </button>
+          <Link
+            href="/dashboard"
+            className={cn(
+              buttonVariants({ size: "lg", variant: "outline" }),
+              "sm:w-auto",
+            )}
+          >
+            Preview dashboard
+          </Link>
+        </div>
+      </DashboardCard>
 
       <div className="grid gap-[var(--layout-gap)] xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
         <DashboardCard tone="default" className="p-5 sm:p-6">
@@ -144,6 +116,36 @@ export function SettingsOverview() {
         </DashboardCard>
 
         <div className="space-y-[var(--layout-gap)]">
+          <DashboardCard tone="green" className="p-5">
+            <SectionEyebrow icon={UserRound}>Applied now</SectionEyebrow>
+            <div className="mt-5 grid gap-3">
+              <InsetPanel className="p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Theme
+                </p>
+                <p className="mt-2 text-sm font-semibold text-foreground">
+                  {capitalize(preferences.theme)}
+                </p>
+              </InsetPanel>
+              <InsetPanel tone="cream" className="p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Text size
+                </p>
+                <p className="mt-2 text-sm font-semibold text-foreground">
+                  {capitalize(preferences.textSize)}
+                </p>
+              </InsetPanel>
+              <InsetPanel tone="green" className="p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Density and motion
+                </p>
+                <p className="mt-2 text-sm font-semibold text-foreground">
+                  {capitalize(preferences.density)} / {capitalize(preferences.motion)}
+                </p>
+              </InsetPanel>
+            </div>
+          </DashboardCard>
+
           <DashboardCard tone="lavender" className="p-5">
             <SectionEyebrow icon={Target}>Learner setup</SectionEyebrow>
             <div className="mt-5 grid gap-4">

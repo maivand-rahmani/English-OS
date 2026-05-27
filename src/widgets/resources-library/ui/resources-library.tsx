@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import type { ElementType } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowUpRight,
@@ -25,17 +27,34 @@ import {
   SmallTag,
   SummaryBadge,
 } from "@/shared/ui/surfaces";
+import { MobileSheet } from "@/shared/ui/mobile-sheet";
 import { cn } from "@/shared/lib/utils";
 import type { ProgressEntry } from "@/shared/types";
 
 import { useResourcesLibrary } from "../model/use-resources-library";
 import type { RoadmapExplorerProps } from "../../roadmap-explorer/model/roadmap-explorer-types";
 
+type LibraryResourceCard = ReturnType<typeof useResourcesLibrary>["resources"][number];
+
 export function ResourcesLibrary({ content }: RoadmapExplorerProps) {
   const library = useResourcesLibrary(content);
+  const [isFiltersSheetOpen, setIsFiltersSheetOpen] = useState(false);
 
   const reduced = useReducedMotion();
-  const Wrapper = (reduced ? "section" : motion.section) as any;
+  const Wrapper: ElementType = reduced ? "section" : motion.section;
+  const activeFilterCount = getActiveFilterCount([
+    library.skillFilter,
+    library.formatFilter,
+    library.useCaseFilter,
+    library.stateFilter,
+  ]);
+
+  function resetFilters() {
+    library.setSkillFilter("all");
+    library.setFormatFilter("all");
+    library.setUseCaseFilter("all");
+    library.setStateFilter("all");
+  }
 
   if (library.resources.length === 0) {
     return (
@@ -114,7 +133,7 @@ export function ResourcesLibrary({ content }: RoadmapExplorerProps) {
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   {library.activeResource.note ?? library.activeResource.whyRecommended}
                 </p>
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mobile-stacked-actions mt-4">
                   <a
                     className={buttonVariants({ size: "sm" })}
                     href={library.activeResource.url}
@@ -172,7 +191,70 @@ export function ResourcesLibrary({ content }: RoadmapExplorerProps) {
         </DashboardCard>
       </div>
 
-      <DashboardCard className="p-5 sm:p-6">
+      <div className="lg:hidden">
+        <DashboardCard className="p-4 sm:p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <SectionEyebrow icon={Filter}>Filters</SectionEyebrow>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                {activeFilterCount === 0
+                  ? "All curated resources are visible."
+                  : `${activeFilterCount} filter groups are active right now.`}
+              </p>
+            </div>
+            <Button variant="outline" onClick={() => setIsFiltersSheetOpen(true)}>
+              Filters
+            </Button>
+          </div>
+        </DashboardCard>
+
+        <MobileSheet
+          description="Tune skill, format, use case, and progress state without leaving the library."
+          onOpenChange={setIsFiltersSheetOpen}
+          open={isFiltersSheetOpen}
+          title="Resource filters"
+        >
+          <FilterRow
+            active={library.skillFilter}
+            label="Skill"
+            onChange={library.setSkillFilter}
+            options={["all", ...library.skillOptions]}
+          />
+          <FilterRow
+            active={library.formatFilter}
+            label="Format"
+            onChange={library.setFormatFilter}
+            options={["all", ...library.formatOptions]}
+          />
+          <FilterRow
+            active={library.useCaseFilter}
+            label="Use case"
+            onChange={library.setUseCaseFilter}
+            options={["all", ...library.useCaseOptions]}
+          />
+          <FilterRow
+            active={library.stateFilter}
+            label="State"
+            onChange={library.setStateFilter}
+            options={[
+              "all",
+              "not_started",
+              "in_progress",
+              "completed",
+              "needs_review",
+              "skipped_for_now",
+            ]}
+          />
+          <div className="mobile-stacked-actions pt-2">
+            <Button onClick={() => setIsFiltersSheetOpen(false)}>Show results</Button>
+            <Button variant="outline" onClick={resetFilters}>
+              Reset filters
+            </Button>
+          </div>
+        </MobileSheet>
+      </div>
+
+      <DashboardCard className="hidden p-5 sm:p-6 lg:block">
         <div className="flex items-center gap-3">
           <SectionEyebrow icon={Filter}>Filters</SectionEyebrow>
         </div>
@@ -223,12 +305,7 @@ export function ResourcesLibrary({ content }: RoadmapExplorerProps) {
             <Button
               size="sm"
               variant="secondary"
-              onClick={() => {
-                library.setSkillFilter("all");
-                library.setFormatFilter("all");
-                library.setUseCaseFilter("all");
-                library.setStateFilter("all");
-              }}
+              onClick={resetFilters}
             >
               Reset filters
             </Button>
@@ -252,44 +329,53 @@ export function ResourcesLibrary({ content }: RoadmapExplorerProps) {
                 {resource.isFeatured ? <SmallTag>Featured</SmallTag> : null}
                 <SmallTag>{resource.role}</SmallTag>
                 <SmallTag>{capitalize(resource.resourceTypeLabel)}</SmallTag>
-                <SmallTag>{capitalize(resource.resourceFormatLabel)}</SmallTag>
                 <StateTag state={getEntryState(library.progressById.get(resource.id))} />
               </div>
 
-              <div className="mt-4 flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {resource.sourceName}
-                  </p>
-                  <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground">
-                    {resource.title}
-                  </h2>
-                </div>
+              <div className="mt-4">
+                <p className="text-sm font-medium text-muted-foreground">
+                  {resource.sourceName} / {resource.primaryUseCaseLabel}
+                </p>
+                <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground">
+                  {resource.title}
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  {resource.note ?? resource.whyRecommended}
+                </p>
+              </div>
 
+              <div className="mt-4 flex flex-wrap gap-2">
+                <SmallTag>{capitalize(resource.resourceFormatLabel)}</SmallTag>
+                {getPrimarySkillLabel(resource) ? (
+                  <SmallTag>{getPrimarySkillLabel(resource)}</SmallTag>
+                ) : null}
+                <SmallTag>{formatMinutes(resource.estimatedMinutes)}</SmallTag>
+              </div>
+
+              <div className="mt-5">
                 <a
-                  className={buttonVariants({ size: "icon-sm", variant: "outline" })}
+                  className={cn(
+                    buttonVariants(),
+                    "w-full rounded-full justify-center",
+                  )}
                   href={resource.url}
                   rel="noreferrer"
                   target="_blank"
                 >
                   <ArrowUpRight className="size-4" />
+                  Visit resource
                 </a>
               </div>
 
-              <p className="mt-4 text-sm leading-7 text-muted-foreground">
-                {resource.description}
-              </p>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                <SmallTag>{resource.primaryUseCaseLabel}</SmallTag>
-                <SmallTag>{resource.accessTypeLabel}</SmallTag>
-                <SmallTag>{resource.difficultyLabel}</SmallTag>
-                {resource.cefrLabel ? <SmallTag>{resource.cefrLabel}</SmallTag> : null}
-                <SmallTag>{formatMinutes(resource.estimatedMinutes)}</SmallTag>
-              </div>
-
               <div className="mt-5 grid gap-4">
+                {resource.description ? (
+                  <Callout title="Overview" body={resource.description} />
+                ) : null}
                 <Callout title="Why recommended" body={resource.whyRecommended} />
+                <Callout
+                  title="Source context"
+                  body={getSourceContext(resource)}
+                />
                 <Callout title="Best use case" body={resource.bestUseCase} />
                 <Callout
                   title="What to do after"
@@ -298,6 +384,12 @@ export function ResourcesLibrary({ content }: RoadmapExplorerProps) {
                     "Keep the material active by reusing it in a short writing or speaking task."
                   }
                 />
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                <SmallTag>{resource.accessTypeLabel}</SmallTag>
+                <SmallTag>{resource.difficultyLabel}</SmallTag>
+                {resource.cefrLabel ? <SmallTag>{resource.cefrLabel}</SmallTag> : null}
               </div>
 
               <InsetPanel tone="cream" className="mt-5 p-4">
@@ -331,16 +423,7 @@ export function ResourcesLibrary({ content }: RoadmapExplorerProps) {
                 </div>
               </InsetPanel>
 
-              <div className="mt-5 flex flex-wrap gap-2">
-                <a
-                  className={buttonVariants({ size: "sm" })}
-                  href={resource.url}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  <ArrowUpRight className="size-4" />
-                  Visit resource
-                </a>
+              <div className="mobile-stacked-actions mt-5">
                 <Button
                   disabled={library.busyAction?.startsWith(`resource:${resource.id}:`) ?? false}
                   size="sm"
@@ -444,12 +527,12 @@ function FilterRow({
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
         {label}
       </p>
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="mobile-chip-row mt-3 lg:flex-wrap lg:overflow-visible lg:pb-0">
         {options.map((option) => (
           <button
             key={`${label}:${option}`}
             className={cn(
-              "rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]",
+              "mobile-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]",
               active === option
                 ? "border-transparent bg-surface-dark-control text-primary-foreground shadow-control"
                 : "border-surface-stroke bg-surface-panel-muted text-muted-foreground hover:bg-surface-module-cream",
@@ -500,6 +583,29 @@ function StateTag({ state }: { state: string }) {
 
 function getEntryState(entry: ProgressEntry | undefined) {
   return entry?.state ?? "not_started";
+}
+
+function getActiveFilterCount(values: string[]) {
+  return values.filter((value) => value !== "all").length;
+}
+
+function getPrimarySkillLabel(resource: LibraryResourceCard) {
+  const primarySkill =
+    resource.skills.find((skill) => skill.emphasis === "primary") ??
+    resource.skills[0];
+
+  return primarySkill?.title;
+}
+
+function getSourceContext(resource: LibraryResourceCard) {
+  const context = [
+    resource.sourceName,
+    resource.accessTypeLabel,
+    resource.difficultyLabel,
+    resource.cefrLabel,
+  ].filter(Boolean);
+
+  return context.join(" / ");
 }
 
 function humanizeChip(value: string) {

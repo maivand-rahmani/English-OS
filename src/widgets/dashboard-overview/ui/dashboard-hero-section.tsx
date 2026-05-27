@@ -49,49 +49,46 @@ export function DashboardHeroSection({
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          {focusBlock ? (
+        {focusBlock ? (
+          <div className="mt-8 space-y-3">
             <button
               type="button"
               onClick={() => onStartBlock(focusBlock, focusBlockState)}
               disabled={busyAction === `block:${focusBlock.id}:start`}
               className={cn(
                 buttonVariants({ size: "lg" }),
-                "justify-center rounded-full px-5",
+                "w-full justify-center rounded-full px-5 sm:w-auto",
               )}
             >
               {focusBlockState === "in_progress" ? "Resume block" : "Start block"}
             </button>
-          ) : null}
 
-          {focusBlock ? (
-            <button
-              type="button"
-              onClick={() => onCompleteBlock(focusBlock)}
-              disabled={busyAction === `block:${focusBlock.id}:complete`}
-              className={cn(
-                buttonVariants({ size: "lg", variant: "outline" }),
-                "justify-center rounded-full border-white/70 bg-white/80 px-5",
-              )}
-            >
-              Mark block complete
-            </button>
-          ) : null}
-
-          {focusBlock ? (
-            <button
-              type="button"
-              onClick={() => onMarkBlockForReview(focusBlock)}
-              disabled={busyAction === `block:${focusBlock.id}:review`}
-              className={cn(
-                buttonVariants({ size: "lg", variant: "ghost" }),
-                "justify-center rounded-full border border-transparent px-5 text-foreground hover:bg-black/5",
-              )}
-            >
-              Mark for review
-            </button>
-          ) : null}
-        </div>
+            <div className="mobile-stacked-actions">
+              <button
+                type="button"
+                onClick={() => onCompleteBlock(focusBlock)}
+                disabled={busyAction === `block:${focusBlock.id}:complete`}
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "rounded-full border-white/70 bg-white/80",
+                )}
+              >
+                Mark block complete
+              </button>
+              <button
+                type="button"
+                onClick={() => onMarkBlockForReview(focusBlock)}
+                disabled={busyAction === `block:${focusBlock.id}:review`}
+                className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  "rounded-full border border-transparent text-foreground hover:bg-black/5",
+                )}
+              >
+                Mark for review
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
     </DashboardCard>
   );

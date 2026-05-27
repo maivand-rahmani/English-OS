@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ElementType } from "react";
 import { History, Lightbulb, MessageCircle, Mic } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -53,7 +54,7 @@ export function SpeakingOverview({ content }: SpeakingOverviewProps) {
     .slice(0, 3);
 
   const reduced = useReducedMotion();
-  const Wrapper = (reduced ? "section" : motion.section) as any;
+  const Wrapper: ElementType = reduced ? "section" : motion.section;
 
   return (
     <Wrapper
@@ -66,62 +67,46 @@ export function SpeakingOverview({ content }: SpeakingOverviewProps) {
             transition: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
           })}
     >
-      <div className="grid gap-[var(--layout-gap)] xl:grid-cols-[minmax(0,1.2fr)_20rem]">
-        <DashboardCard tone="blue" className="p-6 sm:p-7">
-          <SectionEyebrow icon={Mic}>Speaking studio</SectionEyebrow>
-          <h2 className="mt-5 max-w-3xl text-3xl font-semibold tracking-tight text-foreground sm:text-[2.6rem]">
-            {nextPrompt?.title ?? "Keep spoken English active and easy to return to."}
-          </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-            {nextPrompt?.summary ??
-              "Use this space to keep prompts, short returns, reflections, and speaking continuity in one calm place."}
-          </p>
+      <DashboardCard tone="blue" className="p-6 sm:p-7">
+        <SectionEyebrow icon={Mic}>Speaking studio</SectionEyebrow>
+        <h2 className="mt-5 max-w-3xl text-3xl font-semibold tracking-tight text-foreground sm:text-[2.6rem]">
+          {nextPrompt?.title ?? "Keep spoken English active and easy to return to."}
+        </h2>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+          {nextPrompt?.summary ??
+            "Use this space to keep prompts, short returns, reflections, and speaking continuity in one calm place."}
+        </p>
 
-          <div className="mt-5 flex flex-wrap gap-2">
-            <SmallTag>{focusBlock?.stageTitle ?? content.templateTitle}</SmallTag>
-            {nextPrompt?.estimatedMinutes ? (
-              <SmallTag>{nextPrompt.estimatedMinutes} min speaking</SmallTag>
-            ) : null}
-            {nextPrompt?.targetDurationSeconds ? (
-              <SmallTag>{Math.round(nextPrompt.targetDurationSeconds / 60)} min target</SmallTag>
-            ) : null}
-          </div>
+        <div className="mt-5 flex flex-wrap gap-2">
+          <SmallTag>{focusBlock?.stageTitle ?? content.templateTitle}</SmallTag>
+          {nextPrompt?.estimatedMinutes ? (
+            <SmallTag>{nextPrompt.estimatedMinutes} min speaking</SmallTag>
+          ) : null}
+          {nextPrompt?.targetDurationSeconds ? (
+            <SmallTag>{Math.round(nextPrompt.targetDurationSeconds / 60)} min target</SmallTag>
+          ) : null}
+        </div>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="#speaking-focus" className={buttonVariants({ size: "lg" })}>
-              Open active prompt
+        <div className="mobile-stacked-actions mt-8">
+          <Link
+            href="#speaking-focus"
+            className={cn(buttonVariants({ size: "lg" }), "sm:w-auto")}
+          >
+            Open active prompt
+          </Link>
+          {focusBlock ? (
+            <Link
+              href={`/roadmap#block-${focusBlock.id}`}
+              className={cn(
+                buttonVariants({ size: "lg", variant: "outline" }),
+                "sm:w-auto",
+              )}
+            >
+              Open roadmap context
             </Link>
-            {focusBlock ? (
-              <Link
-                href={`/roadmap#block-${focusBlock.id}`}
-                className={buttonVariants({ size: "lg", variant: "outline" })}
-              >
-                Open roadmap context
-              </Link>
-            ) : null}
-          </div>
-        </DashboardCard>
-
-        <DashboardCard tone="green" className="p-5">
-          <SectionEyebrow icon={History}>Speaking rhythm</SectionEyebrow>
-          <div className="mt-5 space-y-4">
-            <MetricTile
-              icon={Mic}
-              label="Current pace"
-              tone="blue"
-              value={getSpeakingStatus(events)}
-              detail="A simple view of whether spoken practice is active, quiet, or ready to restart."
-            />
-            <MetricTile
-              icon={History}
-              label="Recent return"
-              tone="cream"
-              value={lastSpeakingAt ? formatRelativeTimestamp(lastSpeakingAt) : "Not started"}
-              detail="The last time a speaking session was recorded."
-            />
-          </div>
-        </DashboardCard>
-      </div>
+          ) : null}
+        </div>
+      </DashboardCard>
 
       <div className="grid gap-[var(--layout-gap)] xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
         <DashboardCard tone="default" className="p-5 sm:p-6" id="speaking-focus">
@@ -158,23 +143,24 @@ export function SpeakingOverview({ content }: SpeakingOverviewProps) {
         </DashboardCard>
 
         <div className="space-y-[var(--layout-gap)]">
-          <DashboardCard tone="cream" className="p-5">
-            <SectionEyebrow icon={Lightbulb}>Warm-up and reflection</SectionEyebrow>
-            <QuickActionCard
-              icon={Lightbulb}
-              eyebrow="Speaking flow"
-              title="Keep the session simple"
-              detail="Think for a moment, answer once clearly, then add one short follow-up thought instead of chasing a perfect performance."
-              footer="Short, repeatable speaking returns beat long rare sessions"
-              tone="cream"
-            >
-              <Link
-                href="/dashboard"
-                className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-              >
-                Return to daily plan
-              </Link>
-            </QuickActionCard>
+          <DashboardCard tone="green" className="p-5">
+            <SectionEyebrow icon={History}>Speaking rhythm</SectionEyebrow>
+            <div className="mt-5 space-y-4">
+              <MetricTile
+                icon={Mic}
+                label="Current pace"
+                tone="blue"
+                value={getSpeakingStatus(events)}
+                detail="A simple view of whether spoken practice is active, quiet, or ready to restart."
+              />
+              <MetricTile
+                icon={History}
+                label="Recent return"
+                tone="cream"
+                value={lastSpeakingAt ? formatRelativeTimestamp(lastSpeakingAt) : "Not started"}
+                detail="The last time a speaking session was recorded."
+              />
+            </div>
           </DashboardCard>
 
           <DashboardCard tone="lavender" className="p-5">
@@ -202,6 +188,25 @@ export function SpeakingOverview({ content }: SpeakingOverviewProps) {
                 </InsetPanel>
               )}
             </div>
+          </DashboardCard>
+
+          <DashboardCard tone="cream" className="p-5">
+            <SectionEyebrow icon={Lightbulb}>Warm-up and reflection</SectionEyebrow>
+            <QuickActionCard
+              icon={Lightbulb}
+              eyebrow="Speaking flow"
+              title="Keep the session simple"
+              detail="Think for a moment, answer once clearly, then add one short follow-up thought instead of chasing a perfect performance."
+              footer="Short, repeatable speaking returns beat long rare sessions"
+              tone="cream"
+            >
+              <Link
+                href="/dashboard"
+                className={cn(buttonVariants({ variant: "outline" }), "w-full")}
+              >
+                Return to daily plan
+              </Link>
+            </QuickActionCard>
           </DashboardCard>
         </div>
       </div>

@@ -46,7 +46,7 @@ export default async function HomePage() {
 
           <div className="rounded-[1.6rem] border border-border/80 bg-white/75 p-5 shadow-sm backdrop-blur dark:bg-black/20">
             <p className="text-sm font-semibold text-foreground">
-              What's inside
+              What&apos;s inside
             </p>
             <ul className="mt-4 space-y-3">
               {appNavigation.map((item) => (

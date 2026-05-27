@@ -1,21 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
 export function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      const mediaQuery = window.matchMedia(REDUCED_MOTION_QUERY);
+      const handleChange = () => onStoreChange();
+      const observer = new MutationObserver(handleChange);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const dataMotion = document.documentElement.getAttribute("data-motion");
+      mediaQuery.addEventListener("change", handleChange);
+      observer.observe(document.documentElement, {
+        attributeFilter: ["data-motion"],
+        attributes: true,
+      });
 
-    setReduced(mediaQuery.matches || dataMotion === "reduced");
-
-    const handler = (e: MediaQueryListEvent) =>
-      setReduced(e.matches || dataMotion === "reduced");
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, []);
-
-  return reduced;
+      return () => {
+        mediaQuery.removeEventListener("change", handleChange);
+        observer.disconnect();
+      };
+    },
+    () =>
+      window.matchMedia(REDUCED_MOTION_QUERY).matches ||
+      document.documentElement.getAttribute("data-motion") === "reduced",
+    () => false,
+  );
 }

@@ -1,6 +1,7 @@
 export { Button, buttonVariants } from "./button"
 export { Input, SearchInput } from "./input"
 export type { InputProps, SearchInputProps } from "./input"
+export { MobileSheet } from "./mobile-sheet"
 export {
   WorkspaceFrame,
   InsetPanel,

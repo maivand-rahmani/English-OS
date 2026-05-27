@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ElementType } from "react";
 import { motion } from "framer-motion";
 import {
   BookOpenText,
@@ -38,7 +39,7 @@ export function RoadmapExplorer(props: RoadmapExplorerProps) {
   const roadmap = useRoadmapExplorer(props);
 
   const reduced = useReducedMotion();
-  const Wrapper = (reduced ? "section" : motion.section) as any;
+  const Wrapper: ElementType = reduced ? "section" : motion.section;
 
   if (roadmap.allBlocks.length === 0) {
     return (
@@ -116,7 +117,7 @@ export function RoadmapExplorer(props: RoadmapExplorerProps) {
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   {roadmap.nextBlock.summary}
                 </p>
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mobile-stacked-actions mt-4">
                   <Link
                     href={`#block-${roadmap.nextBlock.id}`}
                     className={buttonVariants({ size: "sm" })}
@@ -410,11 +411,11 @@ function RoadmapBlockCard({
         </InsetPanel>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2">
-        <Button disabled={isBusy} size="sm" onClick={() => void onStart()}>
-          <Play className="size-4" />
-          {state === "in_progress" ? "Resume block" : "Start block"}
-        </Button>
+              <div className="mobile-stacked-actions mt-5">
+                <Button disabled={isBusy} size="sm" onClick={() => void onStart()}>
+                  <Play className="size-4" />
+                  {state === "in_progress" ? "Resume block" : "Start block"}
+                </Button>
         <Button
           disabled={isBusy}
           size="sm"
