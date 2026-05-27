@@ -1,32 +1,15 @@
-import { Mic, PenSquare, RotateCcw, Sparkles, Target } from "lucide-react";
+import type { DashboardBlock } from "@/entities/dashboard";
 
-import type { DashboardBlock, DashboardContentState } from "@/entities/dashboard";
 import { cn } from "@/shared/lib/utils";
 import type { BlockState } from "@/shared/types";
 import { buttonVariants } from "@/shared/ui/button";
 
-import type { OutputFocus, ReviewPreviewItem } from "../model/dashboard-overview-types";
-import {
-  formatMinutes,
-  getSkillLine,
-  humanizeState,
-} from "../model/dashboard-overview-formatters";
-import {
-  DashboardCard,
-  InfoTile,
-  PlanRow,
-  SectionEyebrow,
-  SummaryBadge,
-} from "./dashboard-surfaces";
+import { formatMinutes, getSkillLine } from "../model/dashboard-overview-formatters";
+import { DashboardCard, InfoTile } from "@/shared/ui/surfaces";
 
 type DashboardHeroSectionProps = {
-  content: DashboardContentState;
   focusBlock: DashboardBlock | null;
   focusBlockState: BlockState;
-  outputFocus: OutputFocus | null;
-  planHeadline: string;
-  reviewHeadline: string;
-  reviewPreviewItems: ReviewPreviewItem[];
   totalPlanMinutes: number;
   busyAction: string | null;
   onCompleteBlock: (block: DashboardBlock) => void;
@@ -35,13 +18,8 @@ type DashboardHeroSectionProps = {
 };
 
 export function DashboardHeroSection({
-  content,
   focusBlock,
   focusBlockState,
-  outputFocus,
-  planHeadline,
-  reviewHeadline,
-  reviewPreviewItems,
   totalPlanMinutes,
   busyAction,
   onCompleteBlock,
@@ -54,73 +32,21 @@ export function DashboardHeroSection({
       <div className="relative">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="max-w-2xl">
-            <SectionEyebrow icon={Sparkles}>Today plan</SectionEyebrow>
-            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               {focusBlock?.title ?? "Your next block will appear here."}
             </h2>
             <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
-              {planHeadline}
+              {focusBlock?.summary ?? "Choose a block to continue."}
             </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 xl:w-[20rem] xl:grid-cols-1">
             <InfoTile
-              label="Current stage"
-              value={focusBlock?.stageTitle ?? content.templateTitle}
+              label="Focus"
+              value={focusBlock ? getSkillLine(focusBlock.skills) : "No focus yet"}
             />
-            <InfoTile label="Estimated time" value={formatMinutes(totalPlanMinutes)} />
+            <InfoTile label="Time" value={formatMinutes(totalPlanMinutes)} />
           </div>
-        </div>
-
-        <div className="mt-6 grid gap-3 lg:grid-cols-4">
-          <SummaryBadge
-            label="Level"
-            value={content.learnerLevelLabel}
-            accent="neutral"
-          />
-          <SummaryBadge label="Goal" value={content.goalLabel} accent="rose" />
-          <SummaryBadge
-            label="Current focus"
-            value={focusBlock ? getSkillLine(focusBlock.skills) : "No focus yet"}
-            accent="blue"
-          />
-          <SummaryBadge
-            label="Roadmap state"
-            value={humanizeState(focusBlockState)}
-            accent="neutral"
-          />
-        </div>
-
-        <div className="mt-8 grid gap-3">
-          <PlanRow
-            icon={Target}
-            title="Main roadmap action"
-            headline={focusBlock?.summary ?? "Pick up the next roadmap block."}
-            meta={`${focusBlock?.stageTypeLabel ?? "roadmap"} / ${formatMinutes(
-              focusBlock?.estimatedMinutes,
-            )}`}
-            state={humanizeState(focusBlockState)}
-          />
-          <PlanRow
-            icon={RotateCcw}
-            title="Review focus"
-            headline={reviewPreviewItems[0]?.label ?? "No urgent review has surfaced yet."}
-            meta={
-              reviewPreviewItems[0]?.context ??
-              "Finish a block or flag friction to start shaping review."
-            }
-            state={reviewHeadline}
-          />
-          <PlanRow
-            icon={outputFocus?.kind === "speaking" ? Mic : PenSquare}
-            title="Output action"
-            headline={outputFocus?.title ?? "Writing and speaking prompts will appear here."}
-            meta={
-              outputFocus?.detail ??
-              "Use one short output action to turn study into active English."
-            }
-            state={outputFocus?.status ?? "queued"}
-          />
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">

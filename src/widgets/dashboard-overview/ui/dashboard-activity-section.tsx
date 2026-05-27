@@ -1,7 +1,7 @@
 import { Activity, ArrowRight } from "lucide-react";
 
 import type { ActivityItem } from "../model/dashboard-overview-types";
-import { DashboardCard, SectionEyebrow } from "./dashboard-surfaces";
+import { DashboardCard, SectionEyebrow } from "@/shared/ui/surfaces";
 
 type DashboardActivitySectionProps = {
   blockProgressCount: number;
@@ -24,7 +24,7 @@ export function DashboardActivitySection({
           recentActivity.map((item) => (
             <div
               key={item.id}
-              className="rounded-[1.2rem] border border-white/70 bg-[var(--surface-2)] px-4 py-3"
+              className="rounded-[1.2rem] border border-white/70 bg-surface-2 px-4 py-3"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -45,7 +45,7 @@ export function DashboardActivitySection({
         )}
       </div>
 
-      <div className="mt-4 flex items-center justify-between rounded-[1.2rem] border border-white/70 bg-[var(--surface-2)] px-4 py-3">
+      <div className="mt-4 flex items-center justify-between rounded-[1.2rem] border border-white/70 bg-surface-2 px-4 py-3">
         <div>
           <p className="text-sm font-medium text-foreground">Live local state</p>
           <p className="mt-1 text-sm text-muted-foreground">

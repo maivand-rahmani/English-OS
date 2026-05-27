@@ -3,7 +3,7 @@ import { Sparkles, Target } from "lucide-react";
 
 import { buttonVariants } from "@/shared/ui/button";
 
-import { DashboardCard, SectionEyebrow } from "./dashboard-surfaces";
+import { DashboardCard, SectionEyebrow } from "@/shared/ui/surfaces";
 
 export function DashboardEmptyState() {
   return (
@@ -42,7 +42,7 @@ export function DashboardEmptyState() {
           ].map((item) => (
             <li
               key={item}
-              className="rounded-[1.2rem] border border-white/70 bg-[var(--surface-2)] px-4 py-3 text-sm text-muted-foreground"
+              className="rounded-[1.2rem] border border-white/70 bg-surface-2 px-4 py-3 text-sm text-muted-foreground"
             >
               {item}
             </li>

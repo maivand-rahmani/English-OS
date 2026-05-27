@@ -2,7 +2,7 @@ import { Activity, Clock3, TrendingDown, TrendingUp } from "lucide-react";
 
 import type { DashboardContentState } from "@/entities/dashboard";
 
-import { DashboardCard, MetricTile, SectionEyebrow } from "./dashboard-surfaces";
+import { DashboardCard, MetricTile, SectionEyebrow } from "@/shared/ui/surfaces";
 
 type DashboardProgressSectionProps = {
   activeDaysThisWeek: number;
@@ -33,7 +33,7 @@ export function DashboardProgressSection({
             {completedBlocks} of {content.blockCount} roadmap blocks completed
           </p>
         </div>
-        <div className="rounded-[1.2rem] border border-white/70 bg-[var(--surface-2)] px-4 py-3">
+        <div className="rounded-[1.2rem] border border-white/70 bg-surface-2 px-4 py-3">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             Consistency
           </p>
@@ -50,24 +50,28 @@ export function DashboardProgressSection({
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <MetricTile
+          tone="default"
           icon={Activity}
           label="Active days this week"
           value={`${activeDaysThisWeek}/7`}
           detail="Counted from your local learning events."
         />
         <MetricTile
+          tone="default"
           icon={Clock3}
           label="Curated path size"
           value={`${content.stageCount} stages`}
           detail={`${content.blockCount} blocks / ${content.resourceCount} linked resources`}
         />
         <MetricTile
+          tone="default"
           icon={TrendingUp}
           label="Strongest current area"
           value={strongestSkill ?? "Still emerging"}
           detail="Weighted more heavily toward completed and active blocks."
         />
         <MetricTile
+          tone="default"
           icon={TrendingDown}
           label="Current friction"
           value={weakestSkill ?? "No urgent weak area"}

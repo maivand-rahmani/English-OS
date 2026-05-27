@@ -10,7 +10,7 @@ import {
   formatMinutes,
   getResourceReason,
 } from "../model/dashboard-overview-formatters";
-import { DashboardCard, SectionEyebrow, SmallTag } from "./dashboard-surfaces";
+import { DashboardCard, SectionEyebrow, SmallTag } from "@/shared/ui/surfaces";
 
 type DashboardFocusSidebarProps = {
   busyAction: string | null;
@@ -56,7 +56,7 @@ export function DashboardFocusSidebar({
               {getResourceReason(focusResource, focusResourceEntry, focusBlockState)}
             </p>
 
-            <div className="mt-4 rounded-[1.25rem] border border-white/70 bg-[var(--surface-2)] p-4">
+            <div className="mt-4 rounded-[1.25rem] border border-white/70 bg-surface-2 p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Supports
               </p>
@@ -133,7 +133,7 @@ export function DashboardFocusSidebar({
             reviewPreviewItems.slice(0, 3).map((item) => (
               <div
                 key={item.id}
-                className="rounded-[1.2rem] border border-white/70 bg-[var(--surface-2)] px-4 py-3"
+                className="rounded-[1.2rem] border border-white/70 bg-surface-2 px-4 py-3"
               >
                 <p className="text-sm font-medium text-foreground">{item.label}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{item.context}</p>

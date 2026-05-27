@@ -15,7 +15,7 @@ import {
   getSpeakingStatus,
   getWritingStatus,
 } from "../model/dashboard-overview-formatters";
-import { DashboardCard, QuickActionCard, SectionEyebrow } from "./dashboard-surfaces";
+import { DashboardCard, QuickActionCard, SectionEyebrow } from "@/shared/ui/surfaces";
 
 type DashboardPracticeSectionProps = {
   busyAction: string | null;
