@@ -3,3 +3,5 @@ export { useLearningEvents } from "./use-learning-events";
 export type { EventInput } from "./use-learning-events";
 export { useLocalProgress } from "./use-local-progress";
 export { useDrafts } from "./use-drafts";
+export { useReducedMotion } from "./use-reduced-motion";
+export { useLearningContentProgress } from "./use-learning-content-progress"
