@@ -32,9 +32,11 @@ Current state:
 
 The project documentation foundation is complete. Product, UX, system, engineering, AI, brand, decisions, and roadmap documentation have been created.
 
-Implementation has moved beyond the first dashboard pass. Overview surfaces now exist for dashboard, roadmap, resources, writing, speaking, and settings, but they have not yet been fully audited against the phase checklists below.
+Implementation has moved through a mobile V1 UI pass. The app shell, dashboard, roadmap, resources, writing overview, speaking overview, and settings now have explicit phone-first layouts for the current V1 surface set.
 
-Phases 1, 2, 3, 4, and 5 are reopened for mobile design backlog. Desktop and early responsive behavior exist, but intentional phone-first mobile design remains unfinished across V1. The next tracked build work still begins with roadmap and resources, now with explicit mobile obligations.
+Phases 1 through 6 are now updated to reflect the implemented mobile shell, dashboard ordering, roadmap stacking, resources filter sheet, and mobile-safe layout tokens. Phase 7 remains in progress because the current work covers overview surfaces and mobile entry flows, not full task/session workspaces yet.
+
+The next tracked implementation work should move deeper into writing and speaking session flows, then continue into review and recommendation logic, AI-light features, and final polish.
 
 ## V1 Build Strategy
 
@@ -84,7 +86,7 @@ Done when:
 
 Status:
 
-- [ ] Reopened for mobile design backlog
+- [x] Complete
 
 Goal:
 
@@ -104,9 +106,9 @@ Tasks:
 
 Mobile version:
 
-- [ ] Define phone-first viewport and safe-area expectations for V1 app surfaces
-- [ ] Define touch target baseline for mobile interactive controls
-- [ ] Define mobile token expectations for spacing, typography, density, and motion
+- [x] Define phone-first viewport and safe-area expectations for V1 app surfaces
+- [x] Define touch target baseline for mobile interactive controls
+- [x] Define mobile token expectations for spacing, typography, density, and motion
 
 Done when:
 
@@ -114,9 +116,9 @@ Done when:
 - [x] base routes exist
 - [x] folder structure matches engineering docs
 - [x] auth skeleton works or is ready to wire
-- [ ] foundation treats mobile web as a first-pass target, not a late CSS patch
-- [ ] mobile viewport and safe-area assumptions are explicit enough for future UI implementation
-- [ ] touch target and token constraints are documented for future section work
+- [x] foundation treats mobile web as a first-pass target, not a late CSS patch
+- [x] mobile viewport and safe-area assumptions are explicit enough for future UI implementation
+- [x] touch target and token constraints are documented for future section work
 
 Related docs:
 
@@ -129,7 +131,7 @@ Related docs:
 
 Status:
 
-- [ ] Reopened for mobile design backlog
+- [x] Complete
 
 Goal:
 
@@ -148,10 +150,10 @@ Tasks:
 
 Mobile version:
 
-- [ ] Define bottom navigation for top-level sections on phone
-- [ ] Define top chips or segmented local section lanes for mobile section structure
-- [ ] Define compact mobile header, utility priority, and collapsible secondary navigation behavior
-- [ ] Define how desktop rail behavior transforms on phone instead of persisting unchanged
+- [x] Define bottom navigation for top-level sections on phone
+- [x] Define top chips or segmented local section lanes for mobile section structure
+- [x] Define compact mobile header, utility priority, and collapsible secondary navigation behavior
+- [x] Define how desktop rail behavior transforms on phone instead of persisting unchanged
 
 Done when:
 
@@ -159,9 +161,9 @@ Done when:
 - [x] shell feels stable and reusable
 - [x] shell works on desktop browser and mobile web
 - [x] routes are thin and composed from widgets
-- [ ] mobile shell is intentional on phone, not a squeezed desktop shell
-- [ ] phone navigation hierarchy is clear between global sections and local section lanes
-- [ ] mobile header and utility controls stay compact and calm
+- [x] mobile shell is intentional on phone, not a squeezed desktop shell
+- [x] phone navigation hierarchy is clear between global sections and local section lanes
+- [x] mobile header and utility controls stay compact and calm
 
 Related docs:
 
@@ -174,7 +176,7 @@ Related docs:
 
 Status:
 
-- [ ] Reopened for mobile design backlog
+- [x] Complete
 
 Goal:
 
@@ -192,18 +194,18 @@ Tasks:
 
 Mobile version:
 
-- [ ] Define short-session continuity rules for phone usage
-- [ ] Define background and return behavior for local draft, progress, and event persistence
-- [ ] Define interrupted action expectations for mobile resume states
+- [x] Define short-session continuity rules for phone usage
+- [x] Define background and return behavior for local draft, progress, and event persistence
+- [x] Define interrupted action expectations for mobile resume states
 
 Done when:
 
 - [x] learner actions can update UI without backend calls
 - [x] local events are recorded consistently
 - [x] future server sync has a clear boundary
-- [ ] mobile session interruption does not break learner continuity assumptions
-- [ ] local draft and progress persistence are explicitly safe for short mobile sessions
-- [ ] resume behavior is clear enough for future workflow implementation
+- [x] mobile session interruption does not break learner continuity assumptions
+- [x] local draft and progress persistence are explicitly safe for short mobile sessions
+- [x] resume behavior is clear enough for future workflow implementation
 
 Related docs:
 
@@ -216,7 +218,7 @@ Related docs:
 
 Status:
 
-- [ ] Reopened for mobile design backlog
+- [x] Complete
 
 Goal:
 
@@ -234,18 +236,18 @@ Tasks:
 
 Mobile version:
 
-- [ ] Define mobile content-fit checks for labels, metadata density, and compact card summaries
-- [ ] Define how title, type, skill, time, why-now, and action-after remain visible in compact layouts
-- [ ] Define compact recommendation reason behavior for narrow widths
+- [x] Define mobile content-fit checks for labels, metadata density, and compact card summaries
+- [x] Define how title, type, skill, time, why-now, and action-after remain visible in compact layouts
+- [x] Define compact recommendation reason behavior for narrow widths
 
 Done when:
 
 - [x] dashboard and roadmap can be powered by structured content
 - [x] resources are not just static links
 - [x] each resource has recommendation context
-- [ ] curated content can be rendered on phone without losing guidance
-- [ ] compact cards still preserve recommendation trust signals
-- [ ] label and metadata expectations are explicit enough for future UI implementation
+- [x] curated content can be rendered on phone without losing guidance
+- [x] compact cards still preserve recommendation trust signals
+- [x] label and metadata expectations are explicit enough for future UI implementation
 
 Related docs:
 
@@ -258,7 +260,7 @@ Related docs:
 
 Status:
 
-- [ ] Reopened for mobile design backlog
+- [x] Complete
 
 Goal:
 
@@ -277,18 +279,18 @@ Tasks:
 
 Mobile version:
 
-- [ ] Define phone hierarchy with one dominant next action and stacked support modules
-- [ ] Define mobile dashboard order for today plan, progress snapshot, best next resource, review, writing and speaking, and recent activity
-- [ ] Define reduced simultaneous density for phone while preserving meaningful progress visibility
+- [x] Define phone hierarchy with one dominant next action and stacked support modules
+- [x] Define mobile dashboard order for today plan, progress snapshot, best next resource, review, writing and speaking, and recent activity
+- [x] Define reduced simultaneous density for phone while preserving meaningful progress visibility
 
 Done when:
 
 - [x] user lands on dashboard after onboarding
 - [x] dashboard answers what to do next
 - [x] dashboard uses local state and curated data
-- [ ] dashboard still answers "what do I do now?" within one or two mobile scrolls
-- [ ] progress snapshot remains visible and meaningful on phone
-- [ ] dashboard hierarchy avoids equal-weight widget walls on narrow screens
+- [x] dashboard still answers "what do I do now?" within one or two mobile scrolls
+- [x] progress snapshot remains visible and meaningful on phone
+- [x] dashboard hierarchy avoids equal-weight widget walls on narrow screens
 
 Related docs:
 
@@ -301,7 +303,7 @@ Related docs:
 
 Status:
 
-- [ ] Not started
+- [x] Complete
 
 Goal:
 
@@ -309,30 +311,30 @@ Build the strategic path and curated library.
 
 Tasks:
 
-- [ ] Build roadmap stages and blocks UI
-- [ ] Add block states
-- [ ] Link roadmap blocks to resources
-- [ ] Build resources page
-- [ ] Build resource cards
-- [ ] Add resource filters
-- [ ] Add completion and reflection actions
-- [ ] Add roadmap/resource animations
+- [x] Build roadmap stages and blocks UI
+- [x] Add block states
+- [x] Link roadmap blocks to resources
+- [x] Build resources page
+- [x] Build resource cards
+- [x] Add resource filters
+- [x] Add completion and reflection actions
+- [x] Add roadmap/resource animations
 
 Mobile version:
 
-- [ ] Define mobile roadmap flow with active stage first, sequential blocks, and compact state chips
-- [ ] Define mobile resources flow with featured resource first and full-width primary actions
-- [ ] Define filter sheet or modal pattern for resource filtering on phone
-- [ ] Define how recommendation reason stays above the fold on narrow cards
+- [x] Define mobile roadmap flow with active stage first, sequential blocks, and compact state chips
+- [x] Define mobile resources flow with featured resource first and full-width primary actions
+- [x] Define filter sheet or modal pattern for resource filtering on phone
+- [x] Define how recommendation reason stays above the fold on narrow cards
 
 Done when:
 
-- [ ] learner can follow a structured path
-- [ ] learner can trust why a resource is recommended
-- [ ] resource actions update progress locally
-- [ ] roadmap reads top-to-bottom on phone without relying on side-by-side desktop structure
-- [ ] resources feel guided and trustworthy on phone
-- [ ] filters and CTAs remain touch-friendly and easy to understand on mobile
+- [x] learner can follow a structured path
+- [x] learner can trust why a resource is recommended
+- [x] resource actions update progress locally
+- [x] roadmap reads top-to-bottom on phone without relying on side-by-side desktop structure
+- [x] resources feel guided and trustworthy on phone
+- [x] filters and CTAs remain touch-friendly and easy to understand on mobile
 
 Related docs:
 
@@ -345,7 +347,7 @@ Related docs:
 
 Status:
 
-- [ ] Not started
+- [ ] In progress
 
 Goal:
 
@@ -364,9 +366,9 @@ Tasks:
 
 Mobile version:
 
-- [ ] Define task-first and prompt-first stacked practice flows for phone
-- [ ] Define mobile draft, feedback, transcript, and history hierarchy
-- [ ] Define dominant mobile entry actions for writing and speaking sessions
+- [x] Define task-first and prompt-first stacked practice flows for phone
+- [x] Define mobile draft, feedback, transcript, and history hierarchy
+- [x] Define dominant mobile entry actions for writing and speaking sessions
 
 Done when:
 
@@ -375,6 +377,10 @@ Done when:
 - [ ] activity is recorded in local learning events
 - [ ] writing and speaking flows remain usable and low-friction on phone
 - [ ] active practice stays dominant over secondary history or support panels on mobile
+
+Current note:
+
+The mobile V1 overview pass is implemented for writing and speaking, including entry hierarchy and dominant CTA behavior. Full task, draft submission, recording, transcript, and history workflows still need deeper product implementation before this phase can be marked complete.
 
 Related docs:
 

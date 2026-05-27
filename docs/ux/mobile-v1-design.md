@@ -8,6 +8,10 @@ It is the source of truth for how the existing product system should translate f
 
 This document is about design structure, hierarchy, and interaction expectations. It does not require immediate code implementation by itself.
 
+Current implementation note:
+
+The current codebase now includes a mobile V1 pass for the app shell plus the dashboard, roadmap, resources, writing overview, speaking overview, and settings overview. The product still needs deeper writing/speaking session flows, review logic, and AI-light work, but the phone-first shell and section hierarchy are no longer just design intent.
+
 ## Scope
 
 The current-state mobile design scope includes:
@@ -23,6 +27,16 @@ The current-state mobile design scope includes:
 These surfaces are included because they already exist in the current product state, even if some of their larger roadmap phases are still incomplete.
 
 Tablet can be adapted later, but this document treats phone-sized mobile web as the primary target.
+
+Fixed decisions for this V1 pass:
+
+- phone-first mobile web is the default target for all surfaces below `lg`
+- `lg` and above keep the desktop shell
+- global navigation on phone uses a fixed bottom nav
+- local section lanes stay contextual and appear as horizontal chips below the header
+- mobile search is intentionally hidden for now instead of becoming a half-finished flow
+- mobile filter and sheet behavior uses `@base-ui/react`
+- this pass changes UI hierarchy, layout, and mobile interaction patterns without changing product logic, Prisma, local-state hooks, or recommendation logic
 
 ## Mobile Principles
 
@@ -86,6 +100,16 @@ It should avoid:
 - long descriptive intro copy
 - duplicated hierarchy labels
 - desktop-style utility clusters competing with the main task
+- wide search controls without a full mobile search flow
+
+### Safe-area and shell behavior
+
+Phone layouts must assume:
+
+- safe-area-aware bottom spacing for fixed navigation
+- extra bottom padding for CTA blocks so actions do not slide under the bottom nav
+- shell tokens that continue to respect theme, text size, density, and motion settings
+- separate mobile and desktop shell composition instead of one desktop layout squeezed responsively
 
 ### Density behavior
 
@@ -160,6 +184,8 @@ Progression should read top-to-bottom.
 
 Important block state indicators should stay visible as compact chips or tags.
 
+Secondary panels should drop below the main block content instead of depending on wide side-by-side desktop composition.
+
 ### Rules
 
 - no dependency on a wide right panel for key understanding
@@ -197,6 +223,14 @@ Each mobile resource card should prioritize:
 - time expectation
 - primary action
 
+In the current V1 pass this means the first visible layer should hold:
+
+- title
+- why now or recommendation reason
+- type or primary skill signal
+- time
+- one dominant CTA
+
 Secondary metadata can collapse lower in the card.
 
 ### Rules
@@ -205,6 +239,7 @@ Secondary metadata can collapse lower in the card.
 - secondary CTA should be visually reduced
 - recommendation reason should remain visible above the fold
 - filtering should feel lightweight, not like a database interface
+- source context and follow-up action should still be preserved lower in the card, not removed
 
 ## Writing Mobile
 
@@ -227,6 +262,13 @@ Draft stack should be vertical.
 Feedback and mistake guidance should appear below the active work area.
 
 Roadmap context should remain secondary.
+
+Recommended order for the current overview pass:
+
+1. next task or current draft
+2. draft stack
+3. feedback or support blocks
+4. roadmap context
 
 ### Rules
 
@@ -257,6 +299,13 @@ Recent speaking continuity should stack below the active session area.
 
 Reflection should remain supportive, not equal-weight with the main action.
 
+Recommended order for the current overview pass:
+
+1. active prompt
+2. dominant record or continue action
+3. continuity and recent history
+4. reflection and support
+
 ### Rules
 
 - the phone experience should reduce friction and pressure
@@ -284,6 +333,13 @@ Controls should stack in grouped sections.
 
 Profile, goals, preferences, notifications, and account should remain visually separated into calm blocks.
 
+Recommended order for the current overview pass:
+
+1. appearance and preference controls
+2. current applied appearance state
+3. learner setup
+4. notifications and account surfaces
+
 ### Rules
 
 - grouped controls should stay touch-friendly
@@ -301,6 +357,32 @@ Each mobile surface should answer yes to these:
 - Does the hierarchy survive narrow width?
 - Does the screen feel like the same system as desktop?
 - Has the desktop layout been intentionally transformed rather than merely squeezed?
+
+## Mobile Continuity Rules
+
+Short phone sessions should assume:
+
+- the learner may leave and return mid-flow without warning
+- local drafts, progress, and events must survive interruption
+- resume states should favor continuation over rediscovery
+- mobile entry surfaces should show the next useful action before secondary history or analytics
+
+These rules are partly implemented today through the local-first browser state layer and partly define the contract for later writing/speaking session work.
+
+## QA Baseline
+
+The minimum manual mobile QA widths for this V1 pass are:
+
+- `390px`
+- `430px`
+- `768px`
+- `1024px`
+
+The current implementation also adds targeted RTL coverage for:
+
+- mobile versus desktop app shell rendering
+- bottom navigation visibility
+- resources mobile filter sheet open/close behavior
 
 ## Status
 
