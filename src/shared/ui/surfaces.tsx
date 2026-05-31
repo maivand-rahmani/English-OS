@@ -37,9 +37,8 @@ export function WorkspaceFrame({ children, className }: WorkspaceFrameProps) {
   );
 }
 
-type InsetPanelProps = {
+type InsetPanelProps = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
-  className?: string;
   tone?: SurfaceTone;
 };
 
@@ -47,9 +46,11 @@ export function InsetPanel({
   children,
   className,
   tone = "default",
+  ...props
 }: InsetPanelProps) {
   return (
     <div
+      {...props}
       className={cn(
         "rounded-[1.55rem] border border-surface-stroke-strong shadow-panel transition-all duration-200 ease-out hover:translate-y-[-1px] hover:shadow-[0_14px_36px_rgba(20,20,30,0.07)]",
         tone === "default" ? "bg-surface-panel-muted" : surfaceToneClasses[tone],
@@ -247,22 +248,28 @@ export function MetricTile({
 }
 
 type QuickActionCardProps = {
+  detail?: string;
+  eyebrow?: string;
+  footer?: string;
   icon?: ComponentType<{ className?: string }>;
   label?: string;
   description?: string;
   tone?: SurfaceTone;
+  title?: string;
   [key: string]: unknown;
 };
 
 export function QuickActionCard({
+  detail,
+  eyebrow,
+  footer,
   icon: Icon,
   label,
   description,
   tone,
+  title,
   children,
-  ...rest
 }: QuickActionCardProps) {
-  const eyebrow = rest.eyebrow as string | undefined;
   return (
     <div
       className={cn(
@@ -274,10 +281,22 @@ export function QuickActionCard({
         {Icon && <Icon className="size-4 text-muted-foreground" />}
         {label && <p className="text-sm font-semibold text-foreground">{label}</p>}
       </div>
-      {eyebrow && <p className="mt-0.5 text-xs uppercase tracking-[0.18em] text-muted-foreground">{eyebrow}</p>}
-      <p className="mt-2 text-xs leading-5 text-muted-foreground">
-        {description}
-      </p>
+      {eyebrow ? (
+        <p className="mt-0.5 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+          {eyebrow}
+        </p>
+      ) : null}
+      {title ? (
+        <p className="mt-2 text-sm font-semibold text-foreground">{title}</p>
+      ) : null}
+      {detail || description ? (
+        <p className="mt-2 text-xs leading-5 text-muted-foreground">
+          {detail ?? description}
+        </p>
+      ) : null}
+      {footer ? (
+        <p className="mt-3 text-xs font-medium text-muted-foreground">{footer}</p>
+      ) : null}
       {children as ReactNode}
     </div>
   );

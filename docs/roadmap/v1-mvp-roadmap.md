@@ -34,9 +34,9 @@ The project documentation foundation is complete. Product, UX, system, engineeri
 
 Implementation has moved through a mobile V1 UI pass. The app shell, dashboard, roadmap, resources, writing overview, speaking overview, and settings now have explicit phone-first layouts for the current V1 surface set.
 
-Phases 1 through 6 are now updated to reflect the implemented mobile shell, dashboard ordering, roadmap stacking, resources filter sheet, and mobile-safe layout tokens. Phase 7 remains in progress because the current work covers overview surfaces and mobile entry flows, not full task/session workspaces yet.
+Phases 1 through 6 are now updated to reflect the implemented mobile shell, dashboard ordering, roadmap stacking, resources filter sheet, and mobile-safe layout tokens. Phase 7 is now complete: writing and speaking both behave like real local-first practice workspaces with active task or prompt flows, saved history, and workspace-specific motion.
 
-The next tracked implementation work should move deeper into writing and speaking session flows, then continue into review and recommendation logic, AI-light features, and final polish.
+The next tracked implementation work should move into review and recommendation logic, then continue into AI-light features and final polish.
 
 ## V1 Build Strategy
 
@@ -347,7 +347,7 @@ Related docs:
 
 Status:
 
-- [ ] In progress
+- [x] Completed
 
 Goal:
 
@@ -355,14 +355,14 @@ Build the active practice zones.
 
 Tasks:
 
-- [ ] Build writing task list
-- [ ] Build writing draft and submission flow
-- [ ] Build writing feedback-ready UI
-- [ ] Build speaking prompt list
-- [ ] Build speaking session flow
-- [ ] Build transcript-ready speaking UI
-- [ ] Add local practice history
-- [ ] Add workspace-specific motion
+- [x] Build writing task list
+- [x] Build writing draft and submission flow
+- [x] Build writing feedback-ready UI
+- [x] Build speaking prompt list
+- [x] Build speaking session flow
+- [x] Build transcript-ready speaking UI
+- [x] Add local practice history
+- [x] Add workspace-specific motion
 
 Mobile version:
 
@@ -372,15 +372,15 @@ Mobile version:
 
 Done when:
 
-- [ ] writing and speaking feel like real workspaces
-- [ ] both can be entered from dashboard
-- [ ] activity is recorded in local learning events
-- [ ] writing and speaking flows remain usable and low-friction on phone
-- [ ] active practice stays dominant over secondary history or support panels on mobile
+- [x] writing and speaking feel like real workspaces
+- [x] both can be entered from dashboard
+- [x] activity is recorded in local learning events
+- [x] writing and speaking flows remain usable and low-friction on phone
+- [x] active practice stays dominant over secondary history or support panels on mobile
 
 Current note:
 
-The mobile V1 overview pass is implemented for writing and speaking, including entry hierarchy and dominant CTA behavior. Full task, draft submission, recording, transcript, and history workflows still need deeper product implementation before this phase can be marked complete.
+Phase 7 is complete. The writing workspace now includes a real task list, local draft editing with client-first save behavior, local writing submission events, structured feedback-ready surfaces, and visible local practice history. The speaking workspace now includes a real prompt list, resumable session flow, transcript-ready reflection and save flow, visible local speaking history, and richer workspace-specific motion for session and transcript state changes. Dashboard entry points continue to route into both workspaces, and the mobile hierarchy keeps the active task or prompt above secondary history and support content.
 
 Related docs:
 

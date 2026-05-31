@@ -58,6 +58,9 @@ export async function listDrafts(): Promise<DraftSummary[]> {
         const draft = cursor.value as Draft;
         summaries.push({
           id: draft.id,
+          lastSubmittedAt: draft.lastSubmittedAt,
+          lastWordCount: draft.lastWordCount,
+          submissionCount: draft.submissionCount,
           title: draft.title,
           taskId: draft.taskId,
           updatedAt: draft.updatedAt,

@@ -70,6 +70,7 @@ export function useDrafts() {
         content,
         taskId,
         createdAt: now,
+        submissionCount: 0,
         updatedAt: now,
       };
 
@@ -78,6 +79,9 @@ export function useDrafts() {
         setDrafts((prev) =>
           upsertDraftSummary(prev, {
             id: draft.id,
+            lastSubmittedAt: draft.lastSubmittedAt,
+            lastWordCount: draft.lastWordCount,
+            submissionCount: draft.submissionCount,
             title: draft.title,
             taskId: draft.taskId,
             updatedAt: draft.updatedAt,
@@ -93,7 +97,7 @@ export function useDrafts() {
   );
 
   /** Save (update) an existing draft. */
-  const saveDraft = useCallback(async (draft: Draft) => {
+  const saveDraft = useCallback(async (draft: Draft): Promise<Draft | undefined> => {
     const updated = { ...draft, updatedAt: Date.now() };
 
     try {
@@ -101,13 +105,18 @@ export function useDrafts() {
       setDrafts((prev) =>
         upsertDraftSummary(prev, {
           id: updated.id,
+          lastSubmittedAt: updated.lastSubmittedAt,
+          lastWordCount: updated.lastWordCount,
+          submissionCount: updated.submissionCount,
           title: updated.title,
           taskId: updated.taskId,
           updatedAt: updated.updatedAt,
         })
       );
+      return updated;
     } catch (error) {
       console.error("Failed to save draft:", error);
+      return undefined;
     }
   }, []);
 

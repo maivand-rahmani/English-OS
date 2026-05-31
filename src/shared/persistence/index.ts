@@ -33,3 +33,9 @@ export {
   resetAppearancePreferences,
   preferencesToHtmlAttrs,
 } from "./appearance-store";
+
+export {
+  getActiveSpeakingSession,
+  setActiveSpeakingSession,
+  clearActiveSpeakingSession,
+} from "./speaking-session-store";

@@ -1,3 +1,5 @@
+import type { SpeakingReflection } from "./speaking-session";
+
 export const LearningEventType = {
   ResourceStarted: "resource_started",
   ResourceCompleted: "resource_completed",
@@ -58,6 +60,8 @@ export type SpeakingRecordedPayload = {
   sessionId: string;
   promptId?: string;
   durationSeconds: number;
+  reflection?: SpeakingReflection;
+  transcript?: string;
 };
 
 export type ItemSkippedPayload = {
