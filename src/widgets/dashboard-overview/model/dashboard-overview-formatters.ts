@@ -93,7 +93,11 @@ export function getWeakestSkill(
       const current = scores.get(skill.slug) ?? { title: skill.title, friction: 0 };
       const weight = skill.emphasis === "primary" ? 2 : 1;
 
-      if (state === "needs_review" || state === "skipped_for_now") {
+      if (
+        state === "difficult" ||
+        state === "needs_review" ||
+        state === "skipped_for_now"
+      ) {
         current.friction += weight;
       }
 
@@ -230,6 +234,8 @@ export function humanizeState(state: BlockState) {
       return "In progress";
     case "completed":
       return "Completed";
+    case "difficult":
+      return "Difficult";
     case "needs_review":
       return "Needs review";
     case "skipped_for_now":

@@ -27,7 +27,7 @@ export function useLearningContentProgress(limit = 20) {
   async function updateBlockState(
     block: BlockProgressTarget,
     nextState: BlockState,
-    action: "start" | "complete" | "review" | "skip",
+    action: "start" | "complete" | "review" | "difficult" | "skip" | "reset",
   ) {
     setBusyAction(`block:${block.id}:${action}`);
 
@@ -71,6 +71,17 @@ export function useLearningContentProgress(limit = 20) {
             itemId: block.id,
             itemType: "block",
             reason: `Skipped for now inside ${block.stageTitle.toLowerCase()}.`,
+          },
+        });
+      }
+
+      if (action === "difficult") {
+        await recordEvent({
+          type: LearningEventType.ReviewDone,
+          payload: {
+            reviewItemId: block.id,
+            sourceType: "block",
+            outcome: "still_difficult",
           },
         });
       }

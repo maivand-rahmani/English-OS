@@ -2,6 +2,7 @@ export type BlockState =
   | "not_started"
   | "in_progress"
   | "completed"
+  | "difficult"
   | "needs_review"
   | "skipped_for_now";
 
