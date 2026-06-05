@@ -137,7 +137,7 @@ src/widgets/
 ├── app-shell/
 ├── dashboard-today-plan/
 ├── dashboard-progress-snapshot/
-├── roadmap-stage-map/
+├── roadmap-explorer/
 ├── resource-recommendation-panel/
 ├── writing-workspace/
 └── speaking-workspace/
@@ -384,7 +384,8 @@ Use descriptive file names:
 - `get-dashboard-state.ts`
 - `record-learning-event.ts`
 - `complete-resource-action.ts`
-- `roadmap-stage-card.tsx`
+- `roadmap-step-node.tsx`
+- `roadmap-step-modal.tsx`
 
 Avoid vague names like:
 

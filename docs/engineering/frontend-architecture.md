@@ -30,6 +30,11 @@ The shell should include:
 
 The shell should be implemented as a composed widget, not scattered across every page.
 
+The shell should own the main application frame only. The `main` route outlet
+should not add a second generic card surface around every page. Pages may render
+their own workspace surface when that surface is the actual feature, for
+example the Roadmap canvas or a Resources collection card.
+
 Recommended location:
 
 ```text
@@ -156,6 +161,26 @@ Dashboard pages should compose widgets such as:
 - writing action card
 - speaking action card
 
+Roadmap should compose data-driven subcomponents rather than one large page
+component. The expected component split is:
+
+- RoadmapExplorer
+- RoadmapCanvas
+- RoadmapStepNode
+- RoadmapStepModal
+- RoadmapStepTaskTable
+- ConnectedResourceMiniCard
+- RoadmapProgressRing
+- RoadmapStateBadge
+- RoadmapStatusControls
+
+Roadmap layout logic should be scalable and data-driven. Do not use manual
+absolute coordinates that assume a fixed number of steps.
+
+Step detail overlays should render through a body-level portal so they are not
+affected by app shell overflow, transform, stacking context, or route outlet
+surface changes.
+
 ## Design System
 
 Use shadcn/ui primitives as accessible building blocks.
@@ -188,6 +213,9 @@ Desktop components should preserve:
 - lower secondary cards
 - black active controls
 - soft panel surfaces
+
+Avoid page-level card nesting inside the shell. A page should not look like
+three stacked canvases unless those layers represent real product objects.
 
 Mobile can adapt the frame into focused stacked flows, but the product should still feel like the same system.
 

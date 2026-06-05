@@ -27,6 +27,11 @@ The product should use an application-shell structure:
 
 This supports the "control center" feeling and allows the product to scale without collapsing into a single crowded dashboard.
 
+The shell should provide one visual application frame. Individual pages should
+avoid adding another generic page card around their whole surface. Page-specific
+surfaces are allowed only when they are the actual workspace object, such as the
+Roadmap canvas or a repeated content card inside Resources.
+
 The shell must support both desktop browser and mobile web.
 
 Desktop can use a visible top bar, vertical sidebar, and multi-panel content.
@@ -42,6 +47,10 @@ The main control center and daily home.
 
 2. Roadmap
 The learner's structured path through English development.
+
+Roadmap should be treated as a scalable learning graph. It owns strategic
+sequence and step state, while resources remain supporting content inside steps
+or on the separate Resources page.
 
 3. Resources
 The curated resource layer and discovery surface.

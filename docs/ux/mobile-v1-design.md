@@ -176,22 +176,29 @@ It should answer:
 
 ### Layout direction
 
-The active stage and next block should appear first.
+The roadmap should become a vertical connected path on mobile.
 
-Stage cards should stack vertically.
+Progression should read top-to-bottom and continue downward for as many steps
+as the active roadmap contains.
 
-Progression should read top-to-bottom.
+Stage zones should remain visible as grouped regions in the same roadmap flow.
 
-Important block state indicators should stay visible as compact chips or tags.
+Step nodes should stay tap-friendly and show compact state indicators, current
+step context, primary skill, and resource count.
 
-Secondary panels should drop below the main block content instead of depending on wide side-by-side desktop composition.
+Step details should open in a near-full-screen modal overlay, not a side drawer
+or a new route.
 
 ### Rules
 
 - no dependency on a wide right panel for key understanding
-- block states and primary actions must remain visible without opening side panels
-- linked resources should feel like a direct continuation of the current block
+- block states must remain visible on the node
+- primary status actions should be easy to reach from the step modal
+- linked resources should feel like supporting material inside the step modal
 - roadmap should remain strategic, not collapse into a plain checklist
+- the mobile roadmap must scale beyond the MVP step count without redesigning
+  the layout
+- hover previews must never be required for understanding on touch devices
 
 ## Resources Mobile
 

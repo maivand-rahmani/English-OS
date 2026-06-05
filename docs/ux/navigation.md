@@ -109,6 +109,11 @@ Examples:
 - a roadmap block can open a recommended resource
 - a writing reminder on the dashboard can open the exact task or latest draft state
 
+Roadmap step clicks should open an in-place centered modal first. They should
+not immediately navigate away from the roadmap. Links inside that modal may then
+open a resource detail or external resource when the learner chooses deeper
+support.
+
 ## Cross-Linking Rules
 
 The best navigation moments in English OS should come from context-aware cross-linking:
