@@ -70,6 +70,7 @@ function DesktopAppShell({
   userLabel,
 }: DesktopAppShellProps) {
   const isDashboard = currentSection.key === "dashboard";
+  const isRoadmap = currentSection.key === "roadmap";
 
   return (
     <div className="min-h-screen px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
@@ -177,8 +178,10 @@ function DesktopAppShell({
               </div>
             </div>
 
-            <div className="mt-6">
-              {isDashboard ? (
+            <div className={cn("mt-6", isRoadmap && "sr-only")}>
+              {isRoadmap ? (
+                <h1>{currentSection.title}</h1>
+              ) : isDashboard ? (
                 <h1 className="text-3xl font-semibold tracking-tight text-balance text-foreground sm:text-4xl">
                   {currentSection.title}
                 </h1>
@@ -201,7 +204,7 @@ function DesktopAppShell({
           <div className="min-h-0 flex-1 px-6 py-6 lg:px-8 lg:py-8">
             <main
               key={pathname}
-              className="h-full animate-slide-in-from-bottom rounded-[1.75rem] border border-white/65 bg-surface-3 p-5 shadow-soft lg:p-6"
+              className="h-full animate-slide-in-from-bottom"
             >
               {children}
             </main>
@@ -222,6 +225,8 @@ function MobileAppShell({
   pathname,
   userInitial,
 }: MobileAppShellProps) {
+  const isRoadmap = currentSection.key === "roadmap";
+
   return (
     <div className="min-h-screen px-3 pt-3 pb-[calc(var(--mobile-bottom-nav-offset)+1rem)] sm:px-4 sm:pt-4">
       <div className="mx-auto flex max-w-4xl flex-col gap-3">
@@ -229,12 +234,18 @@ function MobileAppShell({
           <header className="border-b border-surface-stroke px-4 py-4 sm:px-5">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
-                  {currentSection.eyebrow}
-                </p>
-                <h1 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
-                  {currentSection.title}
-                </h1>
+                {isRoadmap ? (
+                  <h1 className="sr-only">{currentSection.title}</h1>
+                ) : (
+                  <>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+                      {currentSection.eyebrow}
+                    </p>
+                    <h1 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
+                      {currentSection.title}
+                    </h1>
+                  </>
+                )}
               </div>
 
               <div className="flex shrink-0 items-center gap-2">
@@ -259,7 +270,7 @@ function MobileAppShell({
 
         <main
           key={pathname}
-          className="mobile-sticky-bottom-spacing animate-slide-in-from-bottom rounded-[1.8rem] border border-surface-stroke bg-surface-3 p-4 shadow-soft sm:p-5"
+          className="mobile-sticky-bottom-spacing animate-slide-in-from-bottom"
         >
           {children}
         </main>
