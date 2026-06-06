@@ -11,6 +11,7 @@ This section translates the product thesis into user-facing structure.
 - [Information Architecture](./information-architecture.md)
 - [Layout Principles](./layout-principles.md)
 - [Navigation](./navigation.md)
+- [V1 Navigation Simplification Rule](./v1-navigation-simplification-rule.md)
 - [Mobile V1 Design](./mobile-v1-design.md)
 - [Onboarding](./onboarding.md)
 - [Dashboard](./dashboard.md)
@@ -25,14 +26,15 @@ This section translates the product thesis into user-facing structure.
 1. [Information Architecture](./information-architecture.md)
 2. [Layout Principles](./layout-principles.md)
 3. [Navigation](./navigation.md)
-4. [Mobile V1 Design](./mobile-v1-design.md)
-5. [Onboarding](./onboarding.md)
-6. [Dashboard](./dashboard.md)
-7. [Roadmap](./roadmap.md)
-8. [Resources](./resources.md)
-9. [Writing](./writing.md)
-10. [Speaking](./speaking.md)
-11. [Settings](./settings.md)
+4. [V1 Navigation Simplification Rule](./v1-navigation-simplification-rule.md)
+5. [Mobile V1 Design](./mobile-v1-design.md)
+6. [Onboarding](./onboarding.md)
+7. [Dashboard](./dashboard.md)
+8. [Roadmap](./roadmap.md)
+9. [Resources](./resources.md)
+10. [Writing](./writing.md)
+11. [Speaking](./speaking.md)
+12. [Settings](./settings.md)
 
 ## Document Responsibilities
 
@@ -42,7 +44,9 @@ This section translates the product thesis into user-facing structure.
   Defines global page-layout rules and bans the stacked dashboard-block pattern
   on learner-facing pages.
 - [Navigation](./navigation.md)
-  Defines top bar, sidebars, route logic, and movement rules.
+  Defines the active V1 top-level navigation model, route logic, and movement rules.
+- [V1 Navigation Simplification Rule](./v1-navigation-simplification-rule.md)
+  Defines the rule that postpones section sidebars and fake subpages to V2.
 - [Mobile V1 Design](./mobile-v1-design.md)
   Defines the phone-first mobile web translation of the current V1 product surfaces.
 - [Onboarding](./onboarding.md)
@@ -67,6 +71,7 @@ The most important files in this section are:
 - [Information Architecture](./information-architecture.md)
 - [Layout Principles](./layout-principles.md)
 - [Navigation](./navigation.md)
+- [V1 Navigation Simplification Rule](./v1-navigation-simplification-rule.md)
 - [Mobile V1 Design](./mobile-v1-design.md)
 - [Dashboard](./dashboard.md)
 - [Roadmap](./roadmap.md)

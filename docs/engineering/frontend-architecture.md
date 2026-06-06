@@ -24,9 +24,10 @@ English OS should use a persistent authenticated app shell.
 The shell should include:
 
 - global top bar
-- section-specific sidebar
 - main content area
 - user/account utility area
+
+For V1, the shell must keep navigation limited to the six top-level sections. Local section sidebars are a V2 concern unless a real internal page is implemented and necessary.
 
 The shell should be implemented as a composed widget, not scattered across every page.
 
@@ -211,7 +212,7 @@ dashboard template.
 Shell-level desktop components should preserve:
 
 - large rounded app canvas
-- left icon rail
+- calm shell framing and strong brand anchoring
 - centered pill navigation
 - right utility cluster
 - black active controls
@@ -241,7 +242,7 @@ Desktop layout should support:
 
 - persistent app shell
 - top navigation
-- section sidebar
+- full-width main content for the active page
 - multi-panel dashboards where the page is actually a dashboard
 - contextual right panels
 

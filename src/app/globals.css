@@ -120,8 +120,6 @@
     0 38px 110px rgba(67, 48, 97, 0.16),
     inset 0 1px 0 rgba(255, 255, 255, 0.38);
   --app-shell-max-width: 96rem;
-  --icon-rail-width: 6.75rem;
-  --section-sidebar-width: 18rem;
   --layout-gap: 1.25rem;
   --mobile-bottom-nav-height: 4.4rem;
   --mobile-bottom-nav-safe-area: env(safe-area-inset-bottom, 0px);
@@ -225,7 +223,6 @@
 }
 
 [data-density="compact"] {
-  --section-sidebar-width: 16.5rem;
   --layout-gap: 1rem;
   --mobile-bottom-nav-height: 4rem;
 }

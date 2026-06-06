@@ -29,7 +29,7 @@ The supplied dashboard reference defines this desktop shell direction:
 
 - full-page atmospheric pastel background
 - large centered rounded app canvas
-- left vertical icon sidebar
+- calm shell framing with a strong brand anchor
 - top-centered pill navigation
 - right-side utility controls
 - card-based content inside a single app canvas
@@ -49,7 +49,6 @@ The desktop dashboard should follow this composition:
 
 - atmospheric background outside the product shell
 - large rounded app canvas with generous margin
-- left icon rail separated from content
 - centered pill navigation at the top
 - right utility controls
 - large greeting/title row
@@ -109,7 +108,6 @@ Important motion moments:
 - AI feedback appearing
 - review queue reprioritizing
 - top navigation active pill transitions
-- sidebar icon state changes
 - chart and progress value changes
 - right panel content changes
 
@@ -177,7 +175,7 @@ Desktop direction:
 
 - wide app-canvas experience
 - persistent top navigation
-- persistent or compact vertical sidebar
+- no active per-section sidebar in V1
 - multi-panel dashboard
 - right contextual panels when useful
 - richer charts and progress surfaces

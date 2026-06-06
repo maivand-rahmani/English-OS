@@ -42,6 +42,16 @@ The current interaction model is:
 This keeps the roadmap as the primary object while allowing it to scale
 downward as more steps are added.
 
+## V1 Navigation Model
+
+Roadmap is one immersive page in V1.
+
+`Current Stage` and `Upcoming` should live inside the roadmap canvas and status layers.
+
+`Grammar`, `Vocabulary`, `Reading`, and `Listening` should stay as filters, layers, or tags inside the roadmap experience rather than becoming sidebar pages.
+
+`Milestones` may appear inside the roadmap page or remain future V2 work, but it should not require a separate V1 sidebar route.
+
 ## Example Roadmap Shape
 
 The exact names can evolve, but the general structure should look like:

@@ -53,13 +53,14 @@ For UI work, read:
 
 1. [Information Architecture](./ux/information-architecture.md)
 2. [Navigation](./ux/navigation.md)
-3. [Mobile V1 Design](./ux/mobile-v1-design.md)
-4. [Style Doctrine](./brand/style-doctrine.md)
-5. [Visual Direction](./brand/visual-direction.md)
-6. [Reference Notes](./brand/reference-notes.md)
-7. [Style Acceptance Checklist](./brand/style-acceptance-checklist.md)
-8. [Motion Direction](./brand/motion-direction.md)
-9. [Theme System](./brand/theme-system.md)
+3. [V1 Navigation Simplification Rule](./ux/v1-navigation-simplification-rule.md)
+4. [Mobile V1 Design](./ux/mobile-v1-design.md)
+5. [Style Doctrine](./brand/style-doctrine.md)
+6. [Visual Direction](./brand/visual-direction.md)
+7. [Reference Notes](./brand/reference-notes.md)
+8. [Style Acceptance Checklist](./brand/style-acceptance-checklist.md)
+9. [Motion Direction](./brand/motion-direction.md)
+10. [Theme System](./brand/theme-system.md)
 
 For mobile or responsive UI work, also read:
 

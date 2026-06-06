@@ -20,7 +20,7 @@ Fix the structure first.
 The desktop implementation should answer yes to these:
 
 - Does the page use a large rounded app canvas inside an atmospheric background?
-- Does it have a slim left icon rail?
+- Does the shell keep a strong branded frame without unnecessary sub-navigation chrome?
 - Does it use centered pill navigation?
 - Does the active navigation/control state use strong black styling?
 - Does it have a right-side utility cluster or contextual area where appropriate?

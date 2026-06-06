@@ -1,44 +1,12 @@
 import type { LucideIcon } from "lucide-react";
 import {
-  Activity,
-  AlertCircle,
-  ArrowUp,
-  Bell,
-  BookMarked,
-  BookOpen,
   BookOpenText,
-  CalendarDays,
-  CalendarRange,
-  FilePlus,
-  FolderOpen,
-  Headphones,
-  History,
   LayoutDashboard,
-  Lightbulb,
-  ListChecks,
   Map,
-  MapPin,
-  MessageCircle,
-  MessageSquare,
   Mic,
   PenSquare,
-  RotateCcw,
   Settings2,
-  Shield,
-  SlidersHorizontal,
-  Sparkles,
-  Sprout,
-  Target,
-  TrendingDown,
-  TrendingUp,
-  Trophy,
-  UserRound,
 } from "lucide-react";
-
-type LocalSectionItem = {
-  label: string;
-  icon?: LucideIcon;
-};
 
 export type AppSectionKey =
   | "dashboard"
@@ -81,9 +49,6 @@ export type AppSection = {
   icon: LucideIcon;
   eyebrow: string;
   description: string;
-  sidebarTitle: string;
-  sidebarDescription: string;
-  sidebarItems: readonly LocalSectionItem[];
 };
 
 const appSections: Record<AppSectionKey, AppSection> = {
@@ -92,17 +57,8 @@ const appSections: Record<AppSectionKey, AppSection> = {
     title: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
-    eyebrow: "Dashboard",
-    description: "Overview of your workspace.",
-    sidebarTitle: "Dashboard lanes",
-    sidebarDescription: "Daily planning, review, and momentum signals.",
-    sidebarItems: [
-      { label: "Today", icon: CalendarDays },
-      { label: "This Week", icon: CalendarRange },
-      { label: "Review", icon: RotateCcw },
-      { label: "Weak Areas", icon: TrendingDown },
-      { label: "Recent Activity", icon: Activity },
-    ],
+    eyebrow: "Daily command center",
+    description: "Your daily home for next steps, review, and momentum.",
   },
   roadmap: {
     key: "roadmap",
@@ -110,18 +66,8 @@ const appSections: Record<AppSectionKey, AppSection> = {
     href: "/roadmap",
     icon: Map,
     eyebrow: "Long-range progression",
-    description: "The long-range progression map across English skills.",
-    sidebarTitle: "Roadmap lanes",
-    sidebarDescription: "Structured stages, skills, and milestones.",
-    sidebarItems: [
-      { label: "Current Stage", icon: MapPin },
-      { label: "Upcoming", icon: ArrowUp },
-      { label: "Grammar", icon: BookOpenText },
-      { label: "Vocabulary", icon: BookMarked },
-      { label: "Reading", icon: BookOpen },
-      { label: "Listening", icon: Headphones },
-      { label: "Milestones", icon: Trophy },
-    ],
+    description:
+      "One immersive roadmap page for strategic direction and step-by-step progress.",
   },
   resources: {
     key: "resources",
@@ -129,21 +75,8 @@ const appSections: Record<AppSectionKey, AppSection> = {
     href: "/resources",
     icon: BookOpenText,
     eyebrow: "Curated discovery",
-    description: "Trusted resource discovery connected to skill goals.",
-    sidebarTitle: "Resource lanes",
-    sidebarDescription: "Collections, levels, and skill-focused resource views.",
-    sidebarItems: [
-      { label: "Recommended", icon: Sparkles },
-      { label: "Collections", icon: FolderOpen },
-      { label: "Beginner", icon: Sprout },
-      { label: "Intermediate", icon: TrendingUp },
-      { label: "Grammar", icon: BookOpenText },
-      { label: "Vocabulary", icon: BookMarked },
-      { label: "Listening", icon: Headphones },
-      { label: "Reading", icon: BookOpen },
-      { label: "Speaking", icon: Mic },
-      { label: "Writing", icon: PenSquare },
-    ],
+    description:
+      "A focused library experience with editorial curation, search, and filters inside one page.",
   },
   writing: {
     key: "writing",
@@ -151,16 +84,8 @@ const appSections: Record<AppSectionKey, AppSection> = {
     href: "/writing",
     icon: PenSquare,
     eyebrow: "Focused practice",
-    description: "An active workspace for writing tasks, drafts, and feedback.",
-    sidebarTitle: "Writing lanes",
-    sidebarDescription: "Drafting, submission, and mistake-review flows.",
-    sidebarItems: [
-      { label: "Tasks", icon: ListChecks },
-      { label: "New Draft", icon: FilePlus },
-      { label: "Feedback", icon: MessageSquare },
-      { label: "Mistakes", icon: AlertCircle },
-      { label: "History", icon: History },
-    ],
+    description:
+      "One focused writing workspace for tasks, drafts, feedback, and local history.",
   },
   speaking: {
     key: "speaking",
@@ -168,16 +93,8 @@ const appSections: Record<AppSectionKey, AppSection> = {
     href: "/speaking",
     icon: Mic,
     eyebrow: "Active speaking work",
-    description: "A dedicated place for prompts, recordings, and speaking review.",
-    sidebarTitle: "Speaking lanes",
-    sidebarDescription: "Prompts, recordings, reflection, and feedback.",
-    sidebarItems: [
-      { label: "Prompts", icon: MessageCircle },
-      { label: "Record", icon: Mic },
-      { label: "Feedback", icon: MessageSquare },
-      { label: "Reflection", icon: Lightbulb },
-      { label: "History", icon: History },
-    ],
+    description:
+      "One focused speaking workspace for prompts, active sessions, reflection, and history.",
   },
   settings: {
     key: "settings",
@@ -185,16 +102,8 @@ const appSections: Record<AppSectionKey, AppSection> = {
     href: "/settings",
     icon: Settings2,
     eyebrow: "Preferences and profile",
-    description: "Profile, goals, preferences, and account controls.",
-    sidebarTitle: "Settings lanes",
-    sidebarDescription: "Appearance, account, and learner configuration.",
-    sidebarItems: [
-      { label: "Profile", icon: UserRound },
-      { label: "Goals", icon: Target },
-      { label: "Preferences", icon: SlidersHorizontal },
-      { label: "Notifications", icon: Bell },
-      { label: "Account", icon: Shield },
-    ],
+    description:
+      "A simple settings page for profile, goals, appearance, and account controls.",
   },
 };
 

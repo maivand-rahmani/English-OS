@@ -4,7 +4,7 @@
 
 This document defines the post-V1 expansion path for English OS.
 
-V2 is where the product grows from one primary page per major section into a deeper application with route-backed subpages and full section-specific workflows.
+V2 is where the product grows from one primary page per major section into a deeper application with selective route-backed workflows and full section-specific work areas.
 
 ## V2 Premise
 
@@ -29,7 +29,11 @@ The product should still keep:
 - Writing and Speaking as active practice workspaces
 - Settings as the configuration layer
 
-The difference is that each section now gains real internal pages with focused workflows, deeper continuity, and stronger deep-linking.
+The difference is that selected sections now gain real internal pages with focused workflows, deeper continuity, and stronger deep-linking.
+
+V2 does not mean restoring every old placeholder sidebar item as a route.
+
+It means promoting only the internal surfaces that prove they need their own workflow page.
 
 ## Active Tracker Rule
 
@@ -42,8 +46,9 @@ This document is not the active implementation tracker while V1 is incomplete.
 In V2:
 
 - root top-level routes remain as section overview or command views
-- local sidebar items become real route-backed subpages
-- subpages must be full workflow surfaces, not just alternate filters of the same page
+- only distinct workflow surfaces become route-backed internal pages
+- filters, actions, tabs, and lightweight sections stay inline or in URL state unless they become full workflow surfaces
+- any section-level navigation must stay smaller and more intentional than the old V1 placeholder lists
 - deep links should be able to open the exact place where work continues
 
 The root sections should not disappear.
@@ -55,63 +60,55 @@ They remain the section entry views above the deeper workflow pages.
 ### Dashboard
 
 - `/dashboard`
-- `/dashboard/today`
-- `/dashboard/this-week`
 - `/dashboard/review`
-- `/dashboard/weak-areas`
-- `/dashboard/recent-activity`
+- `/dashboard/insights`
+- `/dashboard/activity`
 
 ### Roadmap
 
 - `/roadmap`
-- `/roadmap/current-stage`
-- `/roadmap/upcoming`
-- `/roadmap/grammar`
-- `/roadmap/vocabulary`
-- `/roadmap/reading`
-- `/roadmap/listening`
+- `/roadmap/stages/[stageSlug]`
+- `/roadmap/skills/[skillSlug]`
 - `/roadmap/milestones`
 
 ### Resources
 
 - `/resources`
-- `/resources/recommended`
 - `/resources/collections`
-- `/resources/beginner`
-- `/resources/intermediate`
-- `/resources/grammar`
-- `/resources/vocabulary`
-- `/resources/listening`
-- `/resources/reading`
-- `/resources/speaking`
-- `/resources/writing`
+- `/resources/collections/[collectionSlug]`
+- `/resources/library/[resourceSlug]`
+- `/resources/follow-up`
 
 ### Writing
 
 - `/writing`
 - `/writing/tasks`
-- `/writing/new-draft`
-- `/writing/feedback`
-- `/writing/mistakes`
+- `/writing/tasks/[taskId]`
+- `/writing/drafts/[draftId]`
+- `/writing/submissions/[submissionId]`
 - `/writing/history`
 
 ### Speaking
 
 - `/speaking`
 - `/speaking/prompts`
-- `/speaking/record`
-- `/speaking/feedback`
-- `/speaking/reflection`
+- `/speaking/prompts/[promptId]`
+- `/speaking/sessions/[sessionId]`
 - `/speaking/history`
 
 ### Settings
 
 - `/settings`
 - `/settings/profile`
-- `/settings/goals`
-- `/settings/preferences`
-- `/settings/notifications`
+- `/settings/learning`
+- `/settings/appearance`
 - `/settings/account`
+
+Legacy V1 sidebar ideas such as `Today`, `This Week`, `Current Stage`,
+`Upcoming`, `Recommended`, `Beginner`, `Grammar`, `New Draft`, `Record`,
+`Feedback`, `Reflection`, `Mistakes`, `Goals`, and `Notifications` should stay
+inline, state-based, or folded into the routes above unless later UX work
+proves they need their own real workflow page.
 
 ### Auth And Onboarding
 
@@ -142,7 +139,7 @@ Rules:
 - roadmap blocks should open the related roadmap subpage, resource view, or practice workspace directly
 - resource cards should open not only external destinations but also the exact English OS follow-up surface
 - writing and speaking actions should reopen the current task, draft, recording flow, feedback view, or history entry directly
-- section sidebars should reflect real navigation state, not decorative labels
+- any section-level navigation that exists should reflect real navigation state, not decorative labels
 
 ## Mobile Rule
 
@@ -178,26 +175,28 @@ Status:
 
 Goal:
 
-Create the routing and shell rules that let section sidebars become real navigation instead of static local lists.
+Create the routing and shell rules that grow V1's simplified top-level navigation into a deeper but still intentional V2 route system.
 
 Tasks:
 
-- [ ] Define nested routing structure for route-backed section subpages
-- [ ] Define sidebar-to-route mapping rules for all major sections
+- [ ] Define nested routing structure for selective route-backed workflows
+- [ ] Define which concepts stay inline or URL-state based instead of becoming pages
 - [ ] Define root section page role as overview or command view
 - [ ] Define deep-linking rules for reopening exact workflow entries
 - [ ] Define section-level URL and state persistence rules
+- [ ] Define when section-level navigation is justified and when it should stay absent
 - [ ] Define mobile navigation behavior for subpage-heavy sections
 
 Mobile version:
 
-- [ ] Define a shared V2 mobile subpage shell using bottom navigation, top chips, and sequential section flows
+- [ ] Define a shared V2 mobile subpage shell using bottom navigation, contextual back paths, and section switchers only where needed
 - [ ] Define mobile return-path behavior between overview pages and deep workflow subpages
 
 Done when:
 
-- [ ] every sidebar item has a clear route contract
+- [ ] every internal route maps to a real workflow surface
 - [ ] root pages and subpages have non-overlapping roles
+- [ ] filters, actions, and lightweight sections are not promoted into routes without clear product need
 - [ ] nested routing rules are consistent across sections
 - [ ] mobile and desktop navigation behavior are both defined
 - [ ] shared mobile subpage navigation rules are explicit enough for every later phase
@@ -216,27 +215,27 @@ Status:
 
 Goal:
 
-Turn Dashboard from one command-center page into a set of focused daily workflow pages.
+Turn Dashboard from one command-center page into a small set of focused follow-up workflow pages without fragmenting the daily home.
 
 Tasks:
 
-- [ ] Build `/dashboard/today` as the primary daily execution surface
-- [ ] Build `/dashboard/this-week` as a continuity and pacing view
+- [ ] Preserve `/dashboard` as the primary daily execution and command-center return point
 - [ ] Build `/dashboard/review` as the deeper review-entry surface
-- [ ] Build `/dashboard/weak-areas` as a focused improvement view
-- [ ] Build `/dashboard/recent-activity` as session continuity and history entry
-- [ ] Preserve `/dashboard` as the section overview and command-center return point
+- [ ] Build `/dashboard/insights` as a focused improvement and weak-signal view
+- [ ] Build `/dashboard/activity` as session continuity and history entry
+- [ ] Define whether weekly pacing stays inside `/dashboard` or later earns its own real workflow route
 - [ ] Add deep links from overview cards into exact dashboard subpages
 
 Mobile version:
 
-- [ ] Define one-dominant-action mobile hierarchy across dashboard subpages
-- [ ] Define mobile ordering for review, weak-area, and recent-activity continuity views
+- [ ] Define one-dominant-action mobile hierarchy across dashboard root, review, insights, and activity surfaces
+- [ ] Define mobile ordering for review, insight, and activity continuity views
 
 Done when:
 
 - [ ] dashboard root works as a command view rather than duplicating every subpage
 - [ ] each dashboard subpage answers a distinct daily decision
+- [ ] weekly pacing and today orchestration are not duplicated into thin extra routes
 - [ ] the learner can move from dashboard overview into focused follow-up views without friction
 - [ ] dashboard subpages are more than filtered cards from one page
 - [ ] each dashboard subpage remains readable and decisive on phone
@@ -256,16 +255,15 @@ Status:
 
 Goal:
 
-Expand Roadmap into a deeper strategic workspace with route-backed views for progression, skills, and milestones.
+Expand Roadmap into a deeper strategic workspace with real stage, skill, and milestone routes without turning every filter into a page.
 
 Tasks:
 
-- [ ] Build `/roadmap/current-stage` for active stage execution
-- [ ] Build `/roadmap/upcoming` for near-future path visibility
-- [ ] Build `/roadmap/grammar` and `/roadmap/vocabulary` as skill-focused roadmap views
-- [ ] Build `/roadmap/reading` and `/roadmap/listening` as applied skill-track views
-- [ ] Build `/roadmap/milestones` as progress landmark and checkpoint view
 - [ ] Preserve `/roadmap` as the strategic overview page
+- [ ] Build `/roadmap/stages/[stageSlug]` for active stage execution and deeper stage continuity
+- [ ] Build `/roadmap/skills/[skillSlug]` as the reusable skill-focused roadmap route
+- [ ] Build `/roadmap/milestones` as progress landmark and checkpoint view
+- [ ] Define whether current and upcoming work stay inside the roadmap root or move into stage detail surfaces
 - [ ] Define direct routes from roadmap blocks into linked resources and practice tasks
 
 Mobile version:
@@ -276,7 +274,7 @@ Mobile version:
 Done when:
 
 - [ ] roadmap supports both stage-first and skill-first navigation
-- [ ] current and upcoming work are separated clearly
+- [ ] current and upcoming work are handled clearly without thin duplicate pages
 - [ ] milestones have a dedicated interpretation surface
 - [ ] roadmap subpages feel like workflow areas, not duplicate filters
 - [ ] roadmap subpages preserve strategic clarity on phone without side-by-side dependence
@@ -295,15 +293,16 @@ Status:
 
 Goal:
 
-Turn Resources into a structured editorial library with route-backed entry points by recommendation, collection, level, and skill.
+Turn Resources into a structured editorial library with deeper route-backed entry points while keeping filters lightweight.
 
 Tasks:
 
-- [ ] Build `/resources/recommended` as the highest-trust personalized entry
-- [ ] Build `/resources/collections` as the editorial browsing surface
-- [ ] Build `/resources/beginner` and `/resources/intermediate` as level-focused pages
-- [ ] Build skill-focused pages for grammar, vocabulary, listening, reading, speaking, and writing
 - [ ] Preserve `/resources` as the overview and discovery start page
+- [ ] Build `/resources/collections` as the editorial browsing surface
+- [ ] Build `/resources/collections/[collectionSlug]` as the deeper collection surface
+- [ ] Build `/resources/library/[resourceSlug]` as the route-backed resource detail surface
+- [ ] Build `/resources/follow-up` as the continue/saved/revisit queue
+- [ ] Define how level, skill, and recommendation filters stay as URL state instead of immediately becoming standalone pages
 - [ ] Define how recommendation context, why-now logic, and follow-up actions appear inside each subpage
 - [ ] Define routes from roadmap and dashboard into exact resource subpages or cards
 
@@ -316,7 +315,7 @@ Done when:
 
 - [ ] resource browsing is organized by real user intent, not only one generic list
 - [ ] recommendation context survives across deeper routes
-- [ ] level and skill pages serve different jobs cleanly
+- [ ] level and skill filters stay lightweight unless they prove they need their own distinct workflow pages
 - [ ] resources subpages remain editorial and guided rather than database-like
 - [ ] resource subpages stay trustworthy and easy to act on in mobile layouts
 
@@ -334,28 +333,30 @@ Status:
 
 Goal:
 
-Expand Writing into a multi-page active workspace with clear task, draft, feedback, mistake, and history flows.
+Expand Writing into a multi-page active workspace with clear task, draft, submission, and history continuity.
 
 Tasks:
 
-- [ ] Build `/writing/tasks` as the task list and task-entry view
-- [ ] Build `/writing/new-draft` as the active drafting surface
-- [ ] Build `/writing/feedback` as the feedback and rewrite loop view
-- [ ] Build `/writing/mistakes` as the repeated-pattern review page
-- [ ] Build `/writing/history` as the continuity and archive view
 - [ ] Preserve `/writing` as the overview and workspace entry page
+- [ ] Build `/writing/tasks` as the task list and task-entry view
+- [ ] Build `/writing/tasks/[taskId]` as the focused task context surface
+- [ ] Build `/writing/drafts/[draftId]` as the active drafting surface
+- [ ] Build `/writing/submissions/[submissionId]` as the feedback and rewrite loop surface
+- [ ] Build `/writing/history` as the continuity and archive view
+- [ ] Define how `New Draft` opens a draft route instead of becoming a permanent navigation page
+- [ ] Define whether repeated mistake review stays inside history/submission surfaces or later earns its own true page
 - [ ] Define direct reopening of exact drafts, feedback states, and history entries
 
 Mobile version:
 
-- [ ] Define task-first mobile writing flow with dominant draft continuation and stacked feedback states
-- [ ] Define compact mobile hierarchy between active drafting, mistake review, and writing history
+- [ ] Define task-first mobile writing flow with dominant draft continuation and stacked submission states
+- [ ] Define compact mobile hierarchy between active drafting, submission feedback, and writing history
 
 Done when:
 
 - [ ] writing has a clear start-to-feedback workflow across routes
 - [ ] draft continuation is route-backed and recoverable
-- [ ] mistake review is separated from single-draft feedback
+- [ ] feedback and mistake review are reachable without route clutter
 - [ ] writing history helps the learner continue, not only archive old work
 - [ ] writing routes remain low-friction and readable on phone
 
@@ -373,16 +374,16 @@ Status:
 
 Goal:
 
-Expand Speaking into a route-backed practice workspace with clear transitions between prompts, recording, feedback, reflection, and history.
+Expand Speaking into a route-backed practice workspace with clear prompt, session, and history continuity without promoting every state into its own nav item.
 
 Tasks:
 
-- [ ] Build `/speaking/prompts` as the session-entry view
-- [ ] Build `/speaking/record` as the active recording surface
-- [ ] Build `/speaking/feedback` as the post-session feedback page
-- [ ] Build `/speaking/reflection` as the learner reflection surface
-- [ ] Build `/speaking/history` as the continuity and archive view
 - [ ] Preserve `/speaking` as the overview and workspace entry page
+- [ ] Build `/speaking/prompts` as the session-entry view
+- [ ] Build `/speaking/prompts/[promptId]` as the focused prompt-launch surface
+- [ ] Build `/speaking/sessions/[sessionId]` as the active speaking session and follow-up surface
+- [ ] Build `/speaking/history` as the continuity and archive view
+- [ ] Define how record, feedback, and reflection live inside session routes unless later UX work proves they need separate pages
 - [ ] Define reopening rules for prompt, recording, transcript, feedback, and history continuity
 
 Mobile version:
@@ -393,8 +394,7 @@ Mobile version:
 Done when:
 
 - [ ] speaking supports a repeatable route-backed session flow
-- [ ] recording and post-session review are clearly separated
-- [ ] reflection is treated as its own product moment
+- [ ] recording, feedback, and reflection are handled coherently without thin duplicate pages
 - [ ] history supports confidence-building continuity across sessions
 - [ ] speaking routes remain approachable and confidence-building on phone
 
@@ -412,27 +412,27 @@ Status:
 
 Goal:
 
-Turn Settings into a real multi-page control area with dedicated preference and account surfaces.
+Turn Settings into a smaller set of clear control surfaces without route clutter.
 
 Tasks:
 
 - [ ] Build `/settings/profile`
-- [ ] Build `/settings/goals`
-- [ ] Build `/settings/preferences`
-- [ ] Build `/settings/notifications`
+- [ ] Build `/settings/learning`
+- [ ] Build `/settings/appearance`
 - [ ] Build `/settings/account`
 - [ ] Preserve `/settings` as the overview and settings home
+- [ ] Define where notifications live and whether they remain inline inside account or learning until they prove they need a dedicated page
 - [ ] Define how appearance, study, and reminder preferences affect the rest of the system visibly
 
 Mobile version:
 
 - [ ] Define stacked mobile settings flows with touch-friendly grouped controls
-- [ ] Define how profile, goals, preferences, notifications, and account pages prioritize high-frequency changes on phone
+- [ ] Define how profile, learning, appearance, and account pages prioritize high-frequency changes on phone
 
 Done when:
 
 - [ ] each settings subpage owns a clear configuration job
-- [ ] appearance and learning preferences are not mixed into one catch-all form
+- [ ] goals, preferences, and notifications are not scattered across too many thin routes
 - [ ] settings changes can be understood in terms of product impact
 - [ ] settings remains calm and focused rather than becoming a feature dump
 - [ ] settings stays easy to scan and edit on phone without long unfocused forms
@@ -502,7 +502,7 @@ Tasks:
 
 Mobile version:
 
-- [ ] Polish bottom navigation, top chips, and return-path continuity for deeper phone workflows
+- [ ] Polish bottom navigation, contextual section switching, and return-path continuity for deeper phone workflows
 - [ ] Verify that exact deep links open usable mobile workflow states instead of desktop-biased layouts
 
 Done when:
@@ -527,7 +527,7 @@ When using this roadmap:
 - verify that V2 work does not replace unfinished V1 obligations
 - verify that every new subpage comes from an already defined UX need
 - verify that root section pages remain useful overview surfaces
-- verify that sidebar navigation is route-backed rather than decorative
+- verify that any section-level navigation is route-backed, justified, and smaller than the old V1 placeholder lists
 - verify that mobile behavior is designed intentionally for every subpage
 - verify that deeper routes create clearer workflows rather than duplicating the same layout with different filters
 

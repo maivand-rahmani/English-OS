@@ -50,6 +50,14 @@ The page should instead prefer:
 - large detail modal for deep context
 - minimal visible complexity
 
+## V1 Navigation Model
+
+Resources is one cohesive page in V1.
+
+`Recommended`, `Collections`, level groupings such as `Beginner` and `Intermediate`, and skill groupings such as `Grammar`, `Vocabulary`, `Listening`, `Reading`, `Speaking`, and `Writing` must remain integrated discovery states inside the page.
+
+They are not active sidebar routes in V1.
+
 ## Resource Browse Requirements
 
 The main browse surface should communicate only the highest-signal metadata:

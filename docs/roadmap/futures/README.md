@@ -32,8 +32,10 @@ Do not use this section as the active work tracker while V1 is still incomplete.
 Future roadmap documents should:
 
 - assume the current roadmap has already been completed
+- assume V1 shipped with top-level navigation only
 - avoid moving unfinished V1 work into later phases
 - describe the next coherent product expansion
+- add internal routes only when they represent real workflow depth
 - stay aligned with the product thesis and information architecture
 
 ## Tracking Rule

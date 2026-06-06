@@ -33,7 +33,7 @@ Fixed decisions for this V1 pass:
 - phone-first mobile web is the default target for all surfaces below `lg`
 - `lg` and above keep the desktop shell
 - global navigation on phone uses a fixed bottom nav
-- local section lanes stay contextual and appear as horizontal chips below the header
+- phone navigation stays limited to the six top-level product sections
 - mobile search is intentionally hidden for now instead of becoming a half-finished flow
 - mobile filter and sheet behavior uses `@base-ui/react`
 - this pass changes UI hierarchy, layout, and mobile interaction patterns without changing product logic, Prisma, local-state hooks, or recommendation logic
@@ -63,8 +63,7 @@ Core rules:
 
 Phone navigation should use:
 
-- bottom navigation for top-level sections
-- top horizontal chips or a segmented row for local section lanes
+- bottom navigation for top-level sections only
 
 The top-level sections remain:
 
@@ -75,15 +74,11 @@ The top-level sections remain:
 - Speaking
 - Settings
 
-### Local section structure
+### Local section navigation
 
-Local section lanes should appear near the top of the active screen as:
+V1 should not add nested mobile navigation for unfinished internal section pages.
 
-- horizontal chips
-- a segmented control row
-- or another compact, tap-friendly variant
-
-They should not behave like a permanently visible desktop rail on phone.
+If a page needs internal organization, it should use inline sections, actions, filters, modals, or lightweight tabs inside the main experience.
 
 ### Header behavior
 
@@ -92,7 +87,6 @@ The mobile header should stay short and utility-light.
 It should prioritize:
 
 - current section identity
-- one local context cue when needed
 - lightweight utilities only
 
 It should avoid:
@@ -399,6 +393,7 @@ Active.
 
 - [Information Architecture](./information-architecture.md)
 - [Navigation](./navigation.md)
+- [V1 Navigation Simplification Rule](./v1-navigation-simplification-rule.md)
 - [Dashboard](./dashboard.md)
 - [Roadmap](./roadmap.md)
 - [Resources](./resources.md)

@@ -27,7 +27,10 @@ describe("AppShell", () => {
     expect(
       await screen.findByRole("navigation", { name: /primary mobile navigation/i }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("list", { name: /resources lanes/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /resources/i })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("list", { name: /resources lanes/i }),
+    ).not.toBeInTheDocument();
     expect(screen.queryByRole("navigation", { name: /top navigation/i })).not.toBeInTheDocument();
     expect(screen.getByText("Shell content")).toBeInTheDocument();
   });

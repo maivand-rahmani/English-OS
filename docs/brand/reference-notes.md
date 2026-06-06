@@ -29,9 +29,7 @@ The reference is successful because it uses:
 - a soft atmospheric page background
 - a large centered rounded application canvas
 - generous outer padding around the app canvas
-- a slim vertical icon rail on the left
-- a small logo/control tile at the top of the rail
-- a separated bottom theme/control cluster
+- a strong left-edge brand anchor and shell rhythm
 - centered segmented top navigation
 - black selected navigation pill
 - right utility group for search, notifications, and profile
@@ -52,7 +50,7 @@ The layout feels rich without being noisy because the hierarchy is clear.
 
 - large rounded central app canvas
 - soft pastel atmospheric background
-- left vertical icon sidebar
+- branded shell discipline without fake V1 sub-navigation
 - centered pill-based top navigation
 - black active navigation state
 - black primary action buttons
@@ -70,7 +68,7 @@ For V1 desktop, keep these close to the reference where they belong:
 - shell silhouette
 - rounded app canvas proportions
 - top navigation shape and placement
-- left icon rail rhythm
+- clean shell rhythm and brand anchoring
 - black active states
 - main-left and right-column Dashboard composition
 - large hero/greeting spacing
@@ -117,7 +115,6 @@ Dashboard can use:
 - right-side recommendation/resource panel
 - lower progress/review/activity cards
 - active top-nav state
-- vertical sidebar utilities
 
 Speaking can use:
 

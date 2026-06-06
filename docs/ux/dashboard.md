@@ -38,7 +38,6 @@ Expected structure:
 
 - outer atmospheric background
 - large rounded app canvas
-- left vertical icon sidebar
 - centered top pill navigation
 - right utility controls
 - large greeting/title row
@@ -49,6 +48,14 @@ Expected structure:
 English OS content should replace the reference content.
 
 The structure should still feel very close.
+
+## V1 Navigation Model
+
+Dashboard is one page in V1.
+
+`Today`, `This Week`, `Review`, `Weak Areas`, and `Recent Activity` belong inside the Dashboard as sections or cards.
+
+They are not active sidebar routes in V1.
 
 Do not turn the dashboard into:
 

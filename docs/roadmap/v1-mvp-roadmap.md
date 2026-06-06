@@ -36,6 +36,8 @@ Implementation has moved through a mobile V1 UI pass. The app shell, dashboard, 
 
 Phases 1 through 6 are now updated to reflect the implemented mobile shell, dashboard ordering, roadmap stacking, resources filter sheet, and mobile-safe layout tokens. Phase 7 is now complete: writing and speaking both behave like real local-first practice workspaces with active task or prompt flows, saved history, and workspace-specific motion.
 
+The shell now follows a top-level-only V1 navigation model. Section sidebars and mobile local lanes are postponed to V2 unless real internal pages are implemented later.
+
 The next tracked implementation work should move into review and recommendation logic, then continue into AI-light features and final polish.
 
 ## V1 Build Strategy
@@ -141,7 +143,7 @@ Tasks:
 
 - [x] Build authenticated app layout
 - [x] Build top pill navigation
-- [x] Build vertical sidebar
+- [x] Keep V1 shell navigation limited to top-level sections only
 - [x] Build main content shell
 - [x] Build responsive shell behavior for desktop and mobile web
 - [x] Build route placeholders for all top-level sections
@@ -151,8 +153,8 @@ Tasks:
 Mobile version:
 
 - [x] Define bottom navigation for top-level sections on phone
-- [x] Define top chips or segmented local section lanes for mobile section structure
-- [x] Define compact mobile header, utility priority, and collapsible secondary navigation behavior
+- [x] Define top-level-only phone navigation for V1
+- [x] Define compact mobile header and utility priority without nested section navigation
 - [x] Define how desktop rail behavior transforms on phone instead of persisting unchanged
 
 Done when:
@@ -162,8 +164,9 @@ Done when:
 - [x] shell works on desktop browser and mobile web
 - [x] routes are thin and composed from widgets
 - [x] mobile shell is intentional on phone, not a squeezed desktop shell
-- [x] phone navigation hierarchy is clear between global sections and local section lanes
+- [x] phone navigation hierarchy is limited to real top-level sections in V1
 - [x] mobile header and utility controls stay compact and calm
+- [x] no active V1 section sidebar or local lane is required to use the product
 
 Related docs:
 

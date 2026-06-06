@@ -58,7 +58,7 @@ The canonical dashboard reference defines:
 
 - a large rounded application canvas
 - centered pill top navigation
-- vertical icon sidebar
+- a calm branded shell without V1 sub-navigation chrome
 - soft glass-like panels
 - black active controls
 - pastel atmospheric background

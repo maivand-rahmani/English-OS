@@ -26,7 +26,7 @@ reference's:
 
 - outer atmospheric background
 - large rounded app canvas
-- left vertical icon rail
+- calm shell framing and brand anchor
 - centered pill navigation
 - right utility cluster
 - soft rounded panels
@@ -98,8 +98,8 @@ The default style can be Soft Liquid OS, but the system must support future them
 ## Core Visual Rules
 
 - Use a large rounded app canvas.
-- Use a vertical icon sidebar.
 - Use centered pill top navigation.
+- Do not rely on an active section sidebar in V1.
 - Use black active states for selected controls and primary actions.
 - Use soft glass-like panels and layered surfaces.
 - Use a calm atmospheric background.
@@ -136,8 +136,8 @@ Soft Liquid OS must work as both:
 
 The style should not be designed only as a wide dashboard screenshot.
 
-Dashboard should feel like a calm command center with dense information, side
-navigation, and contextual panels.
+Dashboard should feel like a calm command center with dense information,
+top-level navigation, and contextual panels.
 
 Other learner-facing pages should feel like focused workspaces or discovery
 surfaces rather than mini dashboards.

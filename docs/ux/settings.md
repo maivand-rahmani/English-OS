@@ -29,6 +29,14 @@ V1 settings should include:
 - notifications
 - account
 
+## V1 Navigation Model
+
+Settings is one simple page in V1.
+
+Profile, goals, preferences, notifications, and account controls may be grouped as sections or tabs inside that page.
+
+They are not active V1 sidebar routes.
+
 ## What Belongs Here
 
 Examples of information that belongs in settings:

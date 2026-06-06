@@ -41,7 +41,7 @@ These moments should receive special attention:
 - app shell entering after onboarding
 - dashboard widgets revealing in sequence
 - top navigation active state moving between sections
-- sidebar icons changing active state
+- shell-preserving transitions between top-level sections
 - today plan updating
 - progress bars and charts changing values
 - roadmap blocks expanding and collapsing
@@ -59,7 +59,6 @@ Examples:
 
 - active top-nav pill slides or morphs into place
 - page sections transition without harsh cuts
-- sidebar active state has a tactile press or glow
 - route changes preserve shell continuity
 
 The shell should feel stable while content changes inside it.

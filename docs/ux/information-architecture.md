@@ -22,10 +22,11 @@ The interface should support all four without becoming cluttered or lesson-heavy
 The product should use an application-shell structure:
 
 - a global top bar for major product zones
-- a local sidebar inside each major zone
 - a primary content area for the active workflow
 
-This supports the "control center" feeling and allows the product to scale without collapsing into a single crowded dashboard.
+In V1, this shell uses top-level navigation only. Local section sidebars are postponed to V2 unless a real internal page becomes necessary and implemented.
+
+This supports the "control center" feeling without inflating the product beyond its current depth.
 
 The shell should provide one visual application frame. Individual pages should
 avoid adding another generic page card around their whole surface. Page-specific
@@ -38,9 +39,9 @@ becoming a stack of dashboard-like support blocks.
 
 The shell must support both desktop browser and mobile web.
 
-Desktop can use a visible top bar, vertical sidebar, and multi-panel content.
+Desktop can use a visible top bar, branded shell framing, and multi-panel content where the page model actually needs it.
 
-Mobile should adapt the same information architecture into focused views, compact navigation, and prioritized cards rather than forcing the desktop dashboard into a narrow screen.
+Mobile should adapt the same information architecture into focused views, compact top-level navigation, and prioritized cards rather than forcing the desktop dashboard into a narrow screen.
 
 ## Top-Level Sections
 
@@ -149,6 +150,38 @@ This means the interface should prioritize "what should I do next?" before analy
 
 These modules should appear where they are most useful rather than being forced into separate product sections.
 
+## What Is Not A Separate V1 Page
+
+These ideas are real product concepts, but they are not active V1 navigation pages:
+
+- Today
+- This Week
+- Review
+- Weak Areas
+- Recent Activity
+- Current Stage
+- Upcoming
+- Grammar
+- Vocabulary
+- Listening
+- Reading
+- Recommended
+- Collections
+- Beginner
+- Intermediate
+- New Draft
+- Record
+- Feedback
+- Reflection
+- History
+- Profile
+- Goals
+- Preferences
+- Notifications
+- Account
+
+In V1 they should stay as inline sections, actions, filters, tabs, or modal states inside the six top-level pages.
+
 ## IA Principles
 
 1. Daily use should begin from dashboard.
@@ -166,6 +199,7 @@ Active.
 ## Related Docs
 
 - [Navigation](./navigation.md)
+- [V1 Navigation Simplification Rule](./v1-navigation-simplification-rule.md)
 - [Layout Principles](./layout-principles.md)
 - [Dashboard](./dashboard.md)
 - [Roadmap](./roadmap.md)

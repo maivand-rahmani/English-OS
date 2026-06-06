@@ -44,7 +44,7 @@ Completion definition:
 Outcome:
 
 - top bar exists
-- per-section sidebar exists
+- V1 shell navigation is limited to the six top-level sections
 - main authenticated layout exists
 - primary routes exist
 

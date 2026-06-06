@@ -38,10 +38,11 @@ The product should not feel like a noisy edtech app, a playful streak machine, o
 The product should use a strong application-shell structure:
 
 - large rounded app canvas
-- persistent top navigation
-- persistent vertical sidebar
+- persistent top-level navigation
 - large primary work area
 - secondary right-side panels where useful
+
+V1 must not use active per-section sidebars as part of that shell. Local sidebars are future V2 navigation only.
 
 This structure should feel like a serious operating system, not a marketing website.
 

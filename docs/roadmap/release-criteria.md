@@ -23,7 +23,7 @@ V1 is product-ready when:
 V1 is UX-ready when:
 
 - top-level navigation works
-- per-section sidebars work
+- no inactive section sidebars or fake subpages appear in the active V1 UI
 - dashboard is the primary daily home
 - main flows are clear without explanation text
 - empty states are intentional

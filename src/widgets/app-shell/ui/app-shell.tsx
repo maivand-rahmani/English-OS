@@ -14,7 +14,6 @@ import { cn } from "@/shared/lib/utils";
 import { SearchInput } from "@/shared/ui/input";
 
 import { MobileBottomNav } from "./mobile-bottom-nav";
-import { MobileSectionLanes } from "./mobile-section-lanes";
 
 type AppShellProps = {
   children: React.ReactNode;
@@ -74,60 +73,29 @@ function DesktopAppShell({
 
   return (
     <div className="min-h-screen px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
-      <div className="mx-auto flex min-h-[calc(100vh-1.5rem)] max-w-[var(--app-shell-max-width)] overflow-hidden rounded-[2rem] border border-white/65 bg-surface-1 shadow-[var(--shell-shadow)] backdrop-blur-2xl lg:min-h-[calc(100vh-3rem)]">
-        <aside className="flex w-[var(--icon-rail-width)] flex-col border-r border-white/55 bg-surface-2">
-          <div className="flex flex-1 flex-col gap-6 px-3 py-6">
-            <div className="flex flex-col items-center gap-3">
-              <Link
-                href="/dashboard"
-                className="flex size-12 items-center justify-center rounded-[1.1rem] border border-white/70 bg-surface-3 text-sm font-semibold tracking-[0.22em] text-foreground shadow-soft transition-transform duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:-translate-y-0.5"
-              >
-                EO
-              </Link>
-              <div className="text-center">
-                <p className="text-sm font-semibold text-foreground">English OS</p>
-                <p className="text-xs text-muted-foreground">
-                  Learn with structure
-                </p>
-              </div>
-            </div>
-
-            <nav
-              aria-label={`${currentSection.title} navigation`}
-              className="flex flex-col items-center gap-2"
-            >
-              {currentSection.sidebarItems.map((item, index) => (
-                <button
-                  key={item.label}
-                  type="button"
-                  title={item.label}
-                  className={cn(
-                    "group flex h-11 w-11 items-center justify-center rounded-[1rem] border border-transparent bg-white/35 text-muted-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] transition-all duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:-translate-y-0.5 hover:border-white/70 hover:bg-white/70 hover:text-foreground",
-                    index === 0 &&
-                      "border-black/10 bg-primary text-primary-foreground shadow-[0_14px_30px_rgba(17,17,20,0.22)]",
-                  )}
+      <div className="mx-auto flex min-h-[calc(100vh-1.5rem)] max-w-[var(--app-shell-max-width)] flex-col overflow-hidden rounded-[2rem] border border-white/65 bg-surface-1 shadow-[var(--shell-shadow)] backdrop-blur-2xl lg:min-h-[calc(100vh-3rem)]">
+        <header className="border-b border-white/60 px-6 py-6 lg:px-8">
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-4 xl:grid xl:grid-cols-[auto_1fr_auto] xl:items-center xl:gap-6">
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/dashboard"
+                  className="flex size-12 shrink-0 items-center justify-center rounded-[1.1rem] border border-white/70 bg-surface-3 text-sm font-semibold tracking-[0.22em] text-foreground shadow-soft transition-transform duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:-translate-y-0.5"
                 >
-                  {item.icon ? (
-                    <item.icon className="size-4" />
-                  ) : (
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.12em]">
-                      {item.label
-                        .split(" ")
-                        .map((word) => word.charAt(0))
-                        .join("")
-                        .slice(0, 3)}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </nav>
-          </div>
-        </aside>
+                  EO
+                </Link>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-foreground">English OS</p>
+                  <p className="text-xs text-muted-foreground">
+                    Six focused product experiences
+                  </p>
+                </div>
+              </div>
 
-        <div className="flex min-w-0 flex-1 flex-col">
-          <header className="border-b border-white/60 px-6 py-6 lg:px-8">
-            <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-              <nav aria-label="Top navigation" className="overflow-x-auto">
+              <nav
+                aria-label="Top navigation"
+                className="overflow-x-auto xl:justify-self-center"
+              >
                 <div className="inline-flex min-w-max items-center gap-1 rounded-full border border-white/70 bg-surface-2 p-1.5 shadow-soft">
                   {appNavigation.map((item) => {
                     const isActive = item.key === currentSection.key;
@@ -150,10 +118,10 @@ function DesktopAppShell({
                 </div>
               </nav>
 
-              <div className="flex items-center justify-end gap-2">
+              <div className="flex items-center justify-end gap-2 xl:justify-self-end">
                 <SearchInput
                   placeholder="Search resources..."
-                  className="w-64"
+                  className="hidden w-64 min-[1180px]:block"
                 />
                 <button
                   type="button"
@@ -178,7 +146,7 @@ function DesktopAppShell({
               </div>
             </div>
 
-            <div className={cn("mt-6", isRoadmap && "sr-only")}>
+            <div className={cn("min-w-0", isRoadmap && "sr-only")}>
               {isRoadmap ? (
                 <h1>{currentSection.title}</h1>
               ) : isDashboard ? (
@@ -199,16 +167,16 @@ function DesktopAppShell({
                 </div>
               )}
             </div>
-          </header>
-
-          <div className="min-h-0 flex-1 px-6 py-6 lg:px-8 lg:py-8">
-            <main
-              key={pathname}
-              className="h-full animate-slide-in-from-bottom"
-            >
-              {children}
-            </main>
           </div>
+        </header>
+
+        <div className="min-h-0 flex-1 px-6 py-6 lg:px-8 lg:py-8">
+          <main
+            key={pathname}
+            className="h-full animate-slide-in-from-bottom"
+          >
+            {children}
+          </main>
         </div>
       </div>
     </div>
@@ -262,10 +230,6 @@ function MobileAppShell({
               </div>
             </div>
           </header>
-
-          <div className="px-4 py-4 sm:px-5">
-            <MobileSectionLanes section={currentSection} />
-          </div>
         </section>
 
         <main

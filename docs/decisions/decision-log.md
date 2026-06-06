@@ -109,7 +109,7 @@ Related docs:
 
 Status: accepted.
 
-The first supplied visual references should guide product structure and first-glance feel. English OS should borrow the large rounded app canvas, vertical icon sidebar, centered pill navigation, soft panel surfaces, black active states, right-side context panels, and tactile animated behavior.
+The first supplied visual references should guide product structure and first-glance feel. English OS should borrow the large rounded app canvas, shell framing discipline, centered pill navigation, soft panel surfaces, black active states, right-side context panels, and tactile animated behavior.
 
 The references should not be copied literally, and English OS should not drift into course-platform or live-class product behavior.
 
@@ -152,7 +152,7 @@ Status: accepted.
 
 The supplied dashboard reference should be treated as the canonical V1 desktop frame for English OS.
 
-The implementation should closely match its structure, spacing logic, app shell silhouette, left icon rail, centered pill navigation, right utility cluster, soft rounded panels, black active states, and calm two-column dashboard composition.
+The implementation should closely match its structure, spacing logic, app shell silhouette, calm brand framing, centered pill navigation, right utility cluster, soft rounded panels, black active states, and calm two-column dashboard composition.
 
 The product may change colors, content, typography details, and English OS-specific modules, but it should not drift into a generic admin dashboard, default shadcn layout, or overloaded analytics wall.
 
@@ -215,6 +215,32 @@ Related docs:
 - [Resources UX](../ux/resources.md)
 - [Roadmap UX](../ux/roadmap.md)
 - [Style Acceptance Checklist](../brand/style-acceptance-checklist.md)
+
+### 2026-06-06: V1 Uses Top-Level Navigation Only
+
+Status: accepted.
+
+English OS V1 must not show per-section sidebars, nested mobile section lanes,
+or fake internal pages for future feature inventory.
+
+The active V1 navigation model is limited to:
+
+- Dashboard
+- Roadmap
+- Resources
+- Writing
+- Speaking
+- Settings
+
+Internal sidebar ideas are deferred to V2. In V1, actions, filters, states,
+tabs, and inline sections must stay inside the main page experience instead of
+becoming route-backed subpages.
+
+Related docs:
+
+- [Navigation](../ux/navigation.md)
+- [V1 Navigation Simplification Rule](../ux/v1-navigation-simplification-rule.md)
+- [Information Architecture](../ux/information-architecture.md)
 
 ## Status
 
