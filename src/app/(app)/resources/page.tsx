@@ -1,8 +1,8 @@
-import { getDashboardState } from "@/server/dashboard/get-dashboard-state";
+import { getResourcesPageData } from "@/server/resources/get-resources-page-data";
 import { ResourcesLibrary } from "@/widgets/resources-library";
 
 export default async function ResourcesPage() {
-  const dashboardState = await getDashboardState();
+  const resourcesPageData = await getResourcesPageData();
 
-  return <ResourcesLibrary content={dashboardState} />;
+  return <ResourcesLibrary content={resourcesPageData} />;
 }

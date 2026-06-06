@@ -1,513 +1,692 @@
 "use client";
 
 import Link from "next/link";
-import type { ElementType } from "react";
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   ArrowUpRight,
-  BookMarked,
-  CheckCircle2,
-  CircleSlash,
   Filter,
-  Flag,
   LibraryBig,
-  Play,
-  Sparkles,
-  Target,
+  Link2,
+  Search,
+  SlidersHorizontal,
 } from "lucide-react";
-import { useReducedMotion } from "@/shared/hooks/use-reduced-motion";
 
-import { buttonVariants, Button } from "@/shared/ui/button";
-import {
-  DashboardCard,
-  InsetPanel,
-  InfoTile,
-  SectionEyebrow,
-  SmallTag,
-  SummaryBadge,
-} from "@/shared/ui/surfaces";
-import { MobileSheet } from "@/shared/ui/mobile-sheet";
+import type { ResourcesPageData } from "@/entities/resources";
 import { cn } from "@/shared/lib/utils";
-import type { ProgressEntry } from "@/shared/types";
+import { Button, MobileSheet, SearchInput } from "@/shared/ui";
+import { DashboardCard, SectionEyebrow, SmallTag } from "@/shared/ui/surfaces";
+import {
+  RESOURCE_ROLE_OPTIONS,
+  useResourcesLibrary,
+} from "../model/use-resources-library";
+import type {
+  ActiveLibraryFilter,
+  LibraryResource,
+  LibraryShelf,
+  ResourcePrimaryAction,
+  ResourceStateFilter,
+  SuggestedLibraryFilter,
+} from "../model/use-resources-library";
+import { ResourceDetailModal } from "./resource-detail-modal";
+import { ResourceSignalFlags, ResourceStateBadge } from "./resource-state-badge";
 
-import { useResourcesLibrary } from "../model/use-resources-library";
-import type { RoadmapExplorerProps } from "../../roadmap-explorer/model/roadmap-explorer-types";
+type ResourcesLibraryProps = {
+  content: ResourcesPageData;
+};
 
-type LibraryResourceCard = ReturnType<typeof useResourcesLibrary>["resources"][number];
+type MobileFilterDraft = {
+  format: string;
+  level: string;
+  role: string;
+  skill: string;
+  state: ResourceStateFilter;
+  useCase: string;
+};
 
-export function ResourcesLibrary({ content }: RoadmapExplorerProps) {
+export function ResourcesLibrary({ content }: ResourcesLibraryProps) {
   const library = useResourcesLibrary(content);
-  const [isFiltersSheetOpen, setIsFiltersSheetOpen] = useState(false);
+  const [isDesktopFiltersOpen, setIsDesktopFiltersOpen] = useState(false);
+  const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [mobileDraft, setMobileDraft] = useState<MobileFilterDraft>({
+    format: library.formatFilter,
+    level: library.levelFilter,
+    role: library.roleFilter,
+    skill: library.skillFilter,
+    state: library.stateFilter,
+    useCase: library.useCaseFilter,
+  });
 
-  const reduced = useReducedMotion();
-  const Wrapper: ElementType = reduced ? "section" : motion.section;
-  const activeFilterCount = getActiveFilterCount([
-    library.skillFilter,
-    library.formatFilter,
-    library.useCaseFilter,
-    library.stateFilter,
-  ]);
+  const hasResources = library.resources.length > 0;
 
-  function resetFilters() {
-    library.setSkillFilter("all");
-    library.setFormatFilter("all");
-    library.setUseCaseFilter("all");
-    library.setStateFilter("all");
+  function openMobileFilters() {
+    setMobileDraft({
+      format: library.formatFilter,
+      level: library.levelFilter,
+      role: library.roleFilter,
+      skill: library.skillFilter,
+      state: library.stateFilter,
+      useCase: library.useCaseFilter,
+    });
+    setIsMobileSheetOpen(true);
   }
 
-  if (library.resources.length === 0) {
+  function applyMobileFilters() {
+    library.setFormatFilter(mobileDraft.format);
+    library.setLevelFilter(mobileDraft.level);
+    library.setRoleFilter(mobileDraft.role);
+    library.setSkillFilter(mobileDraft.skill);
+    library.setStateFilter(mobileDraft.state);
+    library.setUseCaseFilter(mobileDraft.useCase);
+    setIsMobileSheetOpen(false);
+  }
+
+  function clearMobileDraft() {
+    setMobileDraft({
+      format: "all",
+      level: "all",
+      role: "all",
+      skill: "all",
+      state: "all",
+      useCase: "all",
+    });
+  }
+
+  async function handleResourceAction(
+    resource: LibraryResource,
+    action: ResourcePrimaryAction,
+  ) {
+    await library.applyResourceAction(resource, action);
+    setNotice(getNoticeMessage(resource.title, action));
+    window.setTimeout(() => setNotice(null), 1800);
+  }
+
+  function handlePrimaryOpen(resource: LibraryResource) {
+    if (
+      resource.signal.state === "not_started" ||
+      resource.signal.state === "skipped_for_now"
+    ) {
+      void library.applyResourceAction(resource, "start");
+    }
+  }
+
+  if (!hasResources) {
     return (
-      <Wrapper
-        className="grid gap-[var(--layout-gap)] xl:grid-cols-[minmax(0,1fr)_20rem]"
-        {...(reduced
-          ? {}
-          : {
-              initial: { opacity: 0, y: 12 },
-              animate: { opacity: 1, y: 0 },
-              transition: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
-            })}
-      >
-        <DashboardCard className="bg-surface-gradient-empty p-6 sm:p-7">
-          <SectionEyebrow icon={LibraryBig}>Resource library</SectionEyebrow>
+      <section className="space-y-[var(--layout-gap)]">
+        <DashboardCard className="p-6 sm:p-7">
+          <SectionEyebrow icon={LibraryBig}>Curated library</SectionEyebrow>
           <h1 className="mt-5 text-3xl font-semibold tracking-tight text-foreground">
-            Your curated resource library
+            Resources
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">
-            Stop searching, start learning. Every resource is chosen and
-            explained in the context of your roadmap.
+            No curated resources are connected yet. Once the roadmap links them in,
+            this page will become the calmer discovery surface for the learner.
           </p>
-        </DashboardCard>
-
-        <DashboardCard className="p-5">
-          <SectionEyebrow icon={Target}>What this section answers</SectionEyebrow>
-          <div className="mt-5 space-y-3 text-sm leading-7 text-muted-foreground">
-            <p>What is worth using now</p>
-            <p>Why it fits the learner&apos;s path</p>
-            <p>What to do after each resource</p>
+          <div className="mt-5">
+            <Link
+              href="/roadmap"
+              className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-foreground/80"
+            >
+              <Link2 className="size-4" />
+              Open roadmap
+            </Link>
           </div>
         </DashboardCard>
-      </Wrapper>
+      </section>
     );
   }
 
   return (
-    <Wrapper
-      className="space-y-[var(--layout-gap)]"
-      {...(reduced
-        ? {}
-        : {
-            initial: { opacity: 0, y: 12 },
-            animate: { opacity: 1, y: 0 },
-            transition: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
-          })}
-    >
-      <div className="grid gap-[var(--layout-gap)] xl:grid-cols-[minmax(0,1.35fr)_20rem]">
-        <DashboardCard tone="blue" className="overflow-hidden p-6 sm:p-7">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-            <div className="max-w-3xl">
-              <SectionEyebrow icon={LibraryBig}>Curated library</SectionEyebrow>
-              <h1 className="mt-5 text-3xl font-semibold tracking-tight text-foreground sm:text-[2.4rem]">
-                Resources with context, not random links
-              </h1>
-              <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
-                Each resource is wrapped with skill fit, explanation, and follow-up
-                guidance so the learner can trust why it appears now.
-              </p>
+    <section className="space-y-[var(--layout-gap)]">
+      <DiscoveryHero
+        activeFilters={library.activeFilters}
+        content={content}
+        formatFilter={library.formatFilter}
+        levelFilter={library.levelFilter}
+        notice={notice}
+        onClearAll={library.clearAllFilters}
+        onClearFilter={library.clearFilter}
+        onOpenMobileFilters={openMobileFilters}
+        onQueryChange={library.setQuery}
+        onSuggestedFilter={library.applySuggestedFilter}
+        onToggleDesktopFilters={() => setIsDesktopFiltersOpen((value) => !value)}
+        query={library.query}
+        roleFilter={library.roleFilter}
+        skillFilter={library.skillFilter}
+        stateFilter={library.stateFilter}
+        suggestedFilters={library.suggestedFilters}
+        useCaseFilter={library.useCaseFilter}
+      />
 
-              <div className="mt-5 flex flex-wrap gap-2">
-                <SmallTag>{content.learnerLevelLabel}</SmallTag>
-                <SmallTag>{content.audienceLabel}</SmallTag>
-                <SmallTag>{library.resources.length} curated picks</SmallTag>
-              </div>
-            </div>
-
-            {library.activeResource ? (
-              <InsetPanel tone="cream" className="p-4 lg:max-w-sm">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  Active resource
-                </p>
-                <p className="mt-3 text-base font-semibold text-foreground">
-                  {library.activeResource.title}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {library.activeResource.note ?? library.activeResource.whyRecommended}
-                </p>
-                <div className="mobile-stacked-actions mt-4">
-                  <a
-                    className={buttonVariants({ size: "sm" })}
-                    href={library.activeResource.url}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    Visit resource
-                  </a>
-                  <Link
-                    href={`#resource-${library.activeResource.id}`}
-                    className={buttonVariants({ size: "sm", variant: "outline" })}
-                  >
-                    Open details
-                  </Link>
-                </div>
-              </InsetPanel>
-            ) : null}
-          </div>
-
-          <div className="mt-6 grid gap-3 md:grid-cols-4">
-            <SummaryBadge
-              label="Featured"
-              value={`${library.featuredCount} editorial picks`}
-              accent="neutral"
-            />
-            <SummaryBadge
-              label="Completed"
-              value={`${library.completedCount} tracked locally`}
-              accent="blue"
-            />
-            <SummaryBadge
-              label="Filtered view"
-              value={`${library.filteredResources.length} resources visible`}
-              accent="pink"
-            />
-            <SummaryBadge
-              label="Curation rule"
-              value="Explain first, filter second."
-              accent="neutral"
-            />
-          </div>
+      {isDesktopFiltersOpen ? (
+        <DashboardCard className="hidden p-4 lg:block">
+          <DesktopFilterPanel
+            formatFilter={library.formatFilter}
+            formatOptions={library.formatOptions}
+            levelFilter={library.levelFilter}
+            levelOptions={library.levelOptions}
+            roleFilter={library.roleFilter}
+            setFormatFilter={library.setFormatFilter}
+            setLevelFilter={library.setLevelFilter}
+            setRoleFilter={library.setRoleFilter}
+            setSkillFilter={library.setSkillFilter}
+            setStateFilter={library.setStateFilter}
+            setUseCaseFilter={library.setUseCaseFilter}
+            skillFilter={library.skillFilter}
+            skillOptions={library.skillOptions}
+            stateFilter={library.stateFilter}
+            useCaseFilter={library.useCaseFilter}
+            useCaseOptions={library.useCaseOptions}
+          />
         </DashboardCard>
+      ) : null}
 
-        <DashboardCard tone="cream" className="p-5">
-          <SectionEyebrow icon={Sparkles}>Library status</SectionEyebrow>
-          <div className="mt-5 space-y-4">
-            <InfoTile label="Resource count" value={String(library.resources.length)} />
-            <InfoTile label="Featured picks" value={`${library.featuredCount} highlighted`} />
-            <InfoTile
-              label="Progress state"
-              value={library.isLoading ? "Updating progress" : "Ready to use"}
+      {library.isLoading ? (
+        <ResourceSkeletonGrid />
+      ) : !library.isBrowseMode && library.matchingResources.length === 0 ? (
+        <ResourceEmptyState
+          query={library.query}
+          stateFilter={library.stateFilter}
+          onClearFilters={library.clearAllFilters}
+        />
+      ) : library.isBrowseMode ? (
+        <div className="space-y-6">
+          {library.shelves.map((shelf) => (
+            <ResourceShelfSection
+              key={shelf.id}
+              onOpenDetails={library.openResource}
+              onOpenResource={handlePrimaryOpen}
+              shelf={shelf}
             />
-            <InfoTile label="Navigation" value="Roadmap links land directly here." />
-          </div>
-        </DashboardCard>
-      </div>
-
-      <div className="lg:hidden">
-        <DashboardCard className="p-4 sm:p-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <SectionEyebrow icon={Filter}>Filters</SectionEyebrow>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                {activeFilterCount === 0
-                  ? "All curated resources are visible."
-                  : `${activeFilterCount} filter groups are active right now.`}
-              </p>
-            </div>
-            <Button variant="outline" onClick={() => setIsFiltersSheetOpen(true)}>
-              Filters
-            </Button>
-          </div>
-        </DashboardCard>
-
-        <MobileSheet
-          description="Tune skill, format, use case, and progress state without leaving the library."
-          onOpenChange={setIsFiltersSheetOpen}
-          open={isFiltersSheetOpen}
-          title="Resource filters"
-        >
-          <FilterRow
-            active={library.skillFilter}
-            label="Skill"
-            onChange={library.setSkillFilter}
-            options={["all", ...library.skillOptions]}
-          />
-          <FilterRow
-            active={library.formatFilter}
-            label="Format"
-            onChange={library.setFormatFilter}
-            options={["all", ...library.formatOptions]}
-          />
-          <FilterRow
-            active={library.useCaseFilter}
-            label="Use case"
-            onChange={library.setUseCaseFilter}
-            options={["all", ...library.useCaseOptions]}
-          />
-          <FilterRow
-            active={library.stateFilter}
-            label="State"
-            onChange={library.setStateFilter}
-            options={[
-              "all",
-              "not_started",
-              "in_progress",
-              "completed",
-              "needs_review",
-              "skipped_for_now",
-            ]}
-          />
-          <div className="mobile-stacked-actions pt-2">
-            <Button onClick={() => setIsFiltersSheetOpen(false)}>Show results</Button>
-            <Button variant="outline" onClick={resetFilters}>
-              Reset filters
-            </Button>
-          </div>
-        </MobileSheet>
-      </div>
-
-      <DashboardCard className="hidden p-5 sm:p-6 lg:block">
-        <div className="flex items-center gap-3">
-          <SectionEyebrow icon={Filter}>Filters</SectionEyebrow>
-        </div>
-
-        <div className="mt-5 space-y-5">
-          <FilterRow
-            active={library.skillFilter}
-            label="Skill"
-            onChange={library.setSkillFilter}
-            options={["all", ...library.skillOptions]}
-          />
-          <FilterRow
-            active={library.formatFilter}
-            label="Format"
-            onChange={library.setFormatFilter}
-            options={["all", ...library.formatOptions]}
-          />
-          <FilterRow
-            active={library.useCaseFilter}
-            label="Use case"
-            onChange={library.setUseCaseFilter}
-            options={["all", ...library.useCaseOptions]}
-          />
-          <FilterRow
-            active={library.stateFilter}
-            label="State"
-            onChange={library.setStateFilter}
-            options={[
-              "all",
-              "not_started",
-              "in_progress",
-              "completed",
-              "needs_review",
-              "skipped_for_now",
-            ]}
-          />
-        </div>
-      </DashboardCard>
-
-      {library.filteredResources.length === 0 ? (
-        <DashboardCard className="p-6">
-          <SectionEyebrow icon={BookMarked}>Nothing matches yet</SectionEyebrow>
-          <p className="mt-5 text-sm leading-7 text-muted-foreground">
-            Try widening the filters. This library is curated first, so a narrow
-            combination can naturally reduce the list quickly.
-          </p>
-          <div className="mt-4">
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={resetFilters}
-            >
-              Reset filters
-            </Button>
-          </div>
-        </DashboardCard>
-      ) : (
-        <div className="grid gap-[var(--layout-gap)] xl:grid-cols-2">
-          {library.filteredResources.map((resource) => (
-            <article
-              key={resource.id}
-              id={`resource-${resource.id}`}
-              className={cn(
-                "rounded-[1.9rem] border border-surface-stroke bg-surface-panel p-5 shadow-panel animate-in fade-in slide-in-from-bottom-4 duration-[var(--motion-duration-slow)] ease-[var(--motion-ease-standard)]",
-                getEntryState(library.progressById.get(resource.id)) === "in_progress" &&
-                  "border-state-progress-border bg-surface-state-progress",
-                getEntryState(library.progressById.get(resource.id)) === "completed" &&
-                  "border-state-complete-border bg-surface-state-complete",
-              )}
-            >
-              <div className="flex flex-wrap gap-2">
-                {resource.isFeatured ? <SmallTag>Featured</SmallTag> : null}
-                <SmallTag>{resource.role}</SmallTag>
-                <SmallTag>{capitalize(resource.resourceTypeLabel)}</SmallTag>
-                <StateTag state={getEntryState(library.progressById.get(resource.id))} />
-              </div>
-
-              <div className="mt-4">
-                <p className="text-sm font-medium text-muted-foreground">
-                  {resource.sourceName} / {resource.primaryUseCaseLabel}
-                </p>
-                <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground">
-                  {resource.title}
-                </h2>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  {resource.note ?? resource.whyRecommended}
-                </p>
-              </div>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                <SmallTag>{capitalize(resource.resourceFormatLabel)}</SmallTag>
-                {getPrimarySkillLabel(resource) ? (
-                  <SmallTag>{getPrimarySkillLabel(resource)}</SmallTag>
-                ) : null}
-                <SmallTag>{formatMinutes(resource.estimatedMinutes)}</SmallTag>
-              </div>
-
-              <div className="mt-5">
-                <a
-                  className={cn(
-                    buttonVariants(),
-                    "w-full rounded-full justify-center",
-                  )}
-                  href={resource.url}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  <ArrowUpRight className="size-4" />
-                  Visit resource
-                </a>
-              </div>
-
-              <div className="mt-5 grid gap-4">
-                {resource.description ? (
-                  <Callout title="Overview" body={resource.description} />
-                ) : null}
-                <Callout title="Why recommended" body={resource.whyRecommended} />
-                <Callout
-                  title="Source context"
-                  body={getSourceContext(resource)}
-                />
-                <Callout title="Best use case" body={resource.bestUseCase} />
-                <Callout
-                  title="What to do after"
-                  body={
-                    resource.followUpHint ??
-                    "Keep the material active by reusing it in a short writing or speaking task."
-                  }
-                />
-              </div>
-
-              <div className="mt-5 flex flex-wrap gap-2">
-                <SmallTag>{resource.accessTypeLabel}</SmallTag>
-                <SmallTag>{resource.difficultyLabel}</SmallTag>
-                {resource.cefrLabel ? <SmallTag>{resource.cefrLabel}</SmallTag> : null}
-              </div>
-
-              <InsetPanel tone="cream" className="mt-5 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  Skill fit
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {resource.skills.map((skill) => (
-                    <SmallTag key={`${resource.id}:${skill.slug}`}>
-                      {skill.title}
-                      {skill.emphasis === "primary" ? " core" : ""}
-                    </SmallTag>
-                  ))}
-                </div>
-              </InsetPanel>
-
-              <InsetPanel tone="default" className="mt-5 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  Roadmap links
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {resource.linkedBlocks.map((block) => (
-                    <Link
-                      key={`${resource.id}:${block.id}`}
-                      href={`/roadmap#block-${block.id}`}
-                      className="rounded-full border border-surface-stroke bg-surface-panel-strong px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-foreground shadow-panel transition-colors hover:bg-surface-module-lavender"
-                    >
-                      {block.stageTitle} / {block.title}
-                    </Link>
-                  ))}
-                </div>
-              </InsetPanel>
-
-              <div className="mobile-stacked-actions mt-5">
-                <Button
-                  disabled={library.busyAction?.startsWith(`resource:${resource.id}:`) ?? false}
-                  size="sm"
-                  variant="secondary"
-                  onClick={() =>
-                    void library.updateResourceState(
-                      {
-                        id: resource.id,
-                        title: resource.title,
-                        blockTitle: resource.linkedBlocks[0]?.title ?? "resource",
-                      },
-                      "in_progress",
-                      "start",
-                    )
-                  }
-                >
-                  <Play className="size-4" />
-                  Start
-                </Button>
-                <Button
-                  disabled={library.busyAction?.startsWith(`resource:${resource.id}:`) ?? false}
-                  size="sm"
-                  variant="outline"
-                  onClick={() =>
-                    void library.updateResourceState(
-                      {
-                        id: resource.id,
-                        title: resource.title,
-                        blockTitle: resource.linkedBlocks[0]?.title ?? "resource",
-                      },
-                      "completed",
-                      "complete",
-                      "useful",
-                    )
-                  }
-                >
-                  <CheckCircle2 className="size-4" />
-                  Mark useful
-                </Button>
-                <Button
-                  disabled={library.busyAction?.startsWith(`resource:${resource.id}:`) ?? false}
-                  size="sm"
-                  variant="outline"
-                  onClick={() =>
-                    void library.updateResourceState(
-                      {
-                        id: resource.id,
-                        title: resource.title,
-                        blockTitle: resource.linkedBlocks[0]?.title ?? "resource",
-                      },
-                      "needs_review",
-                      "difficult",
-                      "hard",
-                    )
-                  }
-                >
-                  <Flag className="size-4" />
-                  Mark difficult
-                </Button>
-                <Button
-                  disabled={library.busyAction?.startsWith(`resource:${resource.id}:`) ?? false}
-                  size="sm"
-                  variant="ghost"
-                  onClick={() =>
-                    void library.updateResourceState(
-                      {
-                        id: resource.id,
-                        title: resource.title,
-                        blockTitle: resource.linkedBlocks[0]?.title ?? "resource",
-                      },
-                      "skipped_for_now",
-                      "skip",
-                    )
-                  }
-                >
-                  <CircleSlash className="size-4" />
-                  Skip for now
-                </Button>
-              </div>
-            </article>
           ))}
         </div>
+      ) : (
+        <MatchingResourcesSection
+          activeFilters={library.activeFilters}
+          onOpenDetails={library.openResource}
+          onOpenResource={handlePrimaryOpen}
+          query={library.query}
+          resources={library.matchingResources}
+        />
       )}
-    </Wrapper>
+
+      <MobileSheet
+        description="Choose filters without changing the results until you apply them."
+        onOpenChange={setIsMobileSheetOpen}
+        open={isMobileSheetOpen}
+        title="Resource filters"
+      >
+        <FilterRow
+          active={mobileDraft.skill}
+          label="Skill"
+          onChange={(value) => setMobileDraft((current) => ({ ...current, skill: value }))}
+          options={["all", ...library.skillOptions]}
+        />
+        <FilterRow
+          active={mobileDraft.state}
+          label="State"
+          onChange={(value) =>
+            setMobileDraft((current) => ({
+              ...current,
+              state: value as ResourceStateFilter,
+            }))
+          }
+          options={[
+            "all",
+            "not_started",
+            "in_progress",
+            "completed",
+            "useful",
+            "difficult",
+            "needs_review",
+            "skipped_for_now",
+          ]}
+        />
+        <FilterRow
+          active={mobileDraft.level}
+          label="Level"
+          onChange={(value) => setMobileDraft((current) => ({ ...current, level: value }))}
+          options={["all", ...library.levelOptions]}
+        />
+        <FilterRow
+          active={mobileDraft.format}
+          label="Format"
+          onChange={(value) => setMobileDraft((current) => ({ ...current, format: value }))}
+          options={["all", ...library.formatOptions]}
+        />
+        <FilterRow
+          active={mobileDraft.useCase}
+          label="Use case"
+          onChange={(value) => setMobileDraft((current) => ({ ...current, useCase: value }))}
+          options={["all", ...library.useCaseOptions]}
+        />
+        <FilterRow
+          active={mobileDraft.role}
+          label="Role"
+          onChange={(value) => setMobileDraft((current) => ({ ...current, role: value }))}
+          options={["all", ...RESOURCE_ROLE_OPTIONS]}
+        />
+
+        <div className="mobile-stacked-actions pt-2">
+          <Button onClick={applyMobileFilters}>Show matching resources</Button>
+          <Button variant="outline" onClick={clearMobileDraft}>
+            Clear all
+          </Button>
+        </div>
+      </MobileSheet>
+
+      <ResourceDetailModal
+        busy={
+          library.selectedResource
+            ? Boolean(library.busyAction?.startsWith(`resource:${library.selectedResource.id}:`))
+            : false
+        }
+        onAction={(action) =>
+          library.selectedResource
+            ? handleResourceAction(library.selectedResource, action)
+            : Promise.resolve()
+        }
+        onClose={library.closeResource}
+        resource={library.selectedResource}
+      />
+    </section>
+  );
+}
+
+function DiscoveryHero({
+  activeFilters,
+  content,
+  formatFilter,
+  levelFilter,
+  notice,
+  onClearAll,
+  onClearFilter,
+  onOpenMobileFilters,
+  onQueryChange,
+  onSuggestedFilter,
+  onToggleDesktopFilters,
+  query,
+  roleFilter,
+  skillFilter,
+  stateFilter,
+  suggestedFilters,
+  useCaseFilter,
+}: {
+  activeFilters: ActiveLibraryFilter[];
+  content: ResourcesPageData;
+  formatFilter: string;
+  levelFilter: string;
+  notice: string | null;
+  onClearAll: () => void;
+  onClearFilter: (key: ActiveLibraryFilter["key"]) => void;
+  onOpenMobileFilters: () => void;
+  onQueryChange: (value: string) => void;
+  onSuggestedFilter: (filter: SuggestedLibraryFilter) => void;
+  onToggleDesktopFilters: () => void;
+  query: string;
+  roleFilter: string;
+  skillFilter: string;
+  stateFilter: ResourceStateFilter;
+  suggestedFilters: SuggestedLibraryFilter[];
+  useCaseFilter: string;
+}) {
+  return (
+    <DashboardCard className="overflow-hidden p-5 sm:p-6">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-52 bg-[radial-gradient(circle_at_top_left,rgba(255,214,224,0.45),transparent_34%),radial-gradient(circle_at_top_right,rgba(198,214,255,0.35),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.25),transparent_80%)]" />
+      <div className="relative space-y-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-3xl">
+            <SectionEyebrow icon={LibraryBig}>Curated library</SectionEyebrow>
+            <h1 className="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-[2.4rem]">
+              Resources
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+              Search when you know what you need, or browse the shelves when you want
+              a calmer way to discover the next useful resource.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <SmallTag>{content.resourceCount} resources</SmallTag>
+            <SmallTag>{content.learnerLevelLabel}</SmallTag>
+            <SmallTag>{content.templateTitle}</SmallTag>
+            {content.estimatedWeeks ? <SmallTag>{content.estimatedWeeks} week arc</SmallTag> : null}
+            <Link
+              href="/roadmap"
+              className="inline-flex items-center gap-2 rounded-full border border-surface-stroke-strong bg-surface-panel px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-foreground shadow-panel hover:bg-surface-panel-strong"
+            >
+              <Link2 className="size-3.5" />
+              Open roadmap
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Spotlight search
+            </p>
+            <SearchInput
+              aria-label="Search resources"
+              className="mt-3 h-11 rounded-[1rem] bg-white/85"
+              onChange={(event) => onQueryChange(event.target.value)}
+              placeholder="Search resources, skills, roadmap steps, use cases..."
+              value={query}
+            />
+          </div>
+
+          <div className="flex items-end gap-2">
+            <Button
+              className="hidden lg:inline-flex"
+              size="sm"
+              variant="outline"
+              onClick={onToggleDesktopFilters}
+            >
+              <SlidersHorizontal className="size-4" />
+              Filters
+              {activeFilters.length > 0 ? ` (${activeFilters.length})` : ""}
+            </Button>
+            <Button className="lg:hidden" size="sm" variant="outline" onClick={onOpenMobileFilters}>
+              <Filter className="size-4" />
+              Filters
+              {activeFilters.length > 0 ? ` (${activeFilters.length})` : ""}
+            </Button>
+          </div>
+        </div>
+
+        {suggestedFilters.length > 0 ? (
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Suggested
+            </p>
+            <div className="mobile-chip-row mt-3 lg:flex-wrap lg:overflow-visible lg:pb-0">
+              {suggestedFilters.map((filter) => {
+                const isActive = isSuggestedFilterActive({
+                  filter,
+                  formatFilter,
+                  levelFilter,
+                  roleFilter,
+                  skillFilter,
+                  stateFilter,
+                  useCaseFilter,
+                });
+
+                return (
+                  <button
+                    key={filter.id}
+                    className={cn(
+                      "mobile-chip inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]",
+                      isActive
+                        ? "border-transparent bg-surface-dark-control text-primary-foreground shadow-control"
+                        : "border-surface-stroke-strong bg-white/78 text-muted-foreground hover:bg-surface-module-cream",
+                    )}
+                    onClick={() => onSuggestedFilter(filter)}
+                    type="button"
+                  >
+                    {filter.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+
+        <ActiveFilterChips
+          activeFilters={activeFilters}
+          canClearAll={activeFilters.length > 0}
+          notice={notice}
+          onClearAll={onClearAll}
+          onClearFilter={onClearFilter}
+        />
+      </div>
+    </DashboardCard>
+  );
+}
+
+function DesktopFilterPanel({
+  formatFilter,
+  formatOptions,
+  levelFilter,
+  levelOptions,
+  roleFilter,
+  setFormatFilter,
+  setLevelFilter,
+  setRoleFilter,
+  setSkillFilter,
+  setStateFilter,
+  setUseCaseFilter,
+  skillFilter,
+  skillOptions,
+  stateFilter,
+  useCaseFilter,
+  useCaseOptions,
+}: {
+  formatFilter: string;
+  formatOptions: string[];
+  levelFilter: string;
+  levelOptions: string[];
+  roleFilter: string;
+  setFormatFilter: (value: string) => void;
+  setLevelFilter: (value: string) => void;
+  setRoleFilter: (value: string) => void;
+  setSkillFilter: (value: string) => void;
+  setStateFilter: (value: ResourceStateFilter) => void;
+  setUseCaseFilter: (value: string) => void;
+  skillFilter: string;
+  skillOptions: string[];
+  stateFilter: ResourceStateFilter;
+  useCaseFilter: string;
+  useCaseOptions: string[];
+}) {
+  return (
+    <div className="grid gap-4 lg:grid-cols-3">
+      <FilterRow
+        active={skillFilter}
+        label="Skill"
+        onChange={setSkillFilter}
+        options={["all", ...skillOptions]}
+      />
+      <FilterRow
+        active={stateFilter}
+        label="State"
+        onChange={(value) => setStateFilter(value as ResourceStateFilter)}
+        options={[
+          "all",
+          "not_started",
+          "in_progress",
+          "completed",
+          "useful",
+          "difficult",
+          "needs_review",
+          "skipped_for_now",
+        ]}
+      />
+      <FilterRow
+        active={levelFilter}
+        label="Level"
+        onChange={setLevelFilter}
+        options={["all", ...levelOptions]}
+      />
+      <FilterRow
+        active={formatFilter}
+        label="Format"
+        onChange={setFormatFilter}
+        options={["all", ...formatOptions]}
+      />
+      <FilterRow
+        active={useCaseFilter}
+        label="Use case"
+        onChange={setUseCaseFilter}
+        options={["all", ...useCaseOptions]}
+      />
+      <FilterRow
+        active={roleFilter}
+        label="Role"
+        onChange={setRoleFilter}
+        options={["all", ...RESOURCE_ROLE_OPTIONS]}
+      />
+    </div>
+  );
+}
+
+function ResourceShelfSection({
+  onOpenDetails,
+  onOpenResource,
+  shelf,
+}: {
+  onOpenDetails: (resourceId: string) => void;
+  onOpenResource: (resource: LibraryResource) => void;
+  shelf: LibraryShelf;
+}) {
+  if (shelf.resources.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="space-y-3">
+      <div className="px-1">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          Shelf
+        </p>
+        <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+          {shelf.title}
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+          {shelf.description}
+        </p>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        {shelf.resources.map((resource) => (
+          <ResourceTile
+            key={resource.id}
+            onOpenDetails={onOpenDetails}
+            onOpenResource={onOpenResource}
+            resource={resource}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function MatchingResourcesSection({
+  activeFilters,
+  onOpenDetails,
+  onOpenResource,
+  query,
+  resources,
+}: {
+  activeFilters: ActiveLibraryFilter[];
+  onOpenDetails: (resourceId: string) => void;
+  onOpenResource: (resource: LibraryResource) => void;
+  query: string;
+  resources: LibraryResource[];
+}) {
+  return (
+    <section className="space-y-3">
+      <DashboardCard className="p-4 sm:p-5">
+        <SectionEyebrow icon={Search}>Matching resources</SectionEyebrow>
+        <h2 className="mt-3 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+          {resources.length} resource{resources.length === 1 ? "" : "s"}
+        </h2>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          {query.trim()
+            ? "Recommendation-first results for your search, with the extra chrome removed."
+            : "Recommendation-first results for the active filters."}
+        </p>
+        {activeFilters.length > 0 ? (
+          <p className="mt-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+            {activeFilters.length} active filter{activeFilters.length === 1 ? "" : "s"}
+          </p>
+        ) : null}
+      </DashboardCard>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        {resources.map((resource) => (
+          <ResourceTile
+            key={resource.id}
+            onOpenDetails={onOpenDetails}
+            onOpenResource={onOpenResource}
+            resource={resource}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ResourceTile({
+  onOpenDetails,
+  onOpenResource,
+  resource,
+}: {
+  onOpenDetails: (resourceId: string) => void;
+  onOpenResource: (resource: LibraryResource) => void;
+  resource: LibraryResource;
+}) {
+  return (
+    <article
+      className={cn(
+        "group rounded-[1.55rem] border p-4 shadow-panel transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_42px_rgba(20,20,30,0.10)]",
+        getCardTone(resource),
+      )}
+      id={`resource-${resource.id}`}
+    >
+      <div className="flex flex-wrap items-center gap-2">
+        <SmallTag>{resource.sourceName}</SmallTag>
+        <SmallTag>{resource.roleLabel}</SmallTag>
+        {resource.primarySkillLabel ? <SmallTag>{resource.primarySkillLabel}</SmallTag> : null}
+        <ResourceStateBadge state={resource.signal.state} />
+        <ResourceSignalFlags
+          isDifficult={resource.signal.isDifficult}
+          isUseful={resource.signal.isUseful}
+        />
+      </div>
+
+      <button
+        className="mt-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-module-lavender/60"
+        onClick={() => onOpenDetails(resource.id)}
+        type="button"
+      >
+        <h3 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+          {resource.title}
+        </h3>
+      </button>
+
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+        {resource.formatCategory} · {resource.useCaseCategory} · {resource.timeLabel}
+      </p>
+      <p className="mt-3 text-sm leading-6 text-muted-foreground">
+        {resource.recommendationReason}
+      </p>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {resource.levelTags[0] ? <SmallTag>{resource.levelTags.join(" / ")}</SmallTag> : null}
+        <SmallTag>{resource.resourceTypeLabel}</SmallTag>
+        <SmallTag>{resource.accessTypeLabel}</SmallTag>
+      </div>
+
+      <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        {resource.roadmapLabel}
+      </p>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <a
+          className="inline-flex items-center gap-2 rounded-full bg-surface-dark-control px-4 py-2 text-sm font-semibold text-primary-foreground shadow-control"
+          href={resource.url}
+          rel="noreferrer"
+          target="_blank"
+          onClick={() => onOpenResource(resource)}
+        >
+          <ArrowUpRight className="size-4" />
+          {resource.primaryCtaLabel}
+        </a>
+        <Button size="sm" variant="outline" onClick={() => onOpenDetails(resource.id)}>
+          Details
+        </Button>
+      </div>
+    </article>
   );
 }
 
@@ -520,11 +699,11 @@ function FilterRow({
   active: string;
   label: string;
   onChange: (value: string) => void;
-  options: string[];
+  options: readonly string[];
 }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
         {label}
       </p>
       <div className="mobile-chip-row mt-3 lg:flex-wrap lg:overflow-visible lg:pb-0">
@@ -532,15 +711,15 @@ function FilterRow({
           <button
             key={`${label}:${option}`}
             className={cn(
-              "mobile-chip rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]",
+              "mobile-chip inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]",
               active === option
                 ? "border-transparent bg-surface-dark-control text-primary-foreground shadow-control"
-                : "border-surface-stroke bg-surface-panel-muted text-muted-foreground hover:bg-surface-module-cream",
+                : "border-surface-stroke-strong bg-white/72 text-muted-foreground hover:bg-surface-module-cream",
             )}
             onClick={() => onChange(option)}
             type="button"
           >
-            {humanizeChip(option)}
+            {humanizeLabel(option)}
           </button>
         ))}
       </div>
@@ -548,95 +727,223 @@ function FilterRow({
   );
 }
 
-function Callout({ title, body }: { title: string; body: string }) {
+function ActiveFilterChips({
+  activeFilters,
+  canClearAll,
+  notice,
+  onClearAll,
+  onClearFilter,
+}: {
+  activeFilters: ActiveLibraryFilter[];
+  canClearAll: boolean;
+  notice: string | null;
+  onClearAll: () => void;
+  onClearFilter: (key: ActiveLibraryFilter["key"]) => void;
+}) {
+  if (activeFilters.length === 0 && !notice) {
+    return null;
+  }
+
   return (
-    <InsetPanel tone="default" className="p-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-        {title}
+    <div className="flex flex-wrap items-center gap-2 border-t border-surface-stroke pt-4">
+      {activeFilters.map((filter) => (
+        <button
+          key={`${filter.key}:${filter.value}`}
+          className="inline-flex items-center gap-2 rounded-full border border-surface-stroke-strong bg-white/80 px-3 py-1 text-xs font-semibold text-foreground"
+          onClick={() => onClearFilter(filter.key)}
+          type="button"
+        >
+          <span className="uppercase tracking-[0.18em] text-muted-foreground">{filter.label}</span>
+          <span>{filter.value}</span>
+          <span aria-hidden="true">x</span>
+        </button>
+      ))}
+      {canClearAll ? (
+        <Button size="sm" variant="ghost" onClick={onClearAll}>
+          Clear all
+        </Button>
+      ) : null}
+      {notice ? (
+        <div
+          aria-live="polite"
+          className="rounded-full border border-emerald-200 bg-emerald-50/90 px-3 py-1 text-xs font-semibold text-emerald-700"
+        >
+          {notice}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function ResourceEmptyState({
+  onClearFilters,
+  query,
+  stateFilter,
+}: {
+  onClearFilters: () => void;
+  query: string;
+  stateFilter: ResourceStateFilter;
+}) {
+  return (
+    <DashboardCard className="p-6 sm:p-7">
+      <SectionEyebrow icon={Filter}>No matching resources</SectionEyebrow>
+      <p className="mt-4 text-sm leading-7 text-muted-foreground">
+        {getEmptyStateMessage(query, stateFilter)}
       </p>
-      <p className="mt-3 text-sm leading-7 text-foreground">{body}</p>
-    </InsetPanel>
+      <div className="mt-5">
+        <Button size="sm" variant="outline" onClick={onClearFilters}>
+          Clear filters
+        </Button>
+      </div>
+    </DashboardCard>
   );
 }
 
-function StateTag({ state }: { state: string }) {
+function ResourceSkeletonGrid() {
   return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]",
-        state === "not_started" &&
-          "border-surface-stroke bg-surface-pill text-muted-foreground",
-        state === "in_progress" &&
-          "border-state-progress-border bg-surface-state-progress text-state-progress-text",
-        state === "completed" &&
-          "border-state-complete-border bg-surface-state-complete text-state-complete-text",
-        state === "needs_review" &&
-          "border-state-review-border bg-surface-state-review text-state-review-text",
-        state === "skipped_for_now" &&
-          "border-state-skipped-border bg-surface-state-skipped text-state-skipped-text",
-      )}
-    >
-      {humanizeChip(state)}
-    </span>
+    <div className="grid gap-4 lg:grid-cols-2">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <DashboardCard key={index} className="animate-pulse p-4">
+          <div className="flex gap-2">
+            <div className="h-6 w-24 rounded-full bg-white/70" />
+            <div className="h-6 w-20 rounded-full bg-white/60" />
+            <div className="h-6 w-24 rounded-full bg-white/65" />
+          </div>
+          <div className="mt-5 h-6 w-3/4 rounded-full bg-white/72" />
+          <div className="mt-3 h-4 w-full rounded-full bg-white/62" />
+          <div className="mt-2 h-4 w-5/6 rounded-full bg-white/58" />
+          <div className="mt-4 flex gap-2">
+            <div className="h-6 w-20 rounded-full bg-white/60" />
+            <div className="h-6 w-18 rounded-full bg-white/56" />
+            <div className="h-6 w-20 rounded-full bg-white/64" />
+          </div>
+          <div className="mt-4 h-4 w-1/2 rounded-full bg-white/58" />
+          <div className="mt-4 flex gap-2">
+            <div className="h-10 w-28 rounded-full bg-white/70" />
+            <div className="h-10 w-20 rounded-full bg-white/62" />
+          </div>
+        </DashboardCard>
+      ))}
+    </div>
   );
 }
 
-function getEntryState(entry: ProgressEntry | undefined) {
-  return entry?.state ?? "not_started";
+function isSuggestedFilterActive({
+  filter,
+  formatFilter,
+  levelFilter,
+  roleFilter,
+  skillFilter,
+  stateFilter,
+  useCaseFilter,
+}: {
+  filter: SuggestedLibraryFilter;
+  formatFilter: string;
+  levelFilter: string;
+  roleFilter: string;
+  skillFilter: string;
+  stateFilter: ResourceStateFilter;
+  useCaseFilter: string;
+}) {
+  if (filter.key === "skill") {
+    return skillFilter === filter.value;
+  }
+
+  if (filter.key === "level") {
+    return levelFilter === filter.value;
+  }
+
+  if (filter.key === "format") {
+    return formatFilter === filter.value;
+  }
+
+  if (filter.key === "use_case") {
+    return useCaseFilter === filter.value;
+  }
+
+  if (filter.key === "state") {
+    return stateFilter === filter.value;
+  }
+
+  return roleFilter === filter.value;
 }
 
-function getActiveFilterCount(values: string[]) {
-  return values.filter((value) => value !== "all").length;
+function getCardTone(resource: LibraryResource) {
+  if (resource.signal.state === "in_progress") {
+    return "border-sky-200 bg-[linear-gradient(135deg,rgba(235,246,255,0.92),rgba(255,255,255,0.92))]";
+  }
+
+  if (resource.signal.state === "completed") {
+    return "border-emerald-200 bg-[linear-gradient(135deg,rgba(236,251,242,0.92),rgba(255,255,255,0.92))]";
+  }
+
+  if (resource.signal.state === "needs_review") {
+    return "border-amber-200 bg-[linear-gradient(135deg,rgba(255,247,232,0.94),rgba(255,255,255,0.92))]";
+  }
+
+  if (resource.signal.state === "skipped_for_now") {
+    return "border-slate-200 bg-[linear-gradient(135deg,rgba(247,247,250,0.94),rgba(255,255,255,0.9))]";
+  }
+
+  return "border-surface-stroke-strong bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(248,246,252,0.92))]";
 }
 
-function getPrimarySkillLabel(resource: LibraryResourceCard) {
-  const primarySkill =
-    resource.skills.find((skill) => skill.emphasis === "primary") ??
-    resource.skills[0];
+function getNoticeMessage(title: string, action: ResourcePrimaryAction) {
+  if (action === "useful") {
+    return `${title} marked useful`;
+  }
 
-  return primarySkill?.title;
+  if (action === "difficult") {
+    return `${title} marked difficult`;
+  }
+
+  if (action === "review") {
+    return `${title} added to review`;
+  }
+
+  if (action === "skip") {
+    return `${title} skipped for now`;
+  }
+
+  if (action === "reset") {
+    return `${title} reset`;
+  }
+
+  if (action === "complete") {
+    return `${title} marked completed`;
+  }
+
+  return `${title} started`;
 }
 
-function getSourceContext(resource: LibraryResourceCard) {
-  const context = [
-    resource.sourceName,
-    resource.accessTypeLabel,
-    resource.difficultyLabel,
-    resource.cefrLabel,
-  ].filter(Boolean);
+function getEmptyStateMessage(query: string, stateFilter: ResourceStateFilter) {
+  if (query.trim()) {
+    return "No resources match that search. Try broader keywords or remove one of the active filters.";
+  }
 
-  return context.join(" / ");
+  if (stateFilter === "completed") {
+    return "Completed resources will appear here after you finish them.";
+  }
+
+  if (stateFilter === "useful") {
+    return "Resources marked useful will appear here after you save that signal.";
+  }
+
+  if (stateFilter === "difficult") {
+    return "Resources marked difficult will appear here for another pass.";
+  }
+
+  if (stateFilter === "needs_review") {
+    return "Resources that need review will collect here once you flag them.";
+  }
+
+  return "No resources match these filters. Try removing one filter group or clear them all.";
 }
 
-function humanizeChip(value: string) {
+function humanizeLabel(value: string) {
   if (value === "all") {
     return "All";
   }
 
-  return value
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (match) => match.toUpperCase());
-}
-
-function formatMinutes(minutes: number | null | undefined) {
-  if (!minutes || minutes <= 0) {
-    return "Flexible time";
-  }
-
-  if (minutes < 60) {
-    return `${minutes} min`;
-  }
-
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-
-  if (remainingMinutes === 0) {
-    return `${hours} hr`;
-  }
-
-  return `${hours} hr ${remainingMinutes} min`;
-}
-
-function capitalize(value: string) {
-  return value.replace(/\b\w/g, (match) => match.toUpperCase());
+  return value.replaceAll("_", " ").replace(/\b\w/g, (match) => match.toUpperCase());
 }

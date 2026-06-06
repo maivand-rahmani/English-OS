@@ -3,7 +3,9 @@ import type { SpeakingReflection } from "./speaking-session";
 export const LearningEventType = {
   ResourceStarted: "resource_started",
   ResourceCompleted: "resource_completed",
+  ResourceMarkedUseful: "resource_marked_useful",
   ResourceMarkedDifficult: "resource_marked_difficult",
+  ResourceReset: "resource_reset",
   BlockStarted: "block_started",
   BlockCompleted: "block_completed",
   ReviewDone: "review_done",
@@ -30,6 +32,16 @@ export type ResourceMarkedDifficultPayload = {
   resourceId: string;
   resourceTitle: string;
   reason?: string;
+};
+
+export type ResourceMarkedUsefulPayload = {
+  resourceId: string;
+  resourceTitle: string;
+};
+
+export type ResourceResetPayload = {
+  resourceId: string;
+  resourceTitle: string;
 };
 
 export type BlockStartedPayload = {
@@ -94,6 +106,22 @@ export type ResourceMarkedDifficultEvent = {
   synced: boolean;
 };
 
+export type ResourceMarkedUsefulEvent = {
+  id: string;
+  type: typeof LearningEventType.ResourceMarkedUseful;
+  timestamp: number;
+  payload: ResourceMarkedUsefulPayload;
+  synced: boolean;
+};
+
+export type ResourceResetEvent = {
+  id: string;
+  type: typeof LearningEventType.ResourceReset;
+  timestamp: number;
+  payload: ResourceResetPayload;
+  synced: boolean;
+};
+
 export type BlockStartedEvent = {
   id: string;
   type: typeof LearningEventType.BlockStarted;
@@ -146,7 +174,9 @@ export type ItemSkippedEvent = {
 export type LearningEvent =
   | ResourceStartedEvent
   | ResourceCompletedEvent
+  | ResourceMarkedUsefulEvent
   | ResourceMarkedDifficultEvent
+  | ResourceResetEvent
   | BlockStartedEvent
   | BlockCompletedEvent
   | ReviewDoneEvent

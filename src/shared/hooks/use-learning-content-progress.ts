@@ -20,7 +20,12 @@ export type ResourceProgressTarget = {
 };
 
 export function useLearningContentProgress(limit = 20) {
-  const { entries, isLoading: progressLoading, updateEntry } = useLocalProgress();
+  const {
+    entries,
+    isLoading: progressLoading,
+    removeEntry,
+    updateEntry,
+  } = useLocalProgress();
   const { events, isLoading: eventsLoading, recordEvent } = useLearningEvents(limit);
   const [busyAction, setBusyAction] = useState<string | null>(null);
 
@@ -93,8 +98,8 @@ export function useLearningContentProgress(limit = 20) {
   async function updateResourceState(
     resource: ResourceProgressTarget,
     nextState: BlockState,
-    action: "start" | "complete" | "difficult" | "skip",
-    reflection: "easy" | "hard" | "useful" | "confusing" = "useful",
+    action: "start" | "complete" | "review" | "skip",
+    reflection?: "easy" | "hard" | "useful" | "confusing",
   ) {
     setBusyAction(`resource:${resource.id}:${action}`);
 
@@ -125,18 +130,7 @@ export function useLearningContentProgress(limit = 20) {
           payload: {
             resourceId: resource.id,
             resourceTitle: resource.title,
-            reflection,
-          },
-        });
-      }
-
-      if (action === "difficult") {
-        await recordEvent({
-          type: LearningEventType.ResourceMarkedDifficult,
-          payload: {
-            resourceId: resource.id,
-            resourceTitle: resource.title,
-            reason: `Needs another pass for ${resource.blockTitle.toLowerCase()}.`,
+            ...(reflection ? { reflection } : {}),
           },
         });
       }
@@ -156,11 +150,64 @@ export function useLearningContentProgress(limit = 20) {
     }
   }
 
+  async function markResourceUseful(resource: ResourceProgressTarget) {
+    setBusyAction(`resource:${resource.id}:useful`);
+
+    try {
+      await recordEvent({
+        type: LearningEventType.ResourceMarkedUseful,
+        payload: {
+          resourceId: resource.id,
+          resourceTitle: resource.title,
+        },
+      });
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
+  async function markResourceDifficult(resource: ResourceProgressTarget) {
+    setBusyAction(`resource:${resource.id}:difficult`);
+
+    try {
+      await recordEvent({
+        type: LearningEventType.ResourceMarkedDifficult,
+        payload: {
+          resourceId: resource.id,
+          resourceTitle: resource.title,
+          reason: `Needs another pass for ${resource.blockTitle.toLowerCase()}.`,
+        },
+      });
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
+  async function resetResourceState(resource: ResourceProgressTarget) {
+    setBusyAction(`resource:${resource.id}:reset`);
+
+    try {
+      await removeEntry(resource.id);
+      await recordEvent({
+        type: LearningEventType.ResourceReset,
+        payload: {
+          resourceId: resource.id,
+          resourceTitle: resource.title,
+        },
+      });
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
   return {
     entries,
     events,
     busyAction,
     isLoading: progressLoading || eventsLoading,
+    markResourceDifficult,
+    markResourceUseful,
+    resetResourceState,
     updateBlockState,
     updateResourceState,
   } as const;
