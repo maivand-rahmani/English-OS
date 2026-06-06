@@ -12,7 +12,7 @@ English OS should feel like:
 
 - a calm control center
 - a serious personal tool
-- a premium study dashboard
+- a premium study system
 - an intelligent system that understands the learner
 - a place the learner can return to every day
 
@@ -40,15 +40,18 @@ The product should use a strong application-shell structure:
 - large rounded app canvas
 - persistent top navigation
 - persistent vertical sidebar
-- dense but breathable dashboard regions
 - large primary work area
 - secondary right-side panels where useful
 
 This structure should feel like a serious operating system, not a marketing website.
 
-For V1 desktop, the supplied dashboard reference is the structural baseline.
+For V1 desktop, the supplied dashboard reference is the structural baseline for
+the shared shell and Dashboard.
 
 Agents should not invent a different shell unless the decision log is updated first.
+
+The shell baseline does not mean every page should inherit Dashboard
+composition. Learner-facing pages still need their own primary experience model.
 
 ## Minimalism Principle
 
@@ -174,6 +177,7 @@ Active, canonical desktop reference selected.
 - [Motion Direction](./motion-direction.md)
 - [Theme System](./theme-system.md)
 - [Reference Notes](./reference-notes.md)
+- [Layout Principles](../ux/layout-principles.md)
 - [Dashboard](../ux/dashboard.md)
 - [Product Thesis](../product/thesis.md)
 - [Frontend Architecture](../engineering/frontend-architecture.md)

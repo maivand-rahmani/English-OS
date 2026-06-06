@@ -166,6 +166,56 @@ Related docs:
 - [Dashboard UX](../ux/dashboard.md)
 - [Release Criteria](../roadmap/release-criteria.md)
 
+### 2026-06-06: Dashboard Reference Is Scoped To Shell And Dashboard
+
+Status: accepted.
+
+The supplied dashboard reference remains canonical for the shared shell and the
+Dashboard page.
+
+It does not mean every learner-facing page should copy Dashboard composition.
+
+Resources, Roadmap, Writing, Speaking, review flows, and other learner-facing
+surfaces should inherit the shell, material language, navigation grammar, and
+interaction quality without defaulting to wide-left plus narrow-right dashboard
+layouts.
+
+Related docs:
+
+- [Layout Principles](../ux/layout-principles.md)
+- [Frontend Architecture](../engineering/frontend-architecture.md)
+- [Style Doctrine](../brand/style-doctrine.md)
+- [Visual Direction](../brand/visual-direction.md)
+
+### 2026-06-06: Forbidden Pattern - Stacked Dashboard Block Layout
+
+Status: accepted.
+
+English OS pages must not default to a stacked dashboard-block layout unless
+the page is explicitly an analytics dashboard or an admin-style monitoring
+surface.
+
+Forbidden default pattern:
+
+- header block
+- recommendation block
+- search and filters block
+- results block
+- right sidebar insight block
+- status cards block
+- nested cards inside nested cards
+
+This pattern is especially forbidden for Resources, Roadmap, and learner
+workspaces. Small cards and tiles are still allowed when they support the core
+experience without becoming the page architecture.
+
+Related docs:
+
+- [Layout Principles](../ux/layout-principles.md)
+- [Resources UX](../ux/resources.md)
+- [Roadmap UX](../ux/roadmap.md)
+- [Style Acceptance Checklist](../brand/style-acceptance-checklist.md)
+
 ## Status
 
 Active.

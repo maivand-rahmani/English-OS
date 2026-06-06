@@ -6,6 +6,9 @@ This document defines the curated resource experience inside English OS.
 
 Resources are a core value layer in V1. They should help the learner stop searching endlessly and start trusting the system's guidance.
 
+The Resources page must behave like one cohesive curated discovery experience,
+not like a dashboard made from stacked support blocks.
+
 ## Role Of The Resources Section
 
 The resources section should answer:
@@ -28,18 +31,41 @@ That means:
 
 The product should guide the learner to the best path, not try to replace the entire internet.
 
-## Resource Card Requirements
+## Resources Page Model
 
-Every important resource surface should communicate:
+Resources must not be documented or implemented as:
+
+- a command-center block followed by recommendation, filters, results, sidebar,
+  and status blocks
+- a heavy admin-style dashboard
+- a page where every feature gets its own large competing container
+- a page with nested cards inside nested cards
+
+The page should instead prefer:
+
+- one integrated discovery surface
+- lightweight filters
+- compact resource rows or tiles
+- progressive disclosure
+- large detail modal for deep context
+- minimal visible complexity
+
+## Resource Browse Requirements
+
+The main browse surface should communicate only the highest-signal metadata:
 
 - title
-- type
+- source
 - level fit
-- skill fit
+- primary skill fit
 - estimated time
 - why it is recommended
-- what it helps with
-- what to do after it
+- current learner state
+- primary action
+
+Deeper context such as detailed rationale, source trust notes, usage plans,
+follow-up actions, and roadmap links should move into progressive disclosure,
+not stay permanently expanded inside every resource tile.
 
 This is what separates English OS from a link list.
 
@@ -49,6 +75,7 @@ V1 should support:
 
 - recommended resources
 - editorial collections
+- integrated search and discovery
 - skill-based browsing
 - level-based browsing
 - roadmap-linked resources
@@ -63,6 +90,9 @@ The resource experience should be filterable by:
 - use case
 
 But filtering should remain secondary to editorial guidance and personalized recommendation.
+
+Filters should be lightweight and integrated into the discovery experience
+rather than presented as a separate heavyweight page block.
 
 ## User Contribution Policy
 
@@ -100,6 +130,7 @@ This creates a bridge between resource use and system intelligence.
 2. Explanation is as important as recommendation.
 3. The learner should understand why a resource appears now.
 4. The section should feel trustworthy, not overwhelming.
+5. The page should remain a cohesive library experience, not a dashboard.
 
 ## Status
 
@@ -108,6 +139,7 @@ Active.
 ## Related Docs
 
 - [Roadmap UX](./roadmap.md)
+- [Layout Principles](./layout-principles.md)
 - [Dashboard](./dashboard.md)
 - [Recommendation Logic](../system/recommendation-logic.md)
 - [Monetization](../product/monetization.md)

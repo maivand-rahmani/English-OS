@@ -4,9 +4,12 @@
 
 This document defines the known visual and motion direction for English OS.
 
-The V1 desktop visual frame is now anchored to the supplied dashboard reference.
+The V1 desktop shell and Dashboard frame are anchored to the supplied dashboard
+reference.
 
-Future implementation should refine colors, content, typography, and responsive behavior without drifting away from the reference's structure and first-glance feeling.
+Future implementation should refine colors, content, typography, and responsive
+behavior without drifting away from the reference's shell grammar and first-glance
+feeling.
 
 ## Current Direction
 
@@ -22,31 +25,23 @@ The canonical visual style is [Soft Liquid OS](./style-doctrine.md).
 
 ## Reference-Informed Structure
 
-The supplied dashboard reference defines this desktop layout direction:
+The supplied dashboard reference defines this desktop shell direction:
 
 - full-page atmospheric pastel background
 - large centered rounded app canvas
 - left vertical icon sidebar
 - top-centered pill navigation
 - right-side utility controls
-- large dashboard/workspace panels
 - card-based content inside a single app canvas
 - black active states for selected controls and primary actions
 
 For desktop V1, this is not optional styling inspiration.
 
-It is the expected frame.
+It is the expected shell and Dashboard frame.
 
-This should be adapted to English OS sections:
-
-- Dashboard
-- Roadmap
-- Resources
-- Writing
-- Speaking
-- Settings
-
-The final product should closely borrow the structure and interaction feel, while replacing the education-course content with English OS roadmap, resource, progress, review, writing, and speaking concepts.
+Other learner-facing pages should borrow the shell, surfaces, navigation, and
+interaction feel without being forced into the same wide-left plus narrow-right
+Dashboard composition.
 
 ## Desktop Dashboard Frame
 
@@ -93,6 +88,9 @@ Bad screens have:
 - unclear next action
 
 The product should feel like a premium control center, not an analytics landfill.
+
+Non-dashboard pages should avoid being broken into a stack of separate header,
+recommendation, filter, results, sidebar, and status containers.
 
 ## Motion-Led Interface
 
@@ -148,13 +146,13 @@ The reference style can become the default theme, but it should not be the only 
 
 ## Layout Density
 
-The dashboard should be dense enough to feel like a control center.
+The Dashboard should be dense enough to feel like a control center.
 
 It should not become a sparse landing page.
 
 It also should not become overloaded.
 
-Good density:
+Good Dashboard density:
 
 - several panels visible at once
 - one dominant workspace area
@@ -162,7 +160,7 @@ Good density:
 - compact navigation controls
 - strong visual hierarchy
 
-Maximum useful density:
+Maximum useful Dashboard density:
 
 - one primary panel
 - one right-side column
@@ -261,5 +259,6 @@ Active, Soft Liquid OS selected.
 - [Motion Direction](./motion-direction.md)
 - [Theme System](./theme-system.md)
 - [Reference Notes](./reference-notes.md)
+- [Layout Principles](../ux/layout-principles.md)
 - [Navigation](../ux/navigation.md)
 - [Frontend Architecture](../engineering/frontend-architecture.md)

@@ -158,6 +158,8 @@ should not become the full resource library.
    small fixed template.
 6. The roadmap page itself should be the roadmap, not a page with a hero above a
    roadmap section.
+7. The roadmap page should not be rewrapped as a stacked dashboard of support
+   blocks around the canvas.
 
 ## What The Roadmap Should Not Become
 
@@ -178,6 +180,7 @@ Active.
 ## Related Docs
 
 - [Information Architecture](./information-architecture.md)
+- [Layout Principles](./layout-principles.md)
 - [Dashboard](./dashboard.md)
 - [Resources](./resources.md)
 - [Recommendation Logic](../system/recommendation-logic.md)

@@ -4,7 +4,8 @@ This section defines how English OS should feel, look, sound, and move.
 
 Use this section for design principles, visual direction, motion direction, voice of product copy, and later style references.
 
-The V1 desktop visual frame is now anchored to the supplied dashboard reference.
+The V1 desktop shell and Dashboard frame are anchored to the supplied dashboard
+reference.
 
 ## Documents In This Section
 
@@ -47,7 +48,9 @@ The recommended UI/UX style is:
 
 Soft Liquid OS.
 
-This means a motion-led, token-based, glass-tactile productivity dashboard style with calm premium surfaces, strong black active states, customizable themes, and rich but purposeful animation.
+This means a motion-led, token-based, glass-tactile product style with calm
+premium surfaces, strong black active states, customizable themes, and rich but
+purposeful animation.
 
 ## Current Reference Direction
 
@@ -59,11 +62,13 @@ The canonical dashboard reference defines:
 - soft glass-like panels
 - black active controls
 - pastel atmospheric background
-- large dashboard cards
 - motion-heavy interactive transitions
 - token-based theming and appearance customization
 
-The structure should stay close to the reference.
+The shared shell and Dashboard structure should stay close to the reference.
+
+Other learner-facing pages should inherit the shell and material language
+without being forced into Dashboard composition.
 
 Colors, typography details, and English OS-specific content can be refined.
 
@@ -73,4 +78,5 @@ Minimalism is mandatory: the product should feel edited and calm, not like an ov
 
 - [Docs Home](../README.md)
 - [UX README](../ux/README.md)
+- [Layout Principles](../ux/layout-principles.md)
 - [Engineering Frontend Architecture](../engineering/frontend-architecture.md)

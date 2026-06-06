@@ -35,6 +35,10 @@ should not add a second generic card surface around every page. Pages may render
 their own workspace surface when that surface is the actual feature, for
 example the Roadmap canvas or a Resources collection card.
 
+Do not treat the shared shell as a reason to recreate Dashboard composition on
+every page. Learner-facing routes should follow the primary experience model
+defined for that page.
+
 Recommended location:
 
 ```text
@@ -198,21 +202,29 @@ The product should not visually feel like a default shadcn demo.
 
 The default visual direction should follow the Soft Liquid OS style doctrine.
 
-The supplied dashboard reference is the canonical V1 desktop frame.
+The supplied dashboard reference is the canonical V1 desktop shell and
+Dashboard frame.
 
-Frontend implementation should start from that frame, not from a generic dashboard template.
+Frontend implementation should start from that frame, not from a generic
+dashboard template.
 
-Desktop components should preserve:
+Shell-level desktop components should preserve:
 
 - large rounded app canvas
 - left icon rail
 - centered pill navigation
 - right utility cluster
-- wide primary panel
-- right recommendation/context column
-- lower secondary cards
 - black active controls
 - soft panel surfaces
+
+Dashboard-specific composition may preserve:
+
+- a wide primary panel
+- a recommendation or context column
+- lower supporting panels
+
+Do not automatically reuse that Dashboard composition for Resources, Roadmap,
+Writing, Speaking, review flows, or other learner-facing pages.
 
 Avoid page-level card nesting inside the shell. A page should not look like
 three stacked canvases unless those layers represent real product objects.
@@ -230,7 +242,7 @@ Desktop layout should support:
 - persistent app shell
 - top navigation
 - section sidebar
-- multi-panel dashboards
+- multi-panel dashboards where the page is actually a dashboard
 - contextual right panels
 
 Mobile layout should support:
@@ -297,6 +309,7 @@ Active.
 ## Related Docs
 
 - [Navigation](../ux/navigation.md)
+- [Layout Principles](../ux/layout-principles.md)
 - [Dashboard](../ux/dashboard.md)
 - [Project Structure](./project-structure.md)
 - [Backend Architecture](./backend-architecture.md)

@@ -47,6 +47,7 @@ These documents are expected to become the main source-of-truth files for the pr
 - [Product Thesis](./product/thesis.md)
 - [MVP Definition](./product/mvp.md)
 - [Information Architecture](./ux/information-architecture.md)
+- [Layout Principles](./ux/layout-principles.md)
 - [Mobile V1 Design](./ux/mobile-v1-design.md)
 - [Data Model](./system/data-model.md)
 - [Tech Stack](./engineering/tech-stack.md)
@@ -66,9 +67,10 @@ For product structure:
 
 1. [UX README](./ux/README.md)
 2. [Information Architecture](./ux/information-architecture.md)
-3. [Navigation](./ux/navigation.md)
-4. [Mobile V1 Design](./ux/mobile-v1-design.md)
-5. [Dashboard](./ux/dashboard.md)
+3. [Layout Principles](./ux/layout-principles.md)
+4. [Navigation](./ux/navigation.md)
+5. [Mobile V1 Design](./ux/mobile-v1-design.md)
+6. [Dashboard](./ux/dashboard.md)
 
 For implementation planning:
 

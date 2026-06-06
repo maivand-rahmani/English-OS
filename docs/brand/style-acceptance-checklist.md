@@ -8,7 +8,8 @@ Use it before accepting dashboard, shell, roadmap, resources, writing, speaking,
 
 ## Core Rule
 
-If the desktop UI does not feel clearly related to the canonical dashboard reference at first glance, it is not acceptable for V1.
+If the shared shell or the Dashboard page does not feel clearly related to the
+canonical dashboard reference at first glance, it is not acceptable for V1.
 
 Do not fix an off-direction layout by adding colors, shadows, or animation.
 
@@ -40,6 +41,18 @@ The UI should answer yes to these:
 - Are analytics shown only when they help the learner decide what to do next?
 - Are decorative widgets avoided?
 - Are there fewer competing colors than a typical edtech dashboard?
+
+## Page Model Checklist
+
+The implementation should answer yes to these:
+
+- Is the page built around one primary experience model?
+- If the page is not the Dashboard, does it avoid a stacked dashboard-block
+  layout?
+- Are search, filters, status, and recommendations integrated into the page
+  rather than each becoming a separate heavyweight block?
+- Are cards being used as components rather than as the default page
+  architecture?
 
 ## English OS Fit Checklist
 
@@ -101,6 +114,8 @@ Reject or revise the UI if:
 - it feels like a course platform or live-class app
 - it has no clear next action
 - it is desktop-only or mobile-only
+- a non-dashboard learner page defaults to header, recommendation, filters,
+  results, sidebar, and status blocks stacked as separate containers
 
 ## Status
 
@@ -112,4 +127,5 @@ Active.
 - [Visual Direction](./visual-direction.md)
 - [Reference Notes](./reference-notes.md)
 - [Design Principles](./design-principles.md)
+- [Layout Principles](../ux/layout-principles.md)
 - [Dashboard UX](../ux/dashboard.md)

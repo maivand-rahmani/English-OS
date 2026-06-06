@@ -6,7 +6,8 @@ This document captures visual and structural notes from style references.
 
 The current dashboard reference is not just loose inspiration.
 
-It is the canonical V1 desktop frame for structure, spacing, surface style, and first-glance product feeling.
+It is the canonical V1 desktop shell and Dashboard frame for structure,
+spacing, surface style, and first-glance product feeling.
 
 Do not copy literal content, avatars, logos, or course-platform meaning.
 
@@ -16,9 +17,10 @@ Do closely match the visual grammar.
 
 The primary reference shows an English-learning dashboard with a shared app shell.
 
-This reference should define the desktop shell and dashboard direction for V1.
+This reference should define the desktop shell and Dashboard direction for V1.
 
-The product can change colors to become more elegant and more English OS-specific, but the structure should remain recognizably close.
+The product can change colors to become more elegant and more English OS-specific,
+but the shared shell and Dashboard structure should remain recognizably close.
 
 ## Reference Anatomy
 
@@ -63,14 +65,14 @@ The layout feels rich without being noisy because the hierarchy is clear.
 
 ## What Must Stay Close
 
-For V1 desktop, keep these close to the reference:
+For V1 desktop, keep these close to the reference where they belong:
 
 - shell silhouette
 - rounded app canvas proportions
 - top navigation shape and placement
 - left icon rail rhythm
 - black active states
-- main-left and right-column dashboard composition
+- main-left and right-column Dashboard composition
 - large hero/greeting spacing
 - card radius and soft border treatment
 - calm white surface base
@@ -99,6 +101,13 @@ English OS should adapt the structure toward:
 - review and recommendations as system intelligence
 
 Do not let the UI drift into course-platform behavior just because the reference uses course cards.
+
+Do not generalize Dashboard composition into every learner-facing page.
+
+Resources should not default to a right recommendation column plus stacked
+support blocks.
+
+Roadmap should not become a hero plus support-panels page.
 
 ## Structure Implications
 
@@ -208,3 +217,4 @@ Active, canonical desktop reference selected.
 - [Style Doctrine](./style-doctrine.md)
 - [Motion Direction](./motion-direction.md)
 - [Design Principles](./design-principles.md)
+- [Layout Principles](../ux/layout-principles.md)

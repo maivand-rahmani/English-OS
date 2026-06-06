@@ -105,12 +105,16 @@ Do not store secrets, provider keys, or sensitive server-only data in browser st
 
 ## Visual Implementation Rules
 
-- Treat the supplied dashboard reference as the canonical V1 desktop frame.
+- Treat the supplied dashboard reference as the canonical V1 desktop shell and
+  Dashboard frame.
 - Do not implement a generic dashboard and call it Soft Liquid OS.
 - Do not let default shadcn component styling define the product look.
-- Match the reference's shell silhouette, pill navigation, left rail rhythm, panel softness, and black active states.
+- Match the reference's shell silhouette, pill navigation, left rail rhythm,
+  panel softness, and black active states.
 - Keep screens minimal and edited; do not add widgets just because data exists.
 - Prefer one strong primary panel and a small number of supporting panels.
+- Do not default learner-facing pages to a stacked dashboard-block layout unless
+  the page is explicitly a dashboard or admin-style monitoring view.
 - Keep visual decisions tokenized even when matching the reference closely.
 - If a screen looks unrelated to the reference at first glance, revise the layout before adding features.
 
@@ -141,6 +145,7 @@ Active.
 
 - [Project Structure](./project-structure.md)
 - [Frontend Architecture](./frontend-architecture.md)
+- [Layout Principles](../ux/layout-principles.md)
 - [Backend Architecture](./backend-architecture.md)
 - [API Design](./api-design.md)
 - [Decision Log](../decisions/decision-log.md)

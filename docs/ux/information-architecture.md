@@ -32,6 +32,10 @@ avoid adding another generic page card around their whole surface. Page-specific
 surfaces are allowed only when they are the actual workspace object, such as the
 Roadmap canvas or a repeated content card inside Resources.
 
+The shared shell is not a license to reuse Dashboard composition everywhere.
+Each page must still follow its own primary experience model rather than
+becoming a stack of dashboard-like support blocks.
+
 The shell must support both desktop browser and mobile web.
 
 Desktop can use a visible top bar, vertical sidebar, and multi-panel content.
@@ -152,6 +156,8 @@ These modules should appear where they are most useful rather than being forced 
 3. Discovery should live in resources.
 4. Active language production should live in writing and speaking.
 5. Shared system signals like progress and review should appear across multiple sections.
+6. Learner-facing pages should not default to a stacked dashboard-block layout.
+7. Each top-level section should be organized around one coherent page model.
 
 ## Status
 
@@ -160,6 +166,7 @@ Active.
 ## Related Docs
 
 - [Navigation](./navigation.md)
+- [Layout Principles](./layout-principles.md)
 - [Dashboard](./dashboard.md)
 - [Roadmap](./roadmap.md)
 - [Resources](./resources.md)

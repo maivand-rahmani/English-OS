@@ -9,6 +9,7 @@ This section translates the product thesis into user-facing structure.
 ## Documents In This Section
 
 - [Information Architecture](./information-architecture.md)
+- [Layout Principles](./layout-principles.md)
 - [Navigation](./navigation.md)
 - [Mobile V1 Design](./mobile-v1-design.md)
 - [Onboarding](./onboarding.md)
@@ -22,20 +23,24 @@ This section translates the product thesis into user-facing structure.
 ## Reading Order
 
 1. [Information Architecture](./information-architecture.md)
-2. [Navigation](./navigation.md)
-3. [Mobile V1 Design](./mobile-v1-design.md)
-4. [Onboarding](./onboarding.md)
-5. [Dashboard](./dashboard.md)
-6. [Roadmap](./roadmap.md)
-7. [Resources](./resources.md)
-8. [Writing](./writing.md)
-9. [Speaking](./speaking.md)
-10. [Settings](./settings.md)
+2. [Layout Principles](./layout-principles.md)
+3. [Navigation](./navigation.md)
+4. [Mobile V1 Design](./mobile-v1-design.md)
+5. [Onboarding](./onboarding.md)
+6. [Dashboard](./dashboard.md)
+7. [Roadmap](./roadmap.md)
+8. [Resources](./resources.md)
+9. [Writing](./writing.md)
+10. [Speaking](./speaking.md)
+11. [Settings](./settings.md)
 
 ## Document Responsibilities
 
 - [Information Architecture](./information-architecture.md)
   Defines the top-level product structure and major zones.
+- [Layout Principles](./layout-principles.md)
+  Defines global page-layout rules and bans the stacked dashboard-block pattern
+  on learner-facing pages.
 - [Navigation](./navigation.md)
   Defines top bar, sidebars, route logic, and movement rules.
 - [Mobile V1 Design](./mobile-v1-design.md)
@@ -60,6 +65,7 @@ This section translates the product thesis into user-facing structure.
 The most important files in this section are:
 
 - [Information Architecture](./information-architecture.md)
+- [Layout Principles](./layout-principles.md)
 - [Navigation](./navigation.md)
 - [Mobile V1 Design](./mobile-v1-design.md)
 - [Dashboard](./dashboard.md)
