@@ -215,7 +215,7 @@ export function useDashboardOverview(content: DashboardContentState) {
       await createDraft(task.title, "", task.id);
       setDraftNotice(`Local draft stub created for "${task.title}".`);
     } catch {
-      setDraftNotice("Draft creation failed. Try again from the writing workspace.");
+      setDraftNotice("Draft creation failed. Try again from Practice.");
     } finally {
       setBusyAction(null);
     }

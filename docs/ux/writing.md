@@ -41,7 +41,9 @@ V1 should support:
 
 ## V1 Navigation Model
 
-Writing is one focused workspace in V1.
+Writing is a focused mode inside the top-level Practice page in V1.
+
+Writing is not a separate top-level navigation section.
 
 `New Draft` is an action, not a page.
 

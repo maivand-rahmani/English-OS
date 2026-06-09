@@ -41,7 +41,9 @@ V1 should support:
 
 ## V1 Navigation Model
 
-Speaking is one focused workspace in V1.
+Speaking is a focused mode inside the top-level Practice page in V1.
+
+Speaking is not a separate top-level navigation section.
 
 `Record` is an action, not a page.
 

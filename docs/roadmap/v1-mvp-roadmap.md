@@ -32,11 +32,17 @@ Current state:
 
 The project documentation foundation is complete. Product, UX, system, engineering, AI, brand, decisions, and roadmap documentation have been created.
 
-Implementation has moved through a mobile V1 UI pass. The app shell, dashboard, roadmap, resources, writing overview, speaking overview, and settings now have explicit phone-first layouts for the current V1 surface set.
+Implementation has moved through a mobile V1 UI pass. The app shell,
+dashboard, roadmap, resources, Practice studio, and settings now have explicit
+phone-first layouts for the current V1 surface set.
 
-Phases 1 through 6 are now updated to reflect the implemented mobile shell, dashboard ordering, roadmap stacking, resources filter sheet, and mobile-safe layout tokens. Phase 7 is now complete: writing and speaking both behave like real local-first practice workspaces with active task or prompt flows, saved history, and workspace-specific motion.
+Phases 1 through 6 are now updated to reflect the implemented mobile shell, dashboard ordering, roadmap stacking, resources filter sheet, and mobile-safe layout tokens. Phase 7 is now complete at the architecture level: Practice is the top-level V1 output section and writing/speaking live inside it as modes instead of separate top-level pages.
 
 The shell now follows a top-level-only V1 navigation model. Section sidebars and mobile local lanes are postponed to V2 unless real internal pages are implemented later.
+
+The shared shell no longer uses traditional per-page header blocks, and
+Practice now opens directly into one integrated studio surface rather than a
+dashboard-style card stack.
 
 The next tracked implementation work should move into review and recommendation logic, then continue into AI-light features and final polish.
 
@@ -50,7 +56,7 @@ Build the MVP in this order:
 4. curated content model
 5. dashboard
 6. roadmap and resources
-7. writing and speaking
+7. Practice
 8. review and recommendations
 9. AI-light layer
 10. polish and launch readiness
@@ -149,12 +155,13 @@ Tasks:
 - [x] Build route placeholders for all top-level sections
 - [x] Add shell-level motion transitions
 - [x] Add theme attributes at root level
+- [x] Remove traditional per-page eyebrow/title/subtitle headers from the shared shell
 
 Mobile version:
 
 - [x] Define bottom navigation for top-level sections on phone
 - [x] Define top-level-only phone navigation for V1
-- [x] Define compact mobile header and utility priority without nested section navigation
+- [x] Define compact mobile shell chrome and utility priority without nested section navigation
 - [x] Define how desktop rail behavior transforms on phone instead of persisting unchanged
 
 Done when:
@@ -165,7 +172,8 @@ Done when:
 - [x] routes are thin and composed from widgets
 - [x] mobile shell is intentional on phone, not a squeezed desktop shell
 - [x] phone navigation hierarchy is limited to real top-level sections in V1
-- [x] mobile header and utility controls stay compact and calm
+- [x] mobile shell chrome and utility controls stay compact and calm
+- [x] shared shell does not repeat section identity through page-header copy
 - [x] no active V1 section sidebar or local lane is required to use the product
 
 Related docs:
@@ -346,7 +354,7 @@ Related docs:
 - [Review System](../system/review-system.md)
 - [Mobile V1 Design](../ux/mobile-v1-design.md)
 
-## Phase 7: Writing And Speaking Workspaces
+## Phase 7: Practice MVP Studio
 
 Status:
 
@@ -354,36 +362,42 @@ Status:
 
 Goal:
 
-Build the active practice zones.
+Build the correct V1 Practice architecture and surface model.
 
 Tasks:
 
-- [x] Build writing task list
-- [x] Build writing draft and submission flow
-- [x] Build writing feedback-ready UI
-- [x] Build speaking prompt list
-- [x] Build speaking session flow
-- [x] Build transcript-ready speaking UI
-- [x] Add local practice history
-- [x] Add workspace-specific motion
+- [x] Replace top-level Writing and Speaking navigation with Practice
+- [x] Build one main Practice page for V1
+- [x] Keep Writing and Speaking inside Practice as modes
+- [x] Add safe legacy redirects from `/writing` and `/speaking`
+- [x] Keep V1 Practice free of sidebars and internal sub-pages
+- [x] Remove dashboard-style top-level Writing and Speaking page architecture
+- [x] Remove page-header copy above Practice
+- [x] Build one central Practice studio surface instead of a dashboard layout
 
 Mobile version:
 
-- [x] Define task-first and prompt-first stacked practice flows for phone
-- [x] Define mobile draft, feedback, transcript, and history hierarchy
-- [x] Define dominant mobile entry actions for writing and speaking sessions
+- [x] Keep Practice reachable from the shared mobile shell
+- [x] Keep writing and speaking mode entry lightweight on phone
+- [x] Avoid nested mobile section navigation for Practice in V1
 
 Done when:
 
-- [x] writing and speaking feel like real workspaces
-- [x] both can be entered from dashboard
-- [x] activity is recorded in local learning events
-- [x] writing and speaking flows remain usable and low-friction on phone
-- [x] active practice stays dominant over secondary history or support panels on mobile
+- [x] Practice is the top-level V1 output section
+- [x] writing and speaking are available inside Practice as modes
+- [x] dashboard can route learners into Practice without broken links
+- [x] no active Practice sidebar or internal Practice sub-pages are required in V1
+- [x] phone navigation keeps Practice at the top level without nested section chrome
+- [x] Practice opens directly into one integrated workspace surface
+- [x] Practice does not rely on separate task, editor, and feedback cards
 
 Current note:
 
-Phase 7 is complete. The writing workspace now includes a real task list, local draft editing with client-first save behavior, local writing submission events, structured feedback-ready surfaces, and visible local practice history. The speaking workspace now includes a real prompt list, resumable session flow, transcript-ready reflection and save flow, visible local speaking history, and richer workspace-specific motion for session and transcript state changes. Dashboard entry points continue to route into both workspaces, and the mobile hierarchy keeps the active task or prompt above secondary history and support content.
+Phase 7 is complete for the current architecture and surface pass. Practice is
+now the single V1 top-level output page, writing and speaking remain internal
+modes, and the page opens directly into one studio surface instead of a
+dashboard-like stack. Follow-up work can deepen the mode workflows without
+reintroducing the old top-level split or premature V2 navigation.
 
 Related docs:
 

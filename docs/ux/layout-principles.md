@@ -16,13 +16,28 @@ Examples:
 - Dashboard = daily control center
 - Roadmap = immersive roadmap
 - Resources = cohesive curated discovery and library experience
-- Writing = focused writing workspace
-- Speaking = focused speaking workspace
+- Practice = focused output practice shell with writing and speaking modes
 - Review = focused review flow
 
 Search, filters, recommendations, status, and actions may exist inside these
 pages, but they should be visually integrated into the page's core experience.
 They should not automatically become separate heavyweight page blocks.
+
+## Shared Shell Rule
+
+The shared authenticated shell must not inject a traditional page-header block
+for every route.
+
+Do not default to:
+
+- eyebrow label
+- repeated page title
+- subtitle or explainer paragraph
+- hero-style introductory copy
+
+The global shell navigation already communicates section identity. If a page
+needs a large workspace or canvas, that surface should start immediately after
+the shell chrome rather than after another generic header layer.
 
 ## Forbidden Pattern: Stacked Dashboard Block Layout
 
@@ -116,9 +131,29 @@ Do not add hero-plus-dashboard-card stacks above or around it.
 Do not turn the roadmap into a page with separate recommendation, status,
 filter, and support blocks fighting the roadmap canvas for attention.
 
+## Practice Rule
+
+The Practice page itself should be one focused studio surface.
+
+Do not build Practice as:
+
+- header
+- switch
+- task card
+- editor card
+- right feedback card
+
+Do not use a two-column dashboard composition for V1 Practice.
+
+Writing and speaking should switch inside one shared surface with one dominant
+workspace area and one minimal feedback placeholder.
+
 ## Related Docs
 
 - [Information Architecture](./information-architecture.md)
+- [Practice](./practice.md)
+- [Writing](./writing.md)
+- [Speaking](./speaking.md)
 - [Resources](./resources.md)
 - [Roadmap](./roadmap.md)
 - [Frontend Architecture](../engineering/frontend-architecture.md)

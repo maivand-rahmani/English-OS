@@ -3,17 +3,15 @@ import {
   BookOpenText,
   LayoutDashboard,
   Map,
-  Mic,
-  PenSquare,
   Settings2,
+  Sparkles,
 } from "lucide-react";
 
 export type AppSectionKey =
   | "dashboard"
   | "roadmap"
   | "resources"
-  | "writing"
-  | "speaking"
+  | "practice"
   | "settings";
 
 export type AppNavigationItem = {
@@ -37,8 +35,7 @@ export const appPrimaryNavigation: readonly AppNavigationItem[] = [
     href: "/resources",
     icon: BookOpenText,
   },
-  { key: "writing", title: "Writing", href: "/writing", icon: PenSquare },
-  { key: "speaking", title: "Speaking", href: "/speaking", icon: Mic },
+  { key: "practice", title: "Practice", href: "/practice", icon: Sparkles },
 ] as const;
 
 export const appHeaderActions: readonly AppNavigationItem[] = [
@@ -55,8 +52,6 @@ export type AppSection = {
   title: string;
   href: string;
   icon: LucideIcon;
-  eyebrow: string;
-  description: string;
 };
 
 const appSections: Record<AppSectionKey, AppSection> = {
@@ -65,53 +60,30 @@ const appSections: Record<AppSectionKey, AppSection> = {
     title: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
-    eyebrow: "Daily command center",
-    description: "Your daily home for next steps, review, and momentum.",
   },
   roadmap: {
     key: "roadmap",
     title: "Roadmap",
     href: "/roadmap",
     icon: Map,
-    eyebrow: "Long-range progression",
-    description:
-      "One immersive roadmap page for strategic direction and step-by-step progress.",
   },
   resources: {
     key: "resources",
     title: "Resources",
     href: "/resources",
     icon: BookOpenText,
-    eyebrow: "Curated discovery",
-    description:
-      "A focused library experience with editorial curation, search, and filters inside one page.",
   },
-  writing: {
-    key: "writing",
-    title: "Writing",
-    href: "/writing",
-    icon: PenSquare,
-    eyebrow: "Focused practice",
-    description:
-      "One focused writing workspace for tasks, drafts, feedback, and local history.",
-  },
-  speaking: {
-    key: "speaking",
-    title: "Speaking",
-    href: "/speaking",
-    icon: Mic,
-    eyebrow: "Active speaking work",
-    description:
-      "One focused speaking workspace for prompts, active sessions, reflection, and history.",
+  practice: {
+    key: "practice",
+    title: "Practice",
+    href: "/practice",
+    icon: Sparkles,
   },
   settings: {
     key: "settings",
     title: "Settings",
     href: "/settings",
     icon: Settings2,
-    eyebrow: "Preferences and profile",
-    description:
-      "A simple settings page for profile, goals, appearance, and account controls.",
   },
 };
 
@@ -120,6 +92,10 @@ export function getAppSection(sectionKey: AppSectionKey) {
 }
 
 export function getAppSectionByPathname(pathname: string) {
+  if (pathname.startsWith("/writing") || pathname.startsWith("/speaking")) {
+    return appSections.practice;
+  }
+
   const matched = appNavigation.find((item) => pathname.startsWith(item.href));
 
   return matched ? appSections[matched.key] : appSections.dashboard;

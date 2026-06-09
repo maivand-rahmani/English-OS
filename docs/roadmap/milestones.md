@@ -44,15 +44,17 @@ Completion definition:
 Outcome:
 
 - top bar exists
-- V1 shell primary navigation is limited to the five primary sections
+- V1 shell primary navigation is limited to Dashboard, Roadmap, Resources, and Practice
 - settings is available from the header utility area
 - main authenticated layout exists
 - primary routes exist
+- the shared shell does not inject traditional page headers per route
 
 Completion definition:
 
-- user can navigate between Dashboard, Roadmap, Resources, Writing, Speaking, and open Settings from the header utility button
+- user can navigate between Dashboard, Roadmap, Resources, Practice, and open Settings from the header utility button
 - shell is reusable across routes
+- route content starts from the real page surface, not from a duplicated eyebrow/title/subtitle block
 
 ## Milestone 4: Local-First State Foundation Complete
 
@@ -110,18 +112,20 @@ Completion definition:
 - learner can move through roadmap-resource flow
 - resource actions generate local learning events
 
-## Milestone 8: Writing And Speaking Workspaces Working
+## Milestone 8: Practice Studio Working
 
 Outcome:
 
-- writing tasks can be opened and submitted
-- speaking prompts can be opened and completed as sessions
-- local practice history exists
+- Practice exists as the top-level V1 output section
+- writing and speaking both exist as Practice modes
+- legacy Writing and Speaking entry paths resolve safely into Practice
+- Practice opens as one integrated studio surface
 
 Completion definition:
 
-- both practice zones feel like real product areas
-- dashboard can link into them
+- Practice feels like a real product area
+- dashboard can link into writing and speaking modes inside Practice
+- Practice does not feel like a stacked dashboard of separate task, editor, and feedback cards
 
 ## Milestone 9: Review And Recommendations Working
 

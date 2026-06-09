@@ -15,17 +15,20 @@ V1 is product-ready when:
 - dashboard tells the learner what to do next
 - roadmap gives a structured path
 - resources feel curated and trustworthy
-- writing and speaking are real workspaces
+- Practice is the real top-level output section
+- writing and speaking are real modes inside Practice
 - review and recommendations exist in useful V1 form
 
 ## UX Readiness
 
 V1 is UX-ready when:
 
-- top-level navigation works
+- top-level navigation works with Dashboard, Roadmap, Resources, and Practice
+- the shared shell does not repeat section identity through generic page headers
 - no inactive section sidebars or fake subpages appear in the active V1 UI
 - dashboard is the primary daily home
 - main flows are clear without explanation text
+- Practice opens directly into one focused studio surface
 - empty states are intentional
 - loading states are calm
 - errors are understandable
@@ -120,7 +123,7 @@ English OS V1 is launch-ready when a beginner or intermediate self-learner can:
 4. see what to do next
 5. open roadmap and resources
 6. complete actions locally
-7. practice writing or speaking
+7. open Practice and use writing or speaking mode
 8. see progress, review, or recommendations change
 
 ## Status

@@ -15,7 +15,7 @@ describe("AppShell", () => {
   });
 
   test("renders the mobile shell with bottom navigation", async () => {
-    usePathnameMock.mockReturnValue("/resources");
+    usePathnameMock.mockReturnValue("/practice");
     installMatchMedia(390);
 
     render(
@@ -29,9 +29,9 @@ describe("AppShell", () => {
     });
 
     expect(mobileNavigation).toBeInTheDocument();
-    expect(within(mobileNavigation).getAllByRole("link")).toHaveLength(5);
+    expect(within(mobileNavigation).getAllByRole("link")).toHaveLength(4);
     expect(screen.getByRole("link", { name: /settings/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /resources/i })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /practice/i })).not.toBeInTheDocument();
     expect(
       screen.queryByRole("list", { name: /resources lanes/i }),
     ).not.toBeInTheDocument();
@@ -53,14 +53,31 @@ describe("AppShell", () => {
       name: /top navigation/i,
     });
 
-    expect(within(topNavigation).getAllByRole("link")).toHaveLength(5);
+    expect(within(topNavigation).getAllByRole("link")).toHaveLength(4);
     expect(screen.getByRole("link", { name: /settings/i })).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText(/search resources/i),
     ).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /dashboard/i })).not.toBeInTheDocument();
     expect(
       screen.queryByRole("navigation", { name: /primary mobile navigation/i }),
     ).not.toBeInTheDocument();
+  });
+
+  test("treats legacy writing routes as the practice section", async () => {
+    usePathnameMock.mockReturnValue("/writing");
+    installMatchMedia(1280);
+
+    render(
+      <AppShell userLabel="Grace Hopper">
+        <div>Shell content</div>
+      </AppShell>,
+    );
+
+    const practiceLink = await screen.findByRole("link", { name: /practice/i });
+
+    expect(practiceLink).toHaveAttribute("aria-current", "page");
+    expect(screen.queryByRole("heading", { name: /practice/i })).not.toBeInTheDocument();
   });
 });
 

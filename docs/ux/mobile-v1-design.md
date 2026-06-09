@@ -10,7 +10,10 @@ This document is about design structure, hierarchy, and interaction expectations
 
 Current implementation note:
 
-The current codebase now includes a mobile V1 pass for the app shell plus the dashboard, roadmap, resources, writing overview, speaking overview, and settings overview. The product still needs deeper writing/speaking session flows, review logic, and AI-light work, but the phone-first shell and section hierarchy are no longer just design intent.
+The current codebase now includes a mobile V1 pass for the app shell plus the
+dashboard, roadmap, resources, Practice studio, and settings overview. The
+product still needs deeper review logic and AI-light work, but the phone-first
+shell and section hierarchy are no longer just design intent.
 
 ## Scope
 
@@ -20,8 +23,7 @@ The current-state mobile design scope includes:
 - dashboard
 - roadmap
 - resources
-- writing
-- speaking
+- Practice
 - settings
 
 These surfaces are included because they already exist in the current product state, even if some of their larger roadmap phases are still incomplete.
@@ -33,8 +35,9 @@ Fixed decisions for this V1 pass:
 - phone-first mobile web is the default target for all surfaces below `lg`
 - `lg` and above keep the desktop shell
 - global navigation on phone uses a fixed bottom nav
-- phone navigation stays limited to the five primary product sections
+- phone navigation stays limited to the four primary product sections
 - settings is exposed from the header utility area rather than the bottom nav
+- the shared mobile shell does not repeat section titles as traditional page headers
 - mobile search is intentionally hidden for now instead of becoming a half-finished flow
 - mobile filter and sheet behavior uses `@base-ui/react`
 - this pass changes UI hierarchy, layout, and mobile interaction patterns without changing product logic, Prisma, local-state hooks, or recommendation logic
@@ -72,8 +75,7 @@ The primary top-level sections remain:
 - Dashboard
 - Roadmap
 - Resources
-- Writing
-- Speaking
+- Practice
 
 Settings should remain available as a route from the header utility area.
 
@@ -89,11 +91,12 @@ The mobile header should stay short and utility-light.
 
 It should prioritize:
 
-- current section identity
+- app identity
 - lightweight utilities only
 
 It should avoid:
 
+- repeated page titles under the shell
 - long descriptive intro copy
 - duplicated hierarchy labels
 - desktop-style utility clusters competing with the main task
@@ -149,7 +152,7 @@ Desktop right-column concepts should stack below the primary block instead of co
 2. Progress snapshot
 3. Best next resource
 4. Review preview
-5. Writing and speaking actions
+5. Practice actions
 6. Recent activity
 
 ### Rules
@@ -249,7 +252,8 @@ Secondary metadata can collapse lower in the card.
 
 ### Job
 
-Writing on phone should lower the barrier to continuing work.
+Writing on phone should lower the barrier to continuing work inside Practice
+writing mode.
 
 It should make it easy to:
 
@@ -285,7 +289,8 @@ Recommended order for the current overview pass:
 
 ### Job
 
-Speaking on phone should make active practice feel approachable and easy to resume.
+Speaking on phone should make active practice feel approachable and easy to
+resume inside Practice speaking mode.
 
 It should make it easy to:
 
@@ -371,7 +376,7 @@ Short phone sessions should assume:
 - resume states should favor continuation over rediscovery
 - mobile entry surfaces should show the next useful action before secondary history or analytics
 
-These rules are partly implemented today through the local-first browser state layer and partly define the contract for later writing/speaking session work.
+These rules are partly implemented today through the local-first browser state layer and partly define the contract for later Practice writing/speaking mode work.
 
 ## QA Baseline
 

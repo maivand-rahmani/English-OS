@@ -1,8 +1,10 @@
 # UX Docs
 
-This section defines how English OS is structured and how the product should behave from the user's point of view.
+This section defines how English OS is structured and how the product should
+behave from the user's point of view.
 
-Use this section for information architecture, navigation, onboarding, dashboard behavior, and the main product workspaces.
+Use this section for information architecture, navigation, onboarding,
+dashboard behavior, and the main product workspaces.
 
 This section translates the product thesis into user-facing structure.
 
@@ -17,6 +19,7 @@ This section translates the product thesis into user-facing structure.
 - [Dashboard](./dashboard.md)
 - [Roadmap](./roadmap.md)
 - [Resources](./resources.md)
+- [Practice](./practice.md)
 - [Writing](./writing.md)
 - [Speaking](./speaking.md)
 - [Settings](./settings.md)
@@ -32,9 +35,10 @@ This section translates the product thesis into user-facing structure.
 7. [Dashboard](./dashboard.md)
 8. [Roadmap](./roadmap.md)
 9. [Resources](./resources.md)
-10. [Writing](./writing.md)
-11. [Speaking](./speaking.md)
-12. [Settings](./settings.md)
+10. [Practice](./practice.md)
+11. [Writing](./writing.md)
+12. [Speaking](./speaking.md)
+13. [Settings](./settings.md)
 
 ## Document Responsibilities
 
@@ -57,10 +61,12 @@ This section translates the product thesis into user-facing structure.
   Defines the learning-path experience inside the product.
 - [Resources](./resources.md)
   Defines the curated resource layer and discovery experience.
+- [Practice](./practice.md)
+  Defines Practice as the V1 top-level output section and documents the V1/V2 boundary.
 - [Writing](./writing.md)
-  Defines the writing workspace and its user flows.
+  Defines the writing mode that lives inside the V1 Practice section.
 - [Speaking](./speaking.md)
-  Defines the speaking workspace and its user flows.
+  Defines the speaking mode that lives inside the V1 Practice section.
 - [Settings](./settings.md)
   Defines profile, preferences, and system-level controls.
 
@@ -72,6 +78,7 @@ The most important files in this section are:
 - [Layout Principles](./layout-principles.md)
 - [Navigation](./navigation.md)
 - [V1 Navigation Simplification Rule](./v1-navigation-simplification-rule.md)
+- [Practice](./practice.md)
 - [Mobile V1 Design](./mobile-v1-design.md)
 - [Dashboard](./dashboard.md)
 - [Roadmap](./roadmap.md)

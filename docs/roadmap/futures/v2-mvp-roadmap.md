@@ -26,7 +26,7 @@ The product should still keep:
 - Dashboard as the daily command center
 - Roadmap as the strategic layer
 - Resources as the curated library
-- Writing and Speaking as active practice workspaces
+- Practice as the active output section, with Writing and Speaking as internal workspaces
 - Settings as the configuration layer
 
 The difference is that selected sections now gain real internal pages with focused workflows, deeper continuity, and stronger deep-linking.
@@ -79,22 +79,24 @@ They remain the section entry views above the deeper workflow pages.
 - `/resources/library/[resourceSlug]`
 - `/resources/follow-up`
 
-### Writing
+### Practice
 
-- `/writing`
-- `/writing/tasks`
-- `/writing/tasks/[taskId]`
-- `/writing/drafts/[draftId]`
-- `/writing/submissions/[submissionId]`
-- `/writing/history`
-
-### Speaking
-
-- `/speaking`
-- `/speaking/prompts`
-- `/speaking/prompts/[promptId]`
-- `/speaking/sessions/[sessionId]`
-- `/speaking/history`
+- `/practice`
+- `/practice/writing`
+- `/practice/writing/tasks`
+- `/practice/writing/tasks/[taskId]`
+- `/practice/writing/drafts/[draftId]`
+- `/practice/writing/submissions/[submissionId]`
+- `/practice/writing/history`
+- `/practice/speaking`
+- `/practice/speaking/prompts`
+- `/practice/speaking/prompts/[promptId]`
+- `/practice/speaking/sessions/[sessionId]`
+- `/practice/speaking/history`
+- `/practice/challenges`
+- `/practice/events`
+- `/practice/feedback`
+- `/practice/progress`
 
 ### Settings
 
@@ -161,8 +163,8 @@ Build V2 in this order:
 2. dashboard workflow pages
 3. roadmap workflow pages
 4. resources workflow pages
-5. writing workflow pages
-6. speaking workflow pages
+5. writing workflow pages inside Practice
+6. speaking workflow pages inside Practice
 7. settings workflow pages
 8. auth and onboarding expansion
 9. cross-linking, continuity, and polish
@@ -333,16 +335,16 @@ Status:
 
 Goal:
 
-Expand Writing into a multi-page active workspace with clear task, draft, submission, and history continuity.
+Expand Practice writing mode into a multi-page active workspace with clear task, draft, submission, and history continuity.
 
 Tasks:
 
-- [ ] Preserve `/writing` as the overview and workspace entry page
-- [ ] Build `/writing/tasks` as the task list and task-entry view
-- [ ] Build `/writing/tasks/[taskId]` as the focused task context surface
-- [ ] Build `/writing/drafts/[draftId]` as the active drafting surface
-- [ ] Build `/writing/submissions/[submissionId]` as the feedback and rewrite loop surface
-- [ ] Build `/writing/history` as the continuity and archive view
+- [ ] Preserve `/practice` as the section entry page and `/practice/writing` as the writing overview
+- [ ] Build `/practice/writing/tasks` as the task list and task-entry view
+- [ ] Build `/practice/writing/tasks/[taskId]` as the focused task context surface
+- [ ] Build `/practice/writing/drafts/[draftId]` as the active drafting surface
+- [ ] Build `/practice/writing/submissions/[submissionId]` as the feedback and rewrite loop surface
+- [ ] Build `/practice/writing/history` as the continuity and archive view
 - [ ] Define how `New Draft` opens a draft route instead of becoming a permanent navigation page
 - [ ] Define whether repeated mistake review stays inside history/submission surfaces or later earns its own true page
 - [ ] Define direct reopening of exact drafts, feedback states, and history entries
@@ -374,15 +376,15 @@ Status:
 
 Goal:
 
-Expand Speaking into a route-backed practice workspace with clear prompt, session, and history continuity without promoting every state into its own nav item.
+Expand Practice speaking mode into a route-backed workspace with clear prompt, session, and history continuity without promoting every state into its own nav item.
 
 Tasks:
 
-- [ ] Preserve `/speaking` as the overview and workspace entry page
-- [ ] Build `/speaking/prompts` as the session-entry view
-- [ ] Build `/speaking/prompts/[promptId]` as the focused prompt-launch surface
-- [ ] Build `/speaking/sessions/[sessionId]` as the active speaking session and follow-up surface
-- [ ] Build `/speaking/history` as the continuity and archive view
+- [ ] Preserve `/practice` as the section entry page and `/practice/speaking` as the speaking overview
+- [ ] Build `/practice/speaking/prompts` as the session-entry view
+- [ ] Build `/practice/speaking/prompts/[promptId]` as the focused prompt-launch surface
+- [ ] Build `/practice/speaking/sessions/[sessionId]` as the active speaking session and follow-up surface
+- [ ] Build `/practice/speaking/history` as the continuity and archive view
 - [ ] Define how record, feedback, and reflection live inside session routes unless later UX work proves they need separate pages
 - [ ] Define reopening rules for prompt, recording, transcript, feedback, and history continuity
 

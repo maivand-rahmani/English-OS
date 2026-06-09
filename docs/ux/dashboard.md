@@ -122,7 +122,7 @@ This should show lightweight but meaningful signals:
 - strongest current area
 - weakest current area
 
-### Writing And Speaking Actions
+### Practice Actions
 
 The dashboard should give direct entry into:
 
@@ -158,7 +158,7 @@ Good V1 dashboard density:
 - one primary plan/progress/intelligence panel
 - one right-side next-resource or recommendation column
 - one review/progress support card
-- one writing or speaking action card
+- one Practice action card
 - one recent activity or continuity card
 
 Avoid showing all possible analytics at once.

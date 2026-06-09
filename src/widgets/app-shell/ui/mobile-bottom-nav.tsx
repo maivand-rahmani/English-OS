@@ -16,7 +16,12 @@ export function MobileBottomNav({ activeKey }: MobileBottomNavProps) {
       aria-label="Primary mobile navigation"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-surface-stroke bg-surface-panel/95 shadow-[0_-14px_32px_rgba(17,17,20,0.12)] backdrop-blur-xl lg:hidden"
     >
-      <div className="mx-auto grid max-w-3xl grid-cols-5 gap-1 px-2 pt-2 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+      <div
+        className="mx-auto grid max-w-3xl gap-1 px-2 pt-2 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"
+        style={{
+          gridTemplateColumns: `repeat(${appPrimaryNavigation.length}, minmax(0, 1fr))`,
+        }}
+      >
         {appPrimaryNavigation.map((item) => {
           const isActive = item.key === activeKey;
           const Icon = item.icon;

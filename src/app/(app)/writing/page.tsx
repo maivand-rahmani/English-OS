@@ -1,8 +1,5 @@
-import { getDashboardState } from "@/server/dashboard/get-dashboard-state";
-import { WritingOverview } from "@/widgets/writing-overview";
+import { redirect } from "next/navigation";
 
-export default async function WritingPage() {
-  const dashboardState = await getDashboardState();
-
-  return <WritingOverview content={dashboardState} />;
+export default function WritingPage() {
+  redirect("/practice?mode=writing");
 }

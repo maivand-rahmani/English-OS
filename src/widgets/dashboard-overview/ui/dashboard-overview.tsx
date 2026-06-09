@@ -60,14 +60,11 @@ export function DashboardOverview({ content }: DashboardOverviewProps) {
 
   const practiceSection = (
     <DashboardPracticeSection
-      busyAction={overview.busyAction}
       draftCount={overview.drafts.length}
       draftForWritingTask={overview.draftForWritingTask}
-      draftNotice={overview.draftNotice}
       events={overview.events}
       nextSpeakingPrompt={overview.nextSpeakingPrompt}
       nextWritingTask={overview.nextWritingTask}
-      onCreateDraft={overview.handleCreateDraft}
     />
   );
 

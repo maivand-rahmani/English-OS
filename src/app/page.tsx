@@ -27,7 +27,8 @@ export default async function HomePage() {
               </h1>
               <p className="max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
                 A calm, focused workspace for structured English learning.
-                Roadmap, resources, writing, and speaking — all in one place.
+                Roadmap, resources, and one Practice home for writing and speaking,
+                all in one place.
               </p>
             </div>
 
@@ -55,9 +56,7 @@ export default async function HomePage() {
                   className="flex items-center justify-between rounded-2xl border border-border/70 bg-background/70 px-4 py-3"
                 >
                   <span className="font-medium text-foreground">{item.title}</span>
-                  <span className="text-sm text-muted-foreground">
-                    Ready
-                  </span>
+                  <span className="text-sm text-muted-foreground">Ready</span>
                 </li>
               ))}
             </ul>

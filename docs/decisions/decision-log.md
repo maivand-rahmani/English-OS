@@ -21,7 +21,7 @@ Related docs:
 
 ### 2026-05-17: V1 Primary Navigation Sections
 
-Status: accepted.
+Status: superseded on 2026-06-09.
 
 V1 should use these primary navigation sections:
 
@@ -37,6 +37,68 @@ Related docs:
 
 - [Information Architecture](../ux/information-architecture.md)
 - [Navigation](../ux/navigation.md)
+
+### 2026-06-09: Practice Replaces Writing And Speaking In V1 Top Navigation
+
+Status: accepted.
+
+Practice is the V1 top-level output section.
+
+Writing and speaking remain important product modes, but they now live inside
+Practice rather than existing as separate top-level navigation items.
+
+V1 should therefore expose:
+
+- Dashboard
+- Roadmap
+- Resources
+- Practice
+
+Settings remains a top-level route surfaced through the header utility area.
+
+Legacy `/writing` and `/speaking` paths may remain only as redirects into
+Practice while the old architecture is being retired.
+
+Related docs:
+
+- [Information Architecture](../ux/information-architecture.md)
+- [Navigation](../ux/navigation.md)
+- [Practice](../ux/practice.md)
+
+### 2026-06-09: Shared App Shell Does Not Render Traditional Page Headers
+
+Status: accepted.
+
+The authenticated app shell should provide navigation, branded framing, and
+utility controls only.
+
+It should not automatically render a per-route eyebrow, repeated page title, or
+subtitle block under the global navigation.
+
+Section identity should come from the shell navigation and from the page's real
+workspace surface.
+
+Related docs:
+
+- [Navigation](../ux/navigation.md)
+- [Layout Principles](../ux/layout-principles.md)
+- [Frontend Architecture](../engineering/frontend-architecture.md)
+
+### 2026-06-09: V1 Practice Uses One Studio Surface
+
+Status: accepted.
+
+The V1 Practice page should open directly into one integrated studio surface.
+
+Writing and speaking switch inside that same surface. The page should not use a
+dashboard grid, right-side feedback panel, separate task card, or separate
+editor card as the top-level architecture.
+
+Related docs:
+
+- [Practice](../ux/practice.md)
+- [Layout Principles](../ux/layout-principles.md)
+- [Release Criteria](../roadmap/release-criteria.md)
 
 ### 2026-05-17: V1 Engineering Stack
 
@@ -224,13 +286,12 @@ Status: accepted.
 English OS V1 must not show per-section sidebars, nested mobile section lanes,
 or fake internal pages for future feature inventory.
 
-The active V1 navigation model is limited to the five primary sections:
+The active V1 navigation model is limited to the four primary sections:
 
 - Dashboard
 - Roadmap
 - Resources
-- Writing
-- Speaking
+- Practice
 
 Settings remains available as a header utility route.
 

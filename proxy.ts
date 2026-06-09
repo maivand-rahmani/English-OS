@@ -5,6 +5,7 @@ export const proxyConfig = {
     "/dashboard/:path*",
     "/roadmap/:path*",
     "/resources/:path*",
+    "/practice/:path*",
     "/writing/:path*",
     "/speaking/:path*",
     "/settings/:path*",
