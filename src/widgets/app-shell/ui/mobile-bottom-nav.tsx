@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import type { AppSectionKey } from "@/shared/config/navigation";
-import { appNavigation } from "@/shared/config/navigation";
+import { appPrimaryNavigation } from "@/shared/config/navigation";
 import { cn } from "@/shared/lib/utils";
 
 type MobileBottomNavProps = {
@@ -16,8 +16,8 @@ export function MobileBottomNav({ activeKey }: MobileBottomNavProps) {
       aria-label="Primary mobile navigation"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-surface-stroke bg-surface-panel/95 shadow-[0_-14px_32px_rgba(17,17,20,0.12)] backdrop-blur-xl lg:hidden"
     >
-      <div className="mx-auto grid max-w-3xl grid-cols-6 gap-1 px-2 pt-2 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-        {appNavigation.map((item) => {
+      <div className="mx-auto grid max-w-3xl grid-cols-5 gap-1 px-2 pt-2 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+        {appPrimaryNavigation.map((item) => {
           const isActive = item.key === activeKey;
           const Icon = item.icon;
 

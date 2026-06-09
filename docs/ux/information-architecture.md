@@ -69,6 +69,8 @@ The speaking practice workspace.
 6. Settings
 Profile, preferences, and system configuration.
 
+Settings stays a top-level route, but V1 should surface it as a header utility button rather than part of the main navigation pill.
+
 ## Why This Structure Exists
 
 This structure is intentional:
@@ -180,7 +182,7 @@ These ideas are real product concepts, but they are not active V1 navigation pag
 - Notifications
 - Account
 
-In V1 they should stay as inline sections, actions, filters, tabs, or modal states inside the six top-level pages.
+In V1 they should stay as inline sections, actions, filters, tabs, or modal states inside the five primary pages, with Settings remaining a route reached from the header utility area.
 
 ## IA Principles
 

@@ -11,7 +11,8 @@ The V1 navigation model is top-level product sections only:
 - Resources
 - Writing
 - Speaking
-- Settings
+
+Settings should remain a top-level route, but it should be accessed from a header utility button rather than the main navigation pill.
 
 Local sidebars are postponed to V2 and must not appear in the active V1 UI unless the internal pages are real, implemented, and necessary.
 
@@ -26,7 +27,7 @@ Top-level product sections remain the only active navigation model in V1.
 - Resources is one curated discovery and library page.
 - Writing is one focused writing workspace.
 - Speaking is one focused speaking workspace.
-- Settings is one simple settings page.
+- Settings is one simple settings page reached from the header utility area.
 
 Each main section should feel like one strong product experience rather than a shell full of shallow subpages.
 

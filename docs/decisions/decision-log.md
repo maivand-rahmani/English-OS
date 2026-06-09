@@ -19,18 +19,19 @@ Related docs:
 - [Product Thesis](../product/thesis.md)
 - [MVP Definition](../product/mvp.md)
 
-### 2026-05-17: V1 Top-Level Product Sections
+### 2026-05-17: V1 Primary Navigation Sections
 
 Status: accepted.
 
-V1 should use these top-level sections:
+V1 should use these primary navigation sections:
 
 - Dashboard
 - Roadmap
 - Resources
 - Writing
 - Speaking
-- Settings
+
+Settings should remain a top-level route, but it should be surfaced through the header utility area instead of the main navigation pill.
 
 Related docs:
 
@@ -223,14 +224,15 @@ Status: accepted.
 English OS V1 must not show per-section sidebars, nested mobile section lanes,
 or fake internal pages for future feature inventory.
 
-The active V1 navigation model is limited to:
+The active V1 navigation model is limited to the five primary sections:
 
 - Dashboard
 - Roadmap
 - Resources
 - Writing
 - Speaking
-- Settings
+
+Settings remains available as a header utility route.
 
 Internal sidebar ideas are deferred to V2. In V1, actions, filters, states,
 tabs, and inline sections must stay inside the main page experience instead of

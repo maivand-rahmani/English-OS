@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { AppShell } from "./app-shell";
@@ -24,9 +24,13 @@ describe("AppShell", () => {
       </AppShell>,
     );
 
-    expect(
-      await screen.findByRole("navigation", { name: /primary mobile navigation/i }),
-    ).toBeInTheDocument();
+    const mobileNavigation = await screen.findByRole("navigation", {
+      name: /primary mobile navigation/i,
+    });
+
+    expect(mobileNavigation).toBeInTheDocument();
+    expect(within(mobileNavigation).getAllByRole("link")).toHaveLength(5);
+    expect(screen.getByRole("link", { name: /settings/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /resources/i })).toBeInTheDocument();
     expect(
       screen.queryByRole("list", { name: /resources lanes/i }),
@@ -45,12 +49,12 @@ describe("AppShell", () => {
       </AppShell>,
     );
 
-    await waitFor(() => {
-      expect(
-        screen.getByRole("navigation", { name: /top navigation/i }),
-      ).toBeInTheDocument();
+    const topNavigation = await screen.findByRole("navigation", {
+      name: /top navigation/i,
     });
 
+    expect(within(topNavigation).getAllByRole("link")).toHaveLength(5);
+    expect(screen.getByRole("link", { name: /settings/i })).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText(/search resources/i),
     ).toBeInTheDocument();

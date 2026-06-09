@@ -23,7 +23,7 @@ export type AppNavigationItem = {
   icon: LucideIcon;
 };
 
-export const appNavigation: readonly AppNavigationItem[] = [
+export const appPrimaryNavigation: readonly AppNavigationItem[] = [
   {
     key: "dashboard",
     title: "Dashboard",
@@ -39,7 +39,15 @@ export const appNavigation: readonly AppNavigationItem[] = [
   },
   { key: "writing", title: "Writing", href: "/writing", icon: PenSquare },
   { key: "speaking", title: "Speaking", href: "/speaking", icon: Mic },
+] as const;
+
+export const appHeaderActions: readonly AppNavigationItem[] = [
   { key: "settings", title: "Settings", href: "/settings", icon: Settings2 },
+] as const;
+
+export const appNavigation: readonly AppNavigationItem[] = [
+  ...appPrimaryNavigation,
+  ...appHeaderActions,
 ] as const;
 
 export type AppSection = {

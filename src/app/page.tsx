@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/server/auth";
-import { appNavigation } from "@/shared/config/navigation";
+import { appPrimaryNavigation } from "@/shared/config/navigation";
 import { buttonVariants } from "@/shared/ui/button";
 
 export default async function HomePage() {
@@ -49,7 +49,7 @@ export default async function HomePage() {
               What&apos;s inside
             </p>
             <ul className="mt-4 space-y-3">
-              {appNavigation.map((item) => (
+              {appPrimaryNavigation.map((item) => (
                 <li
                   key={item.key}
                   className="flex items-center justify-between rounded-2xl border border-border/70 bg-background/70 px-4 py-3"

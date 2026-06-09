@@ -23,7 +23,8 @@ The global top bar should contain the main product zones:
 - Resources
 - Writing
 - Speaking
-- Settings
+
+Settings should live as a separate header utility button rather than inside the main navigation pill.
 
 The top bar represents major modes of using English OS.
 

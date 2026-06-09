@@ -44,13 +44,14 @@ Completion definition:
 Outcome:
 
 - top bar exists
-- V1 shell navigation is limited to the six top-level sections
+- V1 shell primary navigation is limited to the five primary sections
+- settings is available from the header utility area
 - main authenticated layout exists
 - primary routes exist
 
 Completion definition:
 
-- user can navigate between Dashboard, Roadmap, Resources, Writing, Speaking, and Settings
+- user can navigate between Dashboard, Roadmap, Resources, Writing, Speaking, and open Settings from the header utility button
 - shell is reusable across routes
 
 ## Milestone 4: Local-First State Foundation Complete

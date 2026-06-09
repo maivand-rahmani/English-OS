@@ -6,8 +6,10 @@ import { Bell } from "lucide-react";
 
 import { useMediaQuery } from "@/shared/hooks";
 import {
-  appNavigation,
+  appHeaderActions,
+  appPrimaryNavigation,
   getAppSectionByPathname,
+  type AppNavigationItem,
   type AppSection,
 } from "@/shared/config/navigation";
 import { cn } from "@/shared/lib/utils";
@@ -97,7 +99,7 @@ function DesktopAppShell({
                 className="overflow-x-auto xl:justify-self-center"
               >
                 <div className="inline-flex min-w-max items-center gap-1 rounded-full border border-white/70 bg-surface-2 p-1.5 shadow-soft">
-                  {appNavigation.map((item) => {
+                  {appPrimaryNavigation.map((item) => {
                     const isActive = item.key === currentSection.key;
 
                     return (
@@ -130,6 +132,13 @@ function DesktopAppShell({
                 >
                   <Bell className="size-4" />
                 </button>
+                {appHeaderActions.map((item) => (
+                  <HeaderActionLink
+                    key={item.key}
+                    item={item}
+                    isActive={currentSection.key === item.key}
+                  />
+                ))}
                 <div className="inline-flex items-center gap-3 rounded-full border border-white/70 bg-surface-3 px-2 py-2 shadow-soft">
                   <div className="flex size-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                     {userInitial}
@@ -183,6 +192,31 @@ function DesktopAppShell({
   );
 }
 
+function HeaderActionLink({
+  item,
+  isActive,
+}: {
+  item: AppNavigationItem;
+  isActive: boolean;
+}) {
+  const Icon = item.icon;
+
+  return (
+    <Link
+      aria-current={isActive ? "page" : undefined}
+      aria-label={item.title}
+      href={item.href}
+      className={cn(
+        "inline-flex size-10 items-center justify-center rounded-full border border-surface-stroke bg-surface-panel text-muted-foreground shadow-soft transition-transform duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:-translate-y-0.5 hover:text-foreground sm:border-white/70 sm:bg-surface-2",
+        isActive &&
+          "border-transparent bg-black text-secondary shadow-[0_10px_24px_rgba(17,17,20,0.18)] hover:text-secondary-foreground",
+      )}
+    >
+      <Icon className="size-4" />
+    </Link>
+  );
+}
+
 type MobileAppShellProps = SharedShellProps & {
   userInitial: string;
 };
@@ -224,6 +258,13 @@ function MobileAppShell({
                 >
                   <Bell className="size-4" />
                 </button>
+                {appHeaderActions.map((item) => (
+                  <HeaderActionLink
+                    key={item.key}
+                    item={item}
+                    isActive={currentSection.key === item.key}
+                  />
+                ))}
                 <div className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground shadow-control">
                   {userInitial}
                 </div>

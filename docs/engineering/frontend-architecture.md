@@ -27,7 +27,7 @@ The shell should include:
 - main content area
 - user/account utility area
 
-For V1, the shell must keep navigation limited to the six top-level sections. Local section sidebars are a V2 concern unless a real internal page is implemented and necessary.
+For V1, the shell must keep navigation limited to the five primary sections. Settings should remain a route, but it should be surfaced through a header utility button rather than the main navigation pill. Local section sidebars are a V2 concern unless a real internal page is implemented and necessary.
 
 The shell should be implemented as a composed widget, not scattered across every page.
 
@@ -57,7 +57,7 @@ src/app/
 └── (app)/
 ```
 
-The authenticated app routes should map to the UX top-level sections:
+The authenticated app routes should map to the UX primary sections, plus the settings utility route:
 
 - `/dashboard`
 - `/roadmap`

@@ -33,7 +33,8 @@ Fixed decisions for this V1 pass:
 - phone-first mobile web is the default target for all surfaces below `lg`
 - `lg` and above keep the desktop shell
 - global navigation on phone uses a fixed bottom nav
-- phone navigation stays limited to the six top-level product sections
+- phone navigation stays limited to the five primary product sections
+- settings is exposed from the header utility area rather than the bottom nav
 - mobile search is intentionally hidden for now instead of becoming a half-finished flow
 - mobile filter and sheet behavior uses `@base-ui/react`
 - this pass changes UI hierarchy, layout, and mobile interaction patterns without changing product logic, Prisma, local-state hooks, or recommendation logic
@@ -64,15 +65,17 @@ Core rules:
 Phone navigation should use:
 
 - bottom navigation for top-level sections only
+- settings from a header utility button
 
-The top-level sections remain:
+The primary top-level sections remain:
 
 - Dashboard
 - Roadmap
 - Resources
 - Writing
 - Speaking
-- Settings
+
+Settings should remain available as a route from the header utility area.
 
 ### Local section navigation
 
