@@ -61,6 +61,7 @@
   --color-surface-stroke-strong: var(--surface-stroke-strong);
   --color-surface-pill: var(--surface-pill);
   --color-surface-dark-control: var(--surface-dark-control);
+  --color-surface-dark-control-foreground: var(--surface-dark-control-foreground);
   
   /* EnglishOS shadows */
   --shadow-soft: var(--shadow-soft);
@@ -143,6 +144,12 @@
   --surface-stroke-strong: rgba(255, 255, 255, 0.72);
   --surface-pill: rgba(255, 255, 255, 0.68);
   --surface-dark-control: oklch(0.17 0.01 270);
+  --surface-dark-control-foreground: oklch(0.98 0.002 270);
+  --page-atmosphere-top-left: rgba(255, 199, 214, 0.46);
+  --page-atmosphere-top-right: rgba(191, 205, 255, 0.42);
+  --page-atmosphere-bottom-left: rgba(255, 232, 182, 0.36);
+  --page-atmosphere-start: rgba(255, 255, 255, 0.68);
+  --page-atmosphere-end: rgba(246, 244, 252, 0.94);
 
   /* EnglishOS — shadow tokens */
   --shadow-float: 0 24px 80px rgba(31, 35, 48, 0.10);
@@ -206,6 +213,12 @@
   --surface-stroke-strong: rgba(255, 255, 255, 0.10);
   --surface-pill: rgba(255, 255, 255, 0.08);
   --surface-dark-control: rgba(255, 255, 255, 0.12);
+  --surface-dark-control-foreground: oklch(0.96 0.004 270);
+  --page-atmosphere-top-left: rgba(81, 52, 70, 0.34);
+  --page-atmosphere-top-right: rgba(53, 70, 111, 0.34);
+  --page-atmosphere-bottom-left: rgba(82, 70, 43, 0.28);
+  --page-atmosphere-start: rgba(20, 22, 31, 0.84);
+  --page-atmosphere-end: rgba(15, 17, 25, 0.98);
 
   /* EnglishOS — shadow tokens (dark) */
   --shadow-float: 0 20px 60px rgba(0, 0, 0, 0.45);
@@ -285,10 +298,10 @@
     min-height: 100vh;
     background-color: var(--background);
     background-image:
-      radial-gradient(circle at top left, rgba(255, 199, 214, 0.46), transparent 28%),
-      radial-gradient(circle at top right, rgba(191, 205, 255, 0.42), transparent 24%),
-      radial-gradient(circle at bottom left, rgba(255, 232, 182, 0.36), transparent 24%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(246, 244, 252, 0.94));
+      radial-gradient(circle at top left, var(--page-atmosphere-top-left), transparent 28%),
+      radial-gradient(circle at top right, var(--page-atmosphere-top-right), transparent 24%),
+      radial-gradient(circle at bottom left, var(--page-atmosphere-bottom-left), transparent 24%),
+      linear-gradient(180deg, var(--page-atmosphere-start), var(--page-atmosphere-end));
   }
 
   ::selection {
@@ -406,6 +419,36 @@
 
   .mobile-chip {
     flex: 0 0 auto;
+  }
+
+  .themed-scrollbar {
+    @apply scrollbar-thin scrollbar-thumb-surface-dark-control scrollbar-track-transparent;
+  }
+
+  .themed-scrollbar::-webkit-scrollbar {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 999px;
+  }
+
+  .themed-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 999px;
+  }
+
+  .themed-scrollbar::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    background-color: var(--surface-dark-control);
+    border: 3px solid transparent;
+    border-radius: 999px;
+  }
+
+  .themed-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--foreground);
+  }
+
+  .themed-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
   }
 
   .mobile-card-rhythm > * + * {
