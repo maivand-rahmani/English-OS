@@ -12,8 +12,9 @@ The V1 navigation model is top-level product sections only:
 - Resources
 - Practice
 
-Settings should remain a top-level route, but it should be accessed from a
-header utility button rather than the main navigation pill.
+Settings should be a shell-level overlay accessed from a header utility button.
+The `/settings` route remains only as a direct-access fallback for the same
+overlay.
 
 Local sidebars are postponed to V2 and must not appear in the active V1 UI
 unless the internal pages are real, implemented, and necessary.
@@ -29,7 +30,7 @@ Top-level product sections remain the only active navigation model in V1.
 - Roadmap is one immersive roadmap page.
 - Resources is one curated discovery and library page.
 - Practice is one focused V1 output page containing writing and speaking modes.
-- Settings is one simple settings page reached from the header utility area.
+- Settings is one compact modal system reached from the header utility area.
 
 Each main section should feel like one strong product experience rather than a
 shell full of shallow subpages.

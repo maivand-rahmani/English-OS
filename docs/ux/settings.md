@@ -31,11 +31,14 @@ V1 settings should include:
 
 ## V1 Navigation Model
 
-Settings is one simple page in V1.
+Settings is a shell-level utility overlay in V1, not a top-level product page.
 
-Profile, goals, preferences, notifications, and account controls may be grouped as sections or tabs inside that page.
+The settings icon opens the overlay to Appearance. The avatar or account entry
+opens the same overlay to Account. Profile, preferences, notifications, privacy,
+and account controls use compact internal section navigation inside the modal.
 
-They are not active V1 sidebar routes.
+Direct `/settings` access may render the same settings shell as a route fallback,
+but it must not restore a dashboard-style Settings page.
 
 ## What Belongs Here
 
@@ -71,6 +74,7 @@ If a function matters daily, it likely belongs elsewhere.
 1. Settings should feel calm and practical.
 2. Important learning preferences should be easy to update.
 3. The learner should understand that changing preferences can affect roadmap and recommendations.
+4. Settings content should use rows and subtle dividers rather than cards or decorative panels.
 
 ## Future Expansion
 

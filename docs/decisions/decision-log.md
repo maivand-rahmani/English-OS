@@ -54,7 +54,8 @@ V1 should therefore expose:
 - Resources
 - Practice
 
-Settings remains a top-level route surfaced through the header utility area.
+Settings remains available through the header utility area. Its page-based
+interaction model is superseded by the 2026-06-11 Settings decision below.
 
 Legacy `/writing` and `/speaking` paths may remain only as redirects into
 Practice while the old architecture is being retired.
@@ -64,6 +65,23 @@ Related docs:
 - [Information Architecture](../ux/information-architecture.md)
 - [Navigation](../ux/navigation.md)
 - [Practice](../ux/practice.md)
+
+### 2026-06-11: Settings Becomes A Shell-Level Overlay
+
+Status: accepted.
+
+Settings is a utility modal or mobile sheet opened from the settings control or
+account entry point. It is not a top-level product page. Direct `/settings`
+access renders the same overlay as a compatibility fallback.
+
+Settings content uses compact internal navigation, rows, dividers, and small
+option pickers rather than dashboard cards or decorative panels.
+
+Related docs:
+
+- [Settings](../ux/settings.md)
+- [Navigation](../ux/navigation.md)
+- [Mobile V1 Design](../ux/mobile-v1-design.md)
 
 ### 2026-06-09: Shared App Shell Does Not Render Traditional Page Headers
 

@@ -11,7 +11,7 @@ This document is about design structure, hierarchy, and interaction expectations
 Current implementation note:
 
 The current codebase now includes a mobile V1 pass for the app shell plus the
-dashboard, roadmap, resources, Practice studio, and settings overview. The
+dashboard, roadmap, resources, Practice studio, and Settings sheet. The
 product still needs deeper review logic and AI-light work, but the phone-first
 shell and section hierarchy are no longer just design intent.
 
@@ -36,7 +36,7 @@ Fixed decisions for this V1 pass:
 - `lg` and above keep the desktop shell
 - global navigation on phone uses a fixed bottom nav
 - phone navigation stays limited to the four primary product sections
-- settings is exposed from the header utility area rather than the bottom nav
+- settings is exposed as a full-screen sheet from the header utility area rather than the bottom nav
 - the shared mobile shell does not repeat section titles as traditional page headers
 - mobile search is intentionally hidden for now instead of becoming a half-finished flow
 - mobile filter and sheet behavior uses `@base-ui/react`
@@ -77,7 +77,8 @@ The primary top-level sections remain:
 - Resources
 - Practice
 
-Settings should remain available as a route from the header utility area.
+Settings should open as a near-full-screen sheet from the header utility area.
+Direct route access remains a compatibility fallback only.
 
 ### Local section navigation
 
@@ -336,18 +337,9 @@ It should make it easy to:
 
 ### Layout direction
 
-High-frequency preference groups should appear first.
-
-Controls should stack in grouped sections.
-
-Profile, goals, preferences, notifications, and account should remain visually separated into calm blocks.
-
-Recommended order for the current overview pass:
-
-1. appearance and preference controls
-2. current applied appearance state
-3. learner setup
-4. notifications and account surfaces
+The mobile sheet should use compact internal section navigation and row-based
+controls. Appearance, profile, notifications, privacy, and account remain
+separate sections inside the same sheet.
 
 ### Rules
 
@@ -355,6 +347,7 @@ Recommended order for the current overview pass:
 - long catch-all forms should be avoided
 - daily appearance and preference changes should feel faster than low-frequency account actions
 - settings should never feel like a second dashboard
+- cards, pastel blocks, and explanatory panels should not be used for settings groups
 
 ## Surface Acceptance Checklist
 

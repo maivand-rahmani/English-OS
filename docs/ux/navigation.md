@@ -24,8 +24,9 @@ The global top bar should contain the main product zones:
 - Resources
 - Practice
 
-Settings should live as a separate header utility button rather than inside the
-main navigation pill.
+Settings should live as a header utility button rather than inside the main
+navigation pill. It opens a shell-level overlay and does not behave like a
+top-level product page.
 
 The top bar represents major modes of using English OS.
 
@@ -66,7 +67,7 @@ Examples:
 - Roadmap keeps `Current Stage` and `Upcoming` inside the roadmap experience, while `Grammar`, `Vocabulary`, `Reading`, and `Listening` remain filters, layers, or tags.
 - Resources keeps `Recommended`, `Collections`, levels, and skills as integrated discovery states inside one page.
 - Practice keeps `Writing` and `Speaking` as modes inside one studio-like page surface and keeps draft, recording, feedback, reflection, and history concepts inside the mode experience instead of separate V1 routes.
-- Settings keeps profile, goals, preferences, notifications, and account controls inside one simple settings page.
+- Settings keeps profile, goals, preferences, notifications, privacy, and account controls inside one compact modal system.
 
 ## Route Behavior
 
@@ -75,6 +76,7 @@ The product should support:
 - fast switching between major zones
 - clear deep-linking to real implemented states when useful
 - preserved context when moving inside a workspace
+- settings opening and closing without leaving the current product page
 
 Examples:
 
