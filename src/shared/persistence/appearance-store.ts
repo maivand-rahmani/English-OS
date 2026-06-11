@@ -2,6 +2,7 @@ import {
   type AppearancePreferences,
   defaultAppearancePreferences,
 } from "@/shared/types";
+import type { ThemeMode } from "@/shared/types";
 
 const STORAGE_KEY = "english-os:appearance-preferences";
 
@@ -69,9 +70,25 @@ export function preferencesToHtmlAttrs(
   prefs: AppearancePreferences
 ): Record<string, string> {
   return {
-    "data-theme": prefs.theme,
+    "data-theme": resolveAppliedTheme(prefs.theme),
     "data-text-size": prefs.textSize,
     "data-density": prefs.density,
     "data-motion": prefs.motion,
   };
+}
+
+export function resolveAppliedTheme(theme: ThemeMode): "light" | "dark" {
+  if (theme === "light" || theme === "dark") {
+    return theme;
+  }
+
+  if (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  ) {
+    return "dark";
+  }
+
+  return "light";
 }

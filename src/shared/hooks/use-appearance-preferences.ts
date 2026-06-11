@@ -41,6 +41,22 @@ export function useAppearancePreferences() {
     };
   }, []);
 
+  useEffect(() => {
+    if (preferences.theme !== "system" || typeof window === "undefined") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => applyAttrs(preferences);
+
+    handleChange();
+    mediaQuery.addEventListener("change", handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+  }, [preferences]);
+
   const updatePreferences = useCallback(
     (partial: Partial<AppearancePreferences>) => {
       setPreferences((prev) => {
