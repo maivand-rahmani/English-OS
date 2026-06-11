@@ -1,17 +1,29 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { AppShell } from "./app-shell";
 
 const usePathnameMock = vi.fn();
+const routerReplaceMock = vi.fn();
 
 vi.mock("next/navigation", () => ({
   usePathname: () => usePathnameMock(),
+  useRouter: () => ({
+    replace: routerReplaceMock,
+  }),
 }));
+
+const account = {
+  displayName: "Grace Hopper",
+  email: "grace@example.com",
+  isAuthenticated: true,
+};
 
 describe("AppShell", () => {
   beforeEach(() => {
     usePathnameMock.mockReset();
+    routerReplaceMock.mockReset();
+    localStorage.clear();
   });
 
   test("renders the mobile shell with bottom navigation", async () => {
@@ -19,7 +31,7 @@ describe("AppShell", () => {
     installMatchMedia(390);
 
     render(
-      <AppShell userLabel="Grace Hopper">
+      <AppShell account={account}>
         <div>Shell content</div>
       </AppShell>,
     );
@@ -30,7 +42,7 @@ describe("AppShell", () => {
 
     expect(mobileNavigation).toBeInTheDocument();
     expect(within(mobileNavigation).getAllByRole("link")).toHaveLength(4);
-    expect(screen.getByRole("link", { name: /settings/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^settings$/i })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /practice/i })).not.toBeInTheDocument();
     expect(
       screen.queryByRole("list", { name: /resources lanes/i }),
@@ -44,7 +56,7 @@ describe("AppShell", () => {
     installMatchMedia(1280);
 
     render(
-      <AppShell userLabel="Grace Hopper">
+      <AppShell account={account}>
         <div>Shell content</div>
       </AppShell>,
     );
@@ -54,7 +66,7 @@ describe("AppShell", () => {
     });
 
     expect(within(topNavigation).getAllByRole("link")).toHaveLength(4);
-    expect(screen.getByRole("link", { name: /settings/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^settings$/i })).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText(/search resources/i),
     ).toBeInTheDocument();
@@ -69,7 +81,7 @@ describe("AppShell", () => {
     installMatchMedia(1280);
 
     render(
-      <AppShell userLabel="Grace Hopper">
+      <AppShell account={account}>
         <div>Shell content</div>
       </AppShell>,
     );
@@ -78,6 +90,62 @@ describe("AppShell", () => {
 
     expect(practiceLink).toHaveAttribute("aria-current", "page");
     expect(screen.queryByRole("heading", { name: /practice/i })).not.toBeInTheDocument();
+  });
+
+  test("opens appearance from the settings utility and account from the avatar", async () => {
+    usePathnameMock.mockReturnValue("/dashboard");
+    installMatchMedia(1280);
+
+    render(
+      <AppShell account={account}>
+        <div>Shell content</div>
+      </AppShell>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /^settings$/i }));
+
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByRole("heading", { name: "Appearance" })).toBeInTheDocument();
+
+    fireEvent.click(within(dialog).getByRole("button", { name: /close settings/i }));
+    expect(routerReplaceMock).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: /open account settings/i }));
+
+    const accountDialog = await screen.findByRole("dialog");
+    expect(within(accountDialog).getByRole("heading", { name: "Account" })).toBeInTheDocument();
+    expect(within(accountDialog).getByText("grace@example.com")).toBeInTheDocument();
+  });
+
+  test("closes direct settings access to the dashboard", async () => {
+    usePathnameMock.mockReturnValue("/settings");
+    installMatchMedia(1280);
+
+    render(
+      <AppShell account={account}>
+        <div>Shell content</div>
+      </AppShell>,
+    );
+
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(within(dialog).getByRole("button", { name: /close settings/i }));
+
+    expect(routerReplaceMock).toHaveBeenCalledWith("/dashboard");
+  });
+
+  test("closes direct settings access with Escape", async () => {
+    usePathnameMock.mockReturnValue("/settings");
+    installMatchMedia(1280);
+
+    render(
+      <AppShell account={account}>
+        <div>Shell content</div>
+      </AppShell>,
+    );
+
+    await screen.findByRole("dialog");
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(routerReplaceMock).toHaveBeenCalledWith("/dashboard");
   });
 });
 

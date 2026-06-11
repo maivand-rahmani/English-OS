@@ -7,7 +7,12 @@ export default async function AuthenticatedAppLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  const userLabel = session?.user?.email ?? session?.user?.name ?? "Guest mode";
+  const account = {
+    displayName:
+      session?.user?.name ?? session?.user?.email ?? "Guest mode",
+    email: session?.user?.email ?? null,
+    isAuthenticated: Boolean(session?.user),
+  };
 
-  return <AppShell userLabel={userLabel}>{children}</AppShell>;
+  return <AppShell account={account}>{children}</AppShell>;
 }

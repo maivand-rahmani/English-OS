@@ -3,7 +3,6 @@ import {
   BookOpenText,
   LayoutDashboard,
   Map,
-  Settings2,
   Sparkles,
 } from "lucide-react";
 
@@ -11,8 +10,7 @@ export type AppSectionKey =
   | "dashboard"
   | "roadmap"
   | "resources"
-  | "practice"
-  | "settings";
+  | "practice";
 
 export type AppNavigationItem = {
   key: AppSectionKey;
@@ -38,14 +36,7 @@ export const appPrimaryNavigation: readonly AppNavigationItem[] = [
   { key: "practice", title: "Practice", href: "/practice", icon: Sparkles },
 ] as const;
 
-export const appHeaderActions: readonly AppNavigationItem[] = [
-  { key: "settings", title: "Settings", href: "/settings", icon: Settings2 },
-] as const;
-
-export const appNavigation: readonly AppNavigationItem[] = [
-  ...appPrimaryNavigation,
-  ...appHeaderActions,
-] as const;
+export const appNavigation: readonly AppNavigationItem[] = appPrimaryNavigation;
 
 export type AppSection = {
   key: AppSectionKey;
@@ -78,12 +69,6 @@ const appSections: Record<AppSectionKey, AppSection> = {
     title: "Practice",
     href: "/practice",
     icon: Sparkles,
-  },
-  settings: {
-    key: "settings",
-    title: "Settings",
-    href: "/settings",
-    icon: Settings2,
   },
 };
 

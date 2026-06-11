@@ -1,74 +1,127 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Bell } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Bell, Settings2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { useMediaQuery } from "@/shared/hooks";
 import {
-  appHeaderActions,
   appPrimaryNavigation,
   getAppSectionByPathname,
-  type AppNavigationItem,
   type AppSection,
 } from "@/shared/config/navigation";
 import { cn } from "@/shared/lib/utils";
 import { SearchInput } from "@/shared/ui/input";
+import {
+  SettingsCenter,
+  type SettingsAccount,
+  type SettingsSectionId,
+} from "@/widgets/settings-center";
 
 import { MobileBottomNav } from "./mobile-bottom-nav";
 
 type AppShellProps = {
+  account: SettingsAccount;
   children: React.ReactNode;
-  userLabel: string;
 };
 
-export function AppShell({ children, userLabel }: AppShellProps) {
+export function AppShell({ account, children }: AppShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const currentSection = getAppSectionByPathname(pathname);
   const isDesktopShell = useMediaQuery("(min-width: 1024px)");
-  const userInitial = userLabel.trim().charAt(0).toUpperCase() || "G";
+  const userInitial = account.displayName.trim().charAt(0).toUpperCase() || "G";
+  const isSettingsRoute = pathname.startsWith("/settings");
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsSection, setSettingsSection] =
+    useState<SettingsSectionId>("appearance");
+  const activeSettingsSection = isSettingsRoute
+    ? "appearance"
+    : settingsSection;
 
-  if (isDesktopShell) {
-    return (
-      <DesktopAppShell
-        currentSection={currentSection}
-        pathname={pathname}
-        userInitial={userInitial}
-        userLabel={userLabel}
-      >
-        {children}
-      </DesktopAppShell>
-    );
+  useEffect(() => {
+    if (!isSettingsRoute) {
+      return;
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        router.replace("/dashboard");
+      }
+    }
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isSettingsRoute, router]);
+
+  function openSettings(section: SettingsSectionId) {
+    setSettingsSection(section);
+    setSettingsOpen(true);
+  }
+
+  function handleSettingsOpenChange(open: boolean) {
+    setSettingsOpen(open);
+
+    if (!open && isSettingsRoute) {
+      router.replace("/dashboard");
+    }
   }
 
   return (
-    <MobileAppShell
-      currentSection={currentSection}
-      pathname={pathname}
-      userInitial={userInitial}
-    >
-      {children}
-    </MobileAppShell>
+    <>
+      {isDesktopShell ? (
+        <DesktopAppShell
+          account={account}
+          currentSection={currentSection}
+          onOpenSettings={openSettings}
+          pathname={pathname}
+          userInitial={userInitial}
+        >
+          {children}
+        </DesktopAppShell>
+      ) : (
+        <MobileAppShell
+          currentSection={currentSection}
+          onOpenSettings={openSettings}
+          pathname={pathname}
+          userInitial={userInitial}
+        >
+          {children}
+        </MobileAppShell>
+      )}
+
+      <SettingsCenter
+        account={account}
+        activeSection={activeSettingsSection}
+        onActiveSectionChange={setSettingsSection}
+        onOpenChange={handleSettingsOpenChange}
+        open={settingsOpen || isSettingsRoute}
+        routeFallback={isSettingsRoute}
+      />
+    </>
   );
 }
 
 type SharedShellProps = {
   children: React.ReactNode;
   currentSection: AppSection;
+  onOpenSettings: (section: SettingsSectionId) => void;
   pathname: string;
 };
 
 type DesktopAppShellProps = SharedShellProps & {
+  account: SettingsAccount;
   userInitial: string;
-  userLabel: string;
 };
 
 function DesktopAppShell({
+  account,
   children,
   currentSection,
+  onOpenSettings,
   pathname,
   userInitial,
-  userLabel,
 }: DesktopAppShellProps) {
   return (
     <div className="min-h-screen px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-6">
@@ -128,26 +181,32 @@ function DesktopAppShell({
               >
                 <Bell className="size-4" />
               </button>
-              {appHeaderActions.map((item) => (
-                <HeaderActionLink
-                  key={item.key}
-                  item={item}
-                  isActive={currentSection.key === item.key}
-                />
-              ))}
-              <div className="inline-flex items-center gap-3 rounded-full border border-white/70 bg-surface-3 px-2 py-2 shadow-soft">
+              <button
+                type="button"
+                aria-label="Settings"
+                onClick={() => onOpenSettings("appearance")}
+                className="inline-flex size-10 items-center justify-center rounded-full border border-surface-stroke bg-surface-panel text-muted-foreground shadow-soft transition-transform duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:-translate-y-0.5 hover:text-foreground sm:border-white/70 sm:bg-surface-2"
+              >
+                <Settings2 className="size-4" />
+              </button>
+              <button
+                type="button"
+                aria-label="Open account settings"
+                onClick={() => onOpenSettings("account")}
+                className="inline-flex items-center gap-3 rounded-full border border-white/70 bg-surface-3 px-2 py-2 text-left shadow-soft hover:-translate-y-0.5"
+              >
                 <div className="flex size-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                   {userInitial}
                 </div>
                 <div className="pr-2">
                   <p className="text-sm font-semibold text-foreground">
-                    {userLabel}
+                    {account.displayName}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Ready for focused practice
+                    {account.isAuthenticated ? "Account settings" : "Guest mode"}
                   </p>
                 </div>
-              </div>
+              </button>
             </div>
           </div>
         </header>
@@ -165,31 +224,6 @@ function DesktopAppShell({
   );
 }
 
-function HeaderActionLink({
-  item,
-  isActive,
-}: {
-  item: AppNavigationItem;
-  isActive: boolean;
-}) {
-  const Icon = item.icon;
-
-  return (
-    <Link
-      aria-current={isActive ? "page" : undefined}
-      aria-label={item.title}
-      href={item.href}
-      className={cn(
-        "inline-flex size-10 items-center justify-center rounded-full border border-surface-stroke bg-surface-panel text-muted-foreground shadow-soft transition-transform duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:-translate-y-0.5 hover:text-foreground sm:border-white/70 sm:bg-surface-2",
-        isActive &&
-          "border-transparent bg-primary text-primary-foreground shadow-[0_10px_24px_rgba(17,17,20,0.18)] hover:text-primary-foreground",
-      )}
-    >
-      <Icon className="size-4" />
-    </Link>
-  );
-}
-
 type MobileAppShellProps = SharedShellProps & {
   userInitial: string;
 };
@@ -197,6 +231,7 @@ type MobileAppShellProps = SharedShellProps & {
 function MobileAppShell({
   children,
   currentSection,
+  onOpenSettings,
   pathname,
   userInitial,
 }: MobileAppShellProps) {
@@ -221,16 +256,22 @@ function MobileAppShell({
                 >
                   <Bell className="size-4" />
                 </button>
-                {appHeaderActions.map((item) => (
-                  <HeaderActionLink
-                    key={item.key}
-                    item={item}
-                    isActive={currentSection.key === item.key}
-                  />
-                ))}
-                <div className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground shadow-control">
+                <button
+                  type="button"
+                  aria-label="Settings"
+                  onClick={() => onOpenSettings("appearance")}
+                  className="inline-flex size-10 items-center justify-center rounded-full border border-surface-stroke bg-surface-panel text-muted-foreground shadow-soft"
+                >
+                  <Settings2 className="size-4" />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Open account settings"
+                  onClick={() => onOpenSettings("account")}
+                  className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground shadow-control"
+                >
                   {userInitial}
-                </div>
+                </button>
               </div>
             </div>
           </header>
