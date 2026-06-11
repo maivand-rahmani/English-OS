@@ -40,8 +40,8 @@ export function RoadmapStepTaskTable({ block, state }: RoadmapStepTaskTableProps
   ];
 
   return (
-    <div className="overflow-hidden rounded-[1.35rem] border border-surface-stroke-strong bg-white/55">
-      <div className="grid grid-cols-[minmax(0,1.6fr)_minmax(7rem,0.9fr)_minmax(6rem,0.7fr)_minmax(5.5rem,0.55fr)] border-b border-surface-stroke-strong bg-white/45 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground max-lg:hidden">
+    <div className="overflow-hidden rounded-[1.35rem] border border-surface-stroke-strong bg-surface-panel-muted">
+      <div className="grid grid-cols-[minmax(0,1.6fr)_minmax(7rem,0.9fr)_minmax(6rem,0.7fr)_minmax(5.5rem,0.55fr)] border-b border-surface-stroke-strong bg-surface-panel px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground max-lg:hidden">
         <span>Task</span>
         <span>Resource</span>
         <span>Skill</span>
@@ -57,7 +57,7 @@ export function RoadmapStepTaskTable({ block, state }: RoadmapStepTaskTableProps
               key={row.action}
             >
               <div className="flex min-w-0 items-center gap-3">
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-surface-dark-control text-primary-foreground shadow-control">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-control">
                   <Icon className="size-3.5" />
                 </span>
                 <span className="font-medium text-foreground">{row.action}</span>
@@ -68,7 +68,7 @@ export function RoadmapStepTaskTable({ block, state }: RoadmapStepTaskTableProps
                 className={cn(
                   "inline-flex w-fit items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium",
                   row.status === "Done"
-                    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                    ? "border-surface-stroke-strong bg-surface-module-green text-foreground"
                     : "border-surface-stroke-strong bg-surface-pill text-muted-foreground",
                 )}
               >

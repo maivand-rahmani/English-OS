@@ -24,7 +24,7 @@ export function DashboardActivitySection({
           recentActivity.map((item) => (
             <div
               key={item.id}
-              className="rounded-[1.2rem] border border-white/70 bg-surface-2 px-4 py-3"
+              className="rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel-muted px-4 py-3"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -38,14 +38,14 @@ export function DashboardActivitySection({
             </div>
           ))
         ) : (
-          <div className="rounded-[1.2rem] border border-dashed border-black/10 bg-black/5 px-4 py-4 text-sm leading-6 text-muted-foreground">
+          <div className="rounded-[1.2rem] border border-dashed border-surface-stroke-strong bg-surface-panel-muted px-4 py-4 text-sm leading-6 text-muted-foreground">
             Your local event feed will start filling after you begin a roadmap
             block, complete a resource, or submit practice.
           </div>
         )}
       </div>
 
-      <div className="mt-4 flex items-center justify-between rounded-[1.2rem] border border-white/70 bg-surface-2 px-4 py-3">
+      <div className="mt-4 flex items-center justify-between rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel-muted px-4 py-3">
         <div>
           <p className="text-sm font-medium text-foreground">Live local state</p>
           <p className="mt-1 text-sm text-muted-foreground">

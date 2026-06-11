@@ -27,8 +27,8 @@ export function DashboardHeroSection({
   onStartBlock,
 }: DashboardHeroSectionProps) {
   return (
-    <DashboardCard className="overflow-hidden bg-[linear-gradient(180deg,rgba(255,255,255,0.84),rgba(248,243,255,0.94))] p-6 sm:p-7">
-      <div className="absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_left,rgba(255,211,226,0.42),transparent_60%),radial-gradient(circle_at_top_right,rgba(189,205,255,0.34),transparent_55%)]" />
+    <DashboardCard className="overflow-hidden bg-[linear-gradient(180deg,var(--surface-panel-strong),var(--surface-panel))] p-6 sm:p-7">
+      <div className="absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_left,var(--surface-module-pink),transparent_60%),radial-gradient(circle_at_top_right,var(--surface-module-blue),transparent_55%)]" />
       <div className="relative">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="max-w-2xl">
@@ -70,7 +70,7 @@ export function DashboardHeroSection({
                 disabled={busyAction === `block:${focusBlock.id}:complete`}
                 className={cn(
                   buttonVariants({ variant: "outline" }),
-                  "rounded-full border-white/70 bg-white/80",
+                  "rounded-full border-surface-stroke-strong bg-surface-panel",
                 )}
               >
                 Mark block complete
@@ -81,7 +81,7 @@ export function DashboardHeroSection({
                 disabled={busyAction === `block:${focusBlock.id}:review`}
                 className={cn(
                   buttonVariants({ variant: "ghost" }),
-                  "rounded-full border border-transparent text-foreground hover:bg-black/5",
+                  "rounded-full border border-transparent text-foreground hover:bg-surface-pill",
                 )}
               >
                 Mark for review

@@ -14,11 +14,11 @@ import type { LibraryResource } from "../model/use-resources-library";
 import { cn } from "@/shared/lib/utils";
 
 const stateBadgeStyles: Record<LibraryResource["signal"]["state"], string> = {
-  completed: "border-emerald-200 bg-emerald-50/90 text-emerald-700",
-  in_progress: "border-sky-200 bg-sky-50/90 text-sky-700",
-  needs_review: "border-amber-200 bg-amber-50/90 text-amber-700",
+  completed: "border-surface-stroke-strong bg-surface-module-green text-foreground",
+  in_progress: "border-surface-stroke-strong bg-surface-module-blue text-foreground",
+  needs_review: "border-surface-stroke-strong bg-surface-module-cream text-foreground",
   not_started: "border-surface-stroke-strong bg-surface-pill text-muted-foreground",
-  skipped_for_now: "border-slate-200 bg-slate-100/90 text-slate-500",
+  skipped_for_now: "border-surface-stroke bg-surface-panel-muted text-muted-foreground",
 };
 
 const stateIcons: Record<LibraryResource["signal"]["state"], ComponentType<{ className?: string }>> = {
@@ -63,13 +63,13 @@ export function ResourceSignalFlags({
   return (
     <>
       {isUseful ? (
-        <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50/80 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+        <span className="inline-flex items-center gap-1 rounded-full border border-surface-stroke-strong bg-surface-module-green px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground">
           <CheckCircle2 className="size-3.5" />
           Useful
         </span>
       ) : null}
       {isDifficult ? (
-        <span className="inline-flex items-center gap-1 rounded-full border border-rose-200 bg-rose-50/80 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-rose-700">
+        <span className="inline-flex items-center gap-1 rounded-full border border-surface-stroke-strong bg-surface-module-pink px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground">
           <AlertTriangle className="size-3.5" />
           Difficult
         </span>

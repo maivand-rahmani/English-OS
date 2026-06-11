@@ -331,8 +331,8 @@ function DiscoveryHero({
   useCaseFilter: string;
 }) {
   return (
-    <DashboardCard className="overflow-hidden p-5 sm:p-6">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-52 bg-[radial-gradient(circle_at_top_left,rgba(255,214,224,0.45),transparent_34%),radial-gradient(circle_at_top_right,rgba(198,214,255,0.35),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.25),transparent_80%)]" />
+    <DashboardCard className="overflow-hidden bg-[linear-gradient(180deg,var(--surface-panel-strong),var(--surface-panel))] p-5 sm:p-6">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-52 bg-[radial-gradient(circle_at_top_left,var(--surface-module-pink),transparent_34%),radial-gradient(circle_at_top_right,var(--surface-module-blue),transparent_30%),linear-gradient(180deg,var(--surface-highlight),transparent_80%)]" />
       <div className="relative space-y-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl">
@@ -368,7 +368,7 @@ function DiscoveryHero({
             </p>
             <SearchInput
               aria-label="Search resources"
-              className="mt-3 h-11 rounded-[1rem] bg-white/85"
+              className="mt-3 h-11 rounded-[1rem] border-surface-stroke-strong bg-surface-panel"
               onChange={(event) => onQueryChange(event.target.value)}
               placeholder="Search resources, skills, roadmap steps, use cases..."
               value={query}
@@ -418,7 +418,7 @@ function DiscoveryHero({
                       "mobile-chip inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]",
                       isActive
                         ? "border-transparent bg-surface-dark-control text-primary-foreground shadow-control"
-                        : "border-surface-stroke-strong bg-white/78 text-muted-foreground hover:bg-surface-module-cream",
+                        : "border-surface-stroke-strong bg-surface-panel text-muted-foreground hover:bg-surface-panel-strong",
                     )}
                     onClick={() => onSuggestedFilter(filter)}
                     type="button"
@@ -714,7 +714,7 @@ function FilterRow({
               "mobile-chip inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]",
               active === option
                 ? "border-transparent bg-surface-dark-control text-primary-foreground shadow-control"
-                : "border-surface-stroke-strong bg-white/72 text-muted-foreground hover:bg-surface-module-cream",
+                : "border-surface-stroke-strong bg-surface-panel text-muted-foreground hover:bg-surface-panel-strong",
             )}
             onClick={() => onChange(option)}
             type="button"
@@ -749,7 +749,7 @@ function ActiveFilterChips({
       {activeFilters.map((filter) => (
         <button
           key={`${filter.key}:${filter.value}`}
-          className="inline-flex items-center gap-2 rounded-full border border-surface-stroke-strong bg-white/80 px-3 py-1 text-xs font-semibold text-foreground"
+          className="inline-flex items-center gap-2 rounded-full border border-surface-stroke-strong bg-surface-panel px-3 py-1 text-xs font-semibold text-foreground"
           onClick={() => onClearFilter(filter.key)}
           type="button"
         >
@@ -766,7 +766,7 @@ function ActiveFilterChips({
       {notice ? (
         <div
           aria-live="polite"
-          className="rounded-full border border-emerald-200 bg-emerald-50/90 px-3 py-1 text-xs font-semibold text-emerald-700"
+          className="rounded-full border border-surface-stroke-strong bg-surface-module-green px-3 py-1 text-xs font-semibold text-foreground"
         >
           {notice}
         </div>
@@ -805,22 +805,22 @@ function ResourceSkeletonGrid() {
       {Array.from({ length: 4 }).map((_, index) => (
         <DashboardCard key={index} className="animate-pulse p-4">
           <div className="flex gap-2">
-            <div className="h-6 w-24 rounded-full bg-white/70" />
-            <div className="h-6 w-20 rounded-full bg-white/60" />
-            <div className="h-6 w-24 rounded-full bg-white/65" />
+            <div className="h-6 w-24 rounded-full bg-surface-panel-strong" />
+            <div className="h-6 w-20 rounded-full bg-surface-panel" />
+            <div className="h-6 w-24 rounded-full bg-surface-panel-muted" />
           </div>
-          <div className="mt-5 h-6 w-3/4 rounded-full bg-white/72" />
-          <div className="mt-3 h-4 w-full rounded-full bg-white/62" />
-          <div className="mt-2 h-4 w-5/6 rounded-full bg-white/58" />
+          <div className="mt-5 h-6 w-3/4 rounded-full bg-surface-panel-strong" />
+          <div className="mt-3 h-4 w-full rounded-full bg-surface-panel" />
+          <div className="mt-2 h-4 w-5/6 rounded-full bg-surface-panel-muted" />
           <div className="mt-4 flex gap-2">
-            <div className="h-6 w-20 rounded-full bg-white/60" />
-            <div className="h-6 w-18 rounded-full bg-white/56" />
-            <div className="h-6 w-20 rounded-full bg-white/64" />
+            <div className="h-6 w-20 rounded-full bg-surface-panel" />
+            <div className="h-6 w-18 rounded-full bg-surface-pill" />
+            <div className="h-6 w-20 rounded-full bg-surface-panel-muted" />
           </div>
-          <div className="mt-4 h-4 w-1/2 rounded-full bg-white/58" />
+          <div className="mt-4 h-4 w-1/2 rounded-full bg-surface-panel-muted" />
           <div className="mt-4 flex gap-2">
-            <div className="h-10 w-28 rounded-full bg-white/70" />
-            <div className="h-10 w-20 rounded-full bg-white/62" />
+            <div className="h-10 w-28 rounded-full bg-surface-panel-strong" />
+            <div className="h-10 w-20 rounded-full bg-surface-panel" />
           </div>
         </DashboardCard>
       ))}
@@ -870,22 +870,22 @@ function isSuggestedFilterActive({
 
 function getCardTone(resource: LibraryResource) {
   if (resource.signal.state === "in_progress") {
-    return "border-sky-200 bg-[linear-gradient(135deg,rgba(235,246,255,0.92),rgba(255,255,255,0.92))]";
+    return "border-surface-stroke-strong bg-[linear-gradient(135deg,var(--surface-module-blue),var(--surface-panel-strong))]";
   }
 
   if (resource.signal.state === "completed") {
-    return "border-emerald-200 bg-[linear-gradient(135deg,rgba(236,251,242,0.92),rgba(255,255,255,0.92))]";
+    return "border-surface-stroke-strong bg-[linear-gradient(135deg,var(--surface-module-green),var(--surface-panel-strong))]";
   }
 
   if (resource.signal.state === "needs_review") {
-    return "border-amber-200 bg-[linear-gradient(135deg,rgba(255,247,232,0.94),rgba(255,255,255,0.92))]";
+    return "border-surface-stroke-strong bg-[linear-gradient(135deg,var(--surface-module-cream),var(--surface-panel-strong))]";
   }
 
   if (resource.signal.state === "skipped_for_now") {
-    return "border-slate-200 bg-[linear-gradient(135deg,rgba(247,247,250,0.94),rgba(255,255,255,0.9))]";
+    return "border-surface-stroke bg-[linear-gradient(135deg,var(--surface-panel-muted),var(--surface-panel))]";
   }
 
-  return "border-surface-stroke-strong bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(248,246,252,0.92))]";
+  return "border-surface-stroke-strong bg-[linear-gradient(135deg,var(--surface-panel-strong),var(--surface-module-lavender))]";
 }
 
 function getNoticeMessage(title: string, action: ResourcePrimaryAction) {

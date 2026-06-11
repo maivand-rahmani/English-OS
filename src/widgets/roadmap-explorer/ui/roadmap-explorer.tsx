@@ -41,7 +41,7 @@ export function RoadmapExplorer(props: RoadmapExplorerProps) {
   if (steps.length === 0) {
     return (
       <section className="min-h-[calc(100vh-11rem)] rounded-[2.2rem] border border-surface-stroke bg-surface-panel-strong p-6 shadow-float backdrop-blur-2xl">
-        <div className="flex h-full min-h-[24rem] items-center justify-center rounded-[1.7rem] border border-dashed border-surface-stroke-strong bg-white/45 text-center">
+        <div className="flex h-full min-h-[24rem] items-center justify-center rounded-[1.7rem] border border-dashed border-surface-stroke-strong bg-surface-panel-muted text-center">
           <div className="max-w-md">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Roadmap canvas

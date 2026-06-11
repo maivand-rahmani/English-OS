@@ -33,7 +33,7 @@ export function DashboardProgressSection({
             {completedBlocks} of {content.blockCount} roadmap blocks completed
           </p>
         </div>
-        <div className="rounded-[1.2rem] border border-white/70 bg-surface-2 px-4 py-3">
+        <div className="rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel-muted px-4 py-3">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             Consistency
           </p>
@@ -41,7 +41,7 @@ export function DashboardProgressSection({
         </div>
       </div>
 
-      <div className="mt-5 h-3 overflow-hidden rounded-full bg-black/6">
+      <div className="mt-5 h-3 overflow-hidden rounded-full bg-surface-pill">
         <div
           className="h-full rounded-full bg-primary transition-[width] duration-[var(--motion-duration-slow)] ease-[var(--motion-ease-standard)]"
           style={{ width: `${roadmapCompletion}%` }}

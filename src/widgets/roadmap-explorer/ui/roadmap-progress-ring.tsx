@@ -35,7 +35,7 @@ export function RoadmapProgressRing({ className, progress, tone }: RoadmapProgre
         r="28"
         stroke="currentColor"
         strokeWidth="3"
-        className="text-white/70"
+        className="text-[color:var(--surface-stroke-strong)]"
       />
       <motion.circle
         cx="36"

@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { DashboardContentState } from "@/entities/dashboard";
@@ -11,21 +11,43 @@ const useWritingWorkspaceMock = vi.fn();
 const useSpeakingWorkspaceMock = vi.fn();
 
 vi.mock("framer-motion", () => {
-  function passthrough(tag: "div" | "section" | "span") {
-    return ({
-      animate: _animate,
-      children,
-      exit: _exit,
-      initial: _initial,
-      layoutId: _layoutId,
-      transition: _transition,
-      ...props
-    }: any) =>
-      React.createElement(tag, props, children);
+  type MotionProps = React.HTMLAttributes<HTMLElement> & {
+    animate?: unknown;
+    children?: React.ReactNode;
+    exit?: unknown;
+    initial?: unknown;
+    layoutId?: string;
+    transition?: unknown;
+  };
+
+  function stripMotionProps(props: MotionProps) {
+    const nextProps: Record<string, unknown> = { ...props };
+
+    delete nextProps.animate;
+    delete nextProps.exit;
+    delete nextProps.initial;
+    delete nextProps.layoutId;
+    delete nextProps.transition;
+
+    return nextProps;
   }
 
+  function passthrough(tag: "div" | "section" | "span") {
+    const Component = ({ children, ...props }: MotionProps) =>
+      React.createElement(tag, stripMotionProps(props), children);
+
+    Component.displayName = `MockMotion${tag[0].toUpperCase()}${tag.slice(1)}`;
+
+    return Component;
+  }
+
+  const MockAnimatePresence = ({ children }: { children?: React.ReactNode }) => (
+    <>{children}</>
+  );
+  MockAnimatePresence.displayName = "MockAnimatePresence";
+
   return {
-    AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
+    AnimatePresence: MockAnimatePresence,
     motion: {
       div: passthrough("div"),
       section: passthrough("section"),
@@ -57,35 +79,53 @@ describe("PracticeOverview", () => {
     useSpeakingWorkspaceMock.mockReturnValue(buildSpeakingWorkspaceMock());
   });
 
-  test("renders a single writing workspace without the old page header pattern", () => {
+  test("renders a single writing studio without any page header copy above it", () => {
     render(<PracticeOverview content={buildContentStub()} mode="writing" />);
 
+    const modeTablist = screen.getByRole("tablist", { name: /practice mode/i });
+    const modeTabs = within(modeTablist).getAllByRole("tab");
+
+    expect(modeTablist).toBeInTheDocument();
+    expect(modeTabs[0]).toHaveAccessibleName(/writing mode/i);
+    expect(modeTabs[1]).toHaveAccessibleName(/speaking mode/i);
     expect(
       screen.getByRole("tabpanel", { name: /writing workspace/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /submit writing/i }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/^feedback$/i)).toBeInTheDocument();
     expect(
       screen.queryByRole("heading", { name: /practice/i }),
     ).not.toBeInTheDocument();
-    expect(
-      screen.queryByText(/Practice is now the single top-level home for active output/i),
-    ).not.toBeInTheDocument();
-    expect(screen.queryByText(/ready for feedback later/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/ACTIVE OUTPUT PRACTICE/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/One V1 practice home/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/^feedback$/i)).not.toBeInTheDocument();
   });
 
-  test("switches to the speaking workspace inside the same canvas and updates the mode query", () => {
+  test("switches to the speaking workspace inside the same studio and updates the mode query", () => {
     render(<PracticeOverview content={buildContentStub()} mode="writing" />);
 
     fireEvent.click(screen.getByRole("tab", { name: /speaking mode/i }));
 
-    expect(
-      screen.getByRole("tabpanel", { name: /speaking workspace/i }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /start speaking/i })).toBeInTheDocument();
+    const panel = screen.getByRole("tabpanel", { name: /speaking workspace/i });
+
+    expect(panel).toBeInTheDocument();
+    expect(screen.getAllByRole("tabpanel")).toHaveLength(1);
+    expect(within(panel).getByRole("button", { name: /start speaking/i })).toBeInTheDocument();
     expect(window.location.search).toBe("?mode=speaking");
+  });
+
+  test("keeps live speaking controls reachable inside the shared studio surface", () => {
+    useSpeakingWorkspaceMock.mockReturnValue(buildSpeakingWorkspaceMock({ liveSession: true }));
+
+    render(<PracticeOverview content={buildContentStub()} mode="speaking" />);
+
+    const panel = screen.getByRole("tabpanel", { name: /speaking workspace/i });
+
+    expect(within(panel).getByRole("button", { name: /^pause$/i })).toBeInTheDocument();
+    expect(
+      within(panel).getByRole("button", { name: /finish speaking/i }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -172,7 +212,11 @@ function buildWritingWorkspaceMock() {
   } as const;
 }
 
-function buildSpeakingWorkspaceMock() {
+function buildSpeakingWorkspaceMock({
+  liveSession = false,
+}: {
+  liveSession?: boolean;
+} = {}) {
   return {
     activePrompt: {
       blockId: "block-3",
@@ -188,8 +232,21 @@ function buildSpeakingWorkspaceMock() {
       targetDurationSeconds: 90,
       title: "Weekday in your city",
     },
-    activeSession: null,
-    elapsedSeconds: 0,
+    activeSession: liveSession
+      ? {
+          createdAt: 1710000000000,
+          elapsedSeconds: 42,
+          id: "session-1",
+          lastResumedAt: 1710000002000,
+          promptId: "prompt-1",
+          promptTitle: "Weekday in your city",
+          reflection: null,
+          status: "active",
+          transcriptDraft: "",
+          updatedAt: 1710000003000,
+        }
+      : null,
+    elapsedSeconds: liveSession ? 42 : 0,
     events: [],
     eventsLoading: false,
     focusBlock: null,
@@ -248,8 +305,10 @@ function buildSpeakingWorkspaceMock() {
       },
     ],
     sessionSummary: {
-      detail: "Start one speaking return and save a short reflection after it.",
-      label: "No active session",
+      detail: liveSession
+        ? "Speak out loud now. Pause if you need a breath, then finish when the answer feels complete enough."
+        : "Start one speaking return and save a short reflection after it.",
+      label: liveSession ? "Speaking live for 42s" : "No active session",
     },
     transcriptDraft: "",
     transcriptSummary: {

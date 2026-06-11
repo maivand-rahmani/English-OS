@@ -29,11 +29,11 @@ type RoadmapStepModalProps = {
 };
 
 const identityClasses = [
-  "from-sky-100 via-white to-emerald-100",
-  "from-violet-100 via-white to-amber-100",
-  "from-cyan-100 via-white to-blue-100",
-  "from-rose-100 via-white to-lime-100",
-  "from-amber-100 via-white to-indigo-100",
+  "from-[var(--surface-module-blue)] via-[var(--surface-panel-strong)] to-[var(--surface-module-green)]",
+  "from-[var(--surface-module-lavender)] via-[var(--surface-panel-strong)] to-[var(--surface-module-cream)]",
+  "from-[var(--surface-module-blue)] via-[var(--surface-panel-strong)] to-[var(--surface-module-lavender)]",
+  "from-[var(--surface-module-pink)] via-[var(--surface-panel-strong)] to-[var(--surface-module-green)]",
+  "from-[var(--surface-module-cream)] via-[var(--surface-panel-strong)] to-[var(--surface-module-blue)]",
 ];
 
 export function RoadmapStepModal({
@@ -138,15 +138,14 @@ export function RoadmapStepModal({
       }}
     >
       <div
-        className={`relative max-h-[min(92vh,56rem)] w-full max-w-5xl overflow-y-auto rounded-[2rem] border border-surface-stroke-strong bg-gradient-to-br ${identity} p-4 text-foreground shadow-[0_34px_120px_rgba(15,23,42,0.38)] outline-none sm:p-6`}
+        className={`themed-scrollbar relative max-h-[min(92vh,56rem)] w-full max-w-5xl overflow-y-auto rounded-[2rem] border border-surface-stroke-strong bg-gradient-to-br ${identity} p-4 text-foreground shadow-[0_34px_120px_rgba(15,23,42,0.38)] outline-none sm:p-6`}
         data-roadmap-modal-panel="true"
-        data-theme="light"
         onClick={(event) => event.stopPropagation()}
         ref={modalRef}
         style={{ transform: "translateZ(0)" }}
       >
-        <div className="pointer-events-none absolute -right-14 -top-12 size-40 rounded-full bg-white/40 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-14 left-8 size-44 rounded-full bg-sky-200/30 blur-3xl" />
+        <div className="pointer-events-none absolute -right-14 -top-12 size-40 rounded-full bg-surface-panel blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-14 left-8 size-44 rounded-full bg-surface-module-blue blur-3xl" />
 
         <div className="relative flex items-start justify-between gap-4">
           <div>
@@ -174,7 +173,7 @@ export function RoadmapStepModal({
         </div>
 
         <div className="relative mt-6 grid gap-5">
-          <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-white/50 p-4 shadow-panel">
+          <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-surface-panel-muted p-4 shadow-panel">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Step purpose
             </p>
@@ -211,7 +210,7 @@ export function RoadmapStepModal({
             </div>
           </section>
 
-          <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-white/55 p-4 shadow-panel">
+          <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-surface-panel p-4 shadow-panel">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -222,7 +221,7 @@ export function RoadmapStepModal({
                 </p>
               </div>
               {feedback ? (
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                <span className="rounded-full border border-surface-stroke-strong bg-surface-module-green px-3 py-1 text-xs font-semibold text-foreground">
                   {feedback}
                 </span>
               ) : null}
@@ -230,7 +229,7 @@ export function RoadmapStepModal({
             <RoadmapStatusControls busy={busy} onChange={handleStatusChange} state={state} />
           </section>
 
-          <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-white/45 p-4">
+          <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-surface-panel-muted p-4">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Next step guidance
             </p>

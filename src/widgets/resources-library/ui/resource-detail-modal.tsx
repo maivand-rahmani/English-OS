@@ -115,13 +115,13 @@ export function ResourceDetailModal({
     >
       <div
         className={cn(
-          "relative flex max-h-[96vh] w-full max-w-6xl flex-col overflow-hidden rounded-[2rem] border border-surface-stroke-strong bg-[linear-gradient(135deg,rgba(255,255,255,0.97),rgba(244,244,252,0.92))] shadow-[0_40px_130px_rgba(15,23,42,0.32)]",
+          "relative flex max-h-[96vh] w-full max-w-6xl flex-col overflow-hidden rounded-[2rem] border border-surface-stroke-strong bg-[linear-gradient(135deg,var(--surface-panel-strong),var(--surface-panel))] shadow-[0_40px_130px_rgba(15,23,42,0.32)]",
           reducedMotion ? "" : "animate-in fade-in zoom-in-95 duration-300",
         )}
         onClick={(event) => event.stopPropagation()}
         ref={modalRef}
       >
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-[radial-gradient(circle_at_top_left,rgba(255,211,222,0.4),transparent_34%),radial-gradient(circle_at_top_right,rgba(196,212,255,0.34),transparent_30%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-[radial-gradient(circle_at_top_left,var(--surface-module-pink),transparent_34%),radial-gradient(circle_at_top_right,var(--surface-module-blue),transparent_30%)]" />
         <div className="relative flex items-start justify-between gap-4 border-b border-surface-stroke px-4 py-4 sm:px-6 sm:py-5">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -165,9 +165,9 @@ export function ResourceDetailModal({
           </div>
         </div>
 
-        <div className="relative grid min-h-0 gap-4 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6 xl:grid-cols-[minmax(0,1.25fr)_22rem]">
+        <div className="themed-scrollbar relative grid min-h-0 gap-4 overflow-y-auto px-4 py-4 sm:px-6 sm:py-6 xl:grid-cols-[minmax(0,1.25fr)_22rem]">
           <div className="space-y-4">
-            <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-white/65 p-4 shadow-panel">
+            <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-surface-panel-muted p-4 shadow-panel">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Why this resource
               </p>
@@ -184,7 +184,7 @@ export function ResourceDetailModal({
               </p>
             </section>
 
-            <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-white/55 p-4 shadow-panel">
+            <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-surface-panel p-4 shadow-panel">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 How to use it
               </p>
@@ -192,7 +192,7 @@ export function ResourceDetailModal({
                 {resource.howToUseSteps.map((step) => (
                   <div
                     key={`${resource.id}:${step}`}
-                    className="flex gap-3 rounded-[1.15rem] border border-surface-stroke bg-white/70 px-3 py-3"
+                    className="flex gap-3 rounded-[1.15rem] border border-surface-stroke bg-surface-panel-muted px-3 py-3"
                   >
                     <span className="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-surface-module-lavender text-foreground">
                       <CheckCheck className="size-3.5" />
@@ -236,7 +236,7 @@ export function ResourceDetailModal({
               </InsetPanel>
             </section>
 
-            <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-white/55 p-4 shadow-panel">
+            <section className="rounded-[1.5rem] border border-surface-stroke-strong bg-surface-panel p-4 shadow-panel">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -254,7 +254,7 @@ export function ResourceDetailModal({
                 {resource.linkedBlocks.map((block) => (
                   <div
                     key={`${resource.id}:${block.id}`}
-                    className="grid gap-3 rounded-[1.15rem] border border-surface-stroke bg-white/72 px-3 py-3 sm:grid-cols-[minmax(0,1fr)_auto]"
+                    className="grid gap-3 rounded-[1.15rem] border border-surface-stroke bg-surface-panel-muted px-3 py-3 sm:grid-cols-[minmax(0,1fr)_auto]"
                   >
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -289,7 +289,7 @@ export function ResourceDetailModal({
               {feedback ? (
                 <div
                   aria-live="polite"
-                  className="mt-3 rounded-full border border-emerald-200 bg-emerald-50/90 px-3 py-1 text-xs font-semibold text-emerald-700"
+                  className="mt-3 rounded-full border border-surface-stroke-strong bg-surface-module-green px-3 py-1 text-xs font-semibold text-foreground"
                 >
                   {feedback}
                 </div>

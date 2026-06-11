@@ -2,7 +2,7 @@
 
 import type { ElementType, ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { CheckCircle2, LoaderCircle, Mic, PenSquare, Waves } from "lucide-react";
+import { LoaderCircle, Mic, PenSquare, Waves } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import type { DashboardContentState } from "@/entities/dashboard";
@@ -55,11 +55,7 @@ export function PracticeOverview({ content, mode: initialMode }: PracticeOvervie
   const Wrapper: ElementType = reduced ? "section" : motion.section;
   const writingWorkspace = useWritingWorkspace(content);
   const speakingWorkspace = useSpeakingWorkspace(content);
-  const [mode, setMode] = useState<PracticeMode>(initialMode);
-
-  useEffect(() => {
-    setMode(initialMode);
-  }, [initialMode]);
+  const [mode, setMode] = useState<PracticeMode>(() => initialMode);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -84,22 +80,24 @@ export function PracticeOverview({ content, mode: initialMode }: PracticeOvervie
 
   return (
     <Wrapper
-      className="mx-auto w-full max-w-[72rem]"
+      className="mx-auto w-full max-w-[68rem]"
       {...getWorkspaceShellMotion(reduced)}
     >
-      <WorkspaceFrame className="relative border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(246,241,235,0.9))] px-4 py-5 shadow-[0_30px_80px_rgba(20,20,30,0.1)] sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+      <WorkspaceFrame className="relative overflow-hidden border-surface-stroke-strong bg-[linear-gradient(180deg,var(--surface-panel-strong),var(--surface-panel))] shadow-float">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(216,199,255,0.28),transparent_34%),radial-gradient(circle_at_85%_16%,rgba(182,232,224,0.22),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(255,224,192,0.16),transparent_30%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,var(--surface-highlight),transparent_42%),radial-gradient(circle_at_14%_18%,var(--surface-module-cream),transparent_26%),radial-gradient(circle_at_86%_16%,var(--surface-module-blue),transparent_24%),radial-gradient(circle_at_50%_100%,var(--surface-module-green),transparent_26%)]"
         />
 
         <div className="relative">
-          <PracticeModeSwitch mode={mode} onChange={handleModeChange} reduced={reduced} />
+          <div className="border-b border-surface-stroke px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
+            <PracticeModeSwitch mode={mode} onChange={handleModeChange} reduced={reduced} />
+          </div>
 
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={mode}
-              className="mt-6 sm:mt-8"
+              className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7"
               id={`${mode}-workspace`}
               role="tabpanel"
               aria-label={`${mode} workspace`}
@@ -132,7 +130,7 @@ function PracticeModeSwitch({
       <div
         role="tablist"
         aria-label="Practice mode"
-        className="inline-grid grid-cols-2 rounded-full border border-white/70 bg-white/76 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.84),0_16px_38px_rgba(20,20,30,0.08)] backdrop-blur"
+        className="inline-grid grid-cols-2 rounded-full border border-surface-stroke-strong bg-surface-panel p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_16px_36px_rgba(20,20,30,0.08)] backdrop-blur"
       >
         {practiceModes.map((item) => {
           const isActive = item.key === mode;
@@ -149,16 +147,18 @@ function PracticeModeSwitch({
               onClick={() => onChange(item.key)}
               className={cn(
                 "relative min-w-[9.75rem] rounded-full px-5 py-3 text-sm font-semibold tracking-tight transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] sm:min-w-[11rem]",
-                isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+                isActive
+                  ? "text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               {isActive ? (
                 reduced ? (
-                  <span className="absolute inset-0 rounded-full bg-surface-dark-control shadow-[0_14px_30px_rgba(17,17,20,0.18)]" />
+                  <span className="absolute inset-0 rounded-full bg-primary shadow-control" />
                 ) : (
                   <motion.span
                     layoutId="practice-mode-pill"
-                    className="absolute inset-0 rounded-full bg-surface-dark-control shadow-[0_14px_30px_rgba(17,17,20,0.18)]"
+                    className="absolute inset-0 rounded-full bg-primary shadow-control"
                   />
                 )
               ) : null}
@@ -181,8 +181,8 @@ function WritingStudio({ workspace }: { workspace: WritingWorkspaceApi }) {
   const submissionSummary = activeDraft
     ? getSubmissionSummary(activeDraft)
     : {
-        detail: "Feedback will appear here after submission.",
-        label: "Nothing submitted yet",
+        detail: "Submit one attempt to open the next feedback step.",
+        label: "No submission yet",
       };
   const wordGuidance = getWordTargetGuidance(
     workspace.wordCount,
@@ -191,8 +191,8 @@ function WritingStudio({ workspace }: { workspace: WritingWorkspaceApi }) {
   );
 
   return (
-    <div className="space-y-6">
-      <StudioPromptLine
+    <div className="space-y-5">
+      <StudioPromptStrip
         icon={PenSquare}
         label="Writing prompt"
         meta={formatWritingMeta(activeTask)}
@@ -211,110 +211,97 @@ function WritingStudio({ workspace }: { workspace: WritingWorkspaceApi }) {
         }
       >
         {activeTask?.instructions ??
-          "Writing prompt will appear here when the current roadmap block includes written output practice."}
-      </StudioPromptLine>
+          "Writing work appears here when the current roadmap block includes output practice."}
+      </StudioPromptStrip>
 
-      <div className="space-y-4">
-        {workspace.notice ? <InlineMessage tone="success">{workspace.notice}</InlineMessage> : null}
-        {workspace.workspaceError ? (
-          <InlineMessage tone="error">{workspace.workspaceError}</InlineMessage>
-        ) : null}
+      <StudioNoticeStack notice={workspace.notice} error={workspace.workspaceError} />
 
-        {workspace.isLoadingDraft ? (
-          <StudioCanvas muted>
-            <div className="flex min-h-[23rem] items-center justify-center text-sm text-muted-foreground sm:min-h-[27rem]">
-              <div className="flex items-center gap-3">
-                <LoaderCircle className="size-4 animate-spin" />
-                Opening the writing canvas...
-              </div>
+      {workspace.isLoadingDraft ? (
+        <StudioActiveArea muted>
+          <div className="flex min-h-[24rem] items-center justify-center text-sm text-muted-foreground sm:min-h-[28rem]">
+            <div className="flex items-center gap-3">
+              <LoaderCircle className="size-4 animate-spin" />
+              Opening the writing canvas...
             </div>
-          </StudioCanvas>
-        ) : activeTask ? (
-          activeDraft ? (
-            <StudioCanvas>
-              <textarea
-                id="practice-writing-editor"
-                value={workspace.editorContent}
-                onChange={(event) => workspace.handleEditorChange(event.target.value)}
-                placeholder="Write your response here. Start simply, then tighten the next pass."
-                className="min-h-[23rem] w-full resize-none rounded-[1.65rem] border border-white/80 bg-white/58 px-4 py-4 text-sm leading-7 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.78)] outline-none transition-all duration-200 ease-out placeholder:text-muted-foreground focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-lavender/45 sm:min-h-[27rem] sm:px-5 sm:py-5"
-              />
+          </div>
+        </StudioActiveArea>
+      ) : activeTask ? (
+        activeDraft ? (
+          <StudioActiveArea>
+            <textarea
+              id="practice-writing-editor"
+              value={workspace.editorContent}
+              onChange={(event) => workspace.handleEditorChange(event.target.value)}
+              placeholder="Write your response here. Start simply, then tighten the next pass."
+              className="min-h-[24rem] w-full resize-none rounded-[1.9rem] border border-surface-stroke-strong bg-surface-panel px-4 py-4 text-sm leading-7 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-all duration-200 ease-out placeholder:text-muted-foreground focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-blue/35 sm:min-h-[28rem] sm:px-5 sm:py-5"
+            />
 
-              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div className="space-y-1 text-sm leading-6 text-muted-foreground">
-                  <p>{wordGuidance}</p>
-                  {activeDraft.lastSubmittedAt ? (
-                    <p>
-                      Latest local submission was{" "}
-                      {formatRelativeTimestamp(activeDraft.lastSubmittedAt)}.
-                    </p>
-                  ) : (
-                    <p>Feedback will appear here after submission.</p>
-                  )}
-                </div>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-foreground">{wordGuidance}</p>
+                <p className="text-xs leading-5 text-muted-foreground">
+                  {getWritingStatusLine(workspace.saveState, activeDraft.lastSubmittedAt)}
+                </p>
+              </div>
 
-                <div className="flex flex-wrap gap-3">
-                  <button
-                    type="button"
-                    onClick={() => void workspace.handleSaveNow()}
-                    className={buttonVariants({ variant: "outline" })}
-                  >
-                    Save now
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void workspace.handleSubmitDraft()}
-                    className={buttonVariants({ size: "lg" })}
-                    disabled={workspace.saveState === "submitting"}
-                  >
-                    Submit writing
-                  </button>
-                </div>
-              </div>
-            </StudioCanvas>
-          ) : (
-            <StudioCanvas muted>
-              <div className="flex min-h-[23rem] flex-col items-center justify-center text-center sm:min-h-[27rem]">
-                <p className="text-[1.7rem] font-semibold tracking-tight text-foreground">
-                  The writing canvas is ready
-                </p>
-                <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
-                  Start writing in this same surface. The draft stays local, and the
-                  feedback area below stays reserved for the first submission.
-                </p>
-                <div className="mt-6">
-                  <button
-                    type="button"
-                    onClick={() => void workspace.handleCreateDraft(activeTask)}
-                    className={buttonVariants({ size: "lg" })}
-                  >
-                    Start writing
-                  </button>
-                </div>
-              </div>
-            </StudioCanvas>
-          )
+              <button
+                type="button"
+                onClick={() => void workspace.handleSubmitDraft()}
+                className={buttonVariants({ size: "lg" })}
+                disabled={workspace.saveState === "submitting"}
+              >
+                Submit writing
+              </button>
+            </div>
+          </StudioActiveArea>
         ) : (
-          <StudioCanvas muted>
-            <div className="flex min-h-[23rem] flex-col items-center justify-center text-center sm:min-h-[27rem]">
-              <p className="text-[1.7rem] font-semibold tracking-tight text-foreground">
-                No writing task yet
-              </p>
-              <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
-                Seeded writing tasks will appear here when the roadmap block includes
-                output practice.
-              </p>
+          <StudioActiveArea muted centered>
+            <p className="text-[1.7rem] font-semibold tracking-tight text-foreground">
+              The writing canvas is ready
+            </p>
+            <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
+              Start in this same studio. The draft stays local, and the feedback step
+              stays reserved below for the first submission.
+            </p>
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={() => void workspace.handleCreateDraft(activeTask)}
+                className={buttonVariants({ size: "lg" })}
+              >
+                Start writing
+              </button>
             </div>
-          </StudioCanvas>
-        )}
-      </div>
+          </StudioActiveArea>
+        )
+      ) : (
+        <StudioActiveArea muted centered>
+          <p className="text-[1.7rem] font-semibold tracking-tight text-foreground">
+            No writing task yet
+          </p>
+          <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
+            Seeded writing tasks will appear here when the current roadmap block
+            includes written output practice.
+          </p>
+        </StudioActiveArea>
+      )}
 
-      <StudioFooter
-        icon={CheckCircle2}
-        label="Feedback"
-        lead="Feedback will appear here after submission."
-        body="AI feedback will be connected later. This workspace is ready for writing submissions."
-        detail={activeDraft?.lastSubmittedAt ? submissionSummary.detail : undefined}
+      <StudioFeedbackRegion
+        title={
+          activeDraft?.lastSubmittedAt
+            ? submissionSummary.label
+            : "Feedback will appear here after your first submission."
+        }
+        detail={
+          activeDraft?.lastSubmittedAt
+            ? submissionSummary.detail
+            : "AI review is not connected yet. This reserved area is ready for the next feedback step."
+        }
+        meta={
+          activeDraft?.lastSubmittedAt
+            ? `Latest local submission ${formatRelativeTimestamp(activeDraft.lastSubmittedAt)}.`
+            : null
+        }
       />
     </div>
   );
@@ -325,8 +312,8 @@ function SpeakingStudio({ workspace }: { workspace: SpeakingWorkspaceApi }) {
   const activeSession = workspace.activeSession;
 
   return (
-    <div className="space-y-6">
-      <StudioPromptLine
+    <div className="space-y-5">
+      <StudioPromptStrip
         icon={Mic}
         label="Speaking prompt"
         meta={formatSpeakingMeta(activePrompt)}
@@ -345,188 +332,174 @@ function SpeakingStudio({ workspace }: { workspace: SpeakingWorkspaceApi }) {
         }
       >
         {activePrompt?.promptText ??
-          "Speaking prompt will appear here when the current roadmap block includes spoken output practice."}
-      </StudioPromptLine>
+          "Speaking work appears here when the current roadmap block includes output practice."}
+      </StudioPromptStrip>
 
-      <div className="space-y-4">
-        {workspace.notice ? <InlineMessage tone="success">{workspace.notice}</InlineMessage> : null}
-        {workspace.workspaceError ? (
-          <InlineMessage tone="error">{workspace.workspaceError}</InlineMessage>
-        ) : null}
+      <StudioNoticeStack notice={workspace.notice} error={workspace.workspaceError} />
 
-        {activePrompt ? (
-          activeSession ? (
-            activeSession.status === "reflecting" ? (
-              <StudioCanvas>
-                <div className="space-y-5">
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                    <div>
-                      <p className="text-[1.45rem] font-semibold tracking-tight text-foreground">
-                        Add one reflection and a rough transcript
-                      </p>
-                      <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                        Keep it honest and lightweight. This is the future handoff point
-                        for transcript-based feedback.
-                      </p>
-                    </div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      {formatSpeakingDuration(workspace.elapsedSeconds)}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {workspace.reflectionOptions.map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => workspace.handleChooseReflection(option.value)}
-                        className={cn(
-                          "rounded-full border px-3 py-2 text-sm transition-all duration-200 ease-out",
-                          activeSession.reflection === option.value
-                            ? "border-transparent bg-surface-dark-control text-primary-foreground shadow-[0_12px_24px_rgba(17,17,20,0.16)]"
-                            : "border-white/80 bg-white/56 text-foreground hover:bg-white/74",
-                        )}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  <textarea
-                    id="practice-speaking-transcript"
-                    value={workspace.transcriptDraft}
-                    onChange={(event) => workspace.handleTranscriptChange(event.target.value)}
-                    placeholder="Type or paste a rough transcript of what you said."
-                    className="min-h-[16rem] w-full resize-none rounded-[1.65rem] border border-white/80 bg-white/58 px-4 py-4 text-sm leading-7 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.78)] outline-none transition-all duration-200 ease-out placeholder:text-muted-foreground focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-lavender/45 sm:px-5 sm:py-5"
-                  />
-
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                    <p className="text-sm leading-6 text-muted-foreground">
-                      {workspace.transcriptSummary.detail}
-                    </p>
-
-                    <div className="flex flex-wrap gap-3">
-                      <button
-                        type="button"
-                        onClick={() => workspace.handleClearSession()}
-                        className={buttonVariants({ variant: "outline" })}
-                      >
-                        Clear session
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => void workspace.handleSaveSession()}
-                        className={buttonVariants({ size: "lg" })}
-                      >
-                        Save speaking attempt
-                      </button>
-                    </div>
-                  </div>
+      {activePrompt ? (
+        activeSession ? (
+          activeSession.status === "reflecting" ? (
+            <StudioActiveArea>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <p className="text-[1.45rem] font-semibold tracking-tight text-foreground">
+                    Capture the attempt while it is still fresh
+                  </p>
+                  <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
+                    {workspace.sessionSummary.detail}
+                  </p>
                 </div>
-              </StudioCanvas>
-            ) : (
-              <StudioCanvas muted>
-                <div className="flex min-h-[23rem] flex-col items-center justify-center text-center sm:min-h-[27rem]">
-                  <div className="flex size-16 items-center justify-center rounded-full bg-surface-dark-control text-primary-foreground shadow-control">
-                    <Waves className="size-6" />
-                  </div>
-                  <p className="mt-6 text-[3rem] font-semibold tracking-tight text-foreground sm:text-[4.5rem]">
-                    {formatSpeakingDuration(workspace.elapsedSeconds)}
-                  </p>
-                  <p className="mt-4 max-w-lg text-sm leading-7 text-muted-foreground">
-                    Audio recording is not connected yet. This studio still tracks the
-                    local speaking session and keeps the transcript handoff ready for
-                    later feedback.
-                  </p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {formatSpeakingDuration(workspace.elapsedSeconds)}
+                </p>
+              </div>
 
-                  <div className="mt-6 flex flex-wrap justify-center gap-3">
-                    {activeSession.status === "active" ? (
-                      <button
-                        type="button"
-                        onClick={() => workspace.handlePauseSession()}
-                        className={buttonVariants({ variant: "outline" })}
-                      >
-                        Pause
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => workspace.handleResumeSession()}
-                        className={buttonVariants({ variant: "outline" })}
-                      >
-                        Resume
-                      </button>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {workspace.reflectionOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => workspace.handleChooseReflection(option.value)}
+                    className={cn(
+                        "rounded-full border px-3 py-2 text-sm transition-all duration-200 ease-out",
+                        activeSession.reflection === option.value
+                        ? "border-transparent bg-primary text-primary-foreground shadow-control"
+                        : "border-surface-stroke-strong bg-surface-panel text-foreground hover:bg-surface-panel-strong",
                     )}
-                    <button
-                      type="button"
-                      onClick={() => workspace.handleFinishSession()}
-                      className={buttonVariants({ size: "lg" })}
-                    >
-                      Finish speaking
-                    </button>
-                  </div>
-                </div>
-              </StudioCanvas>
-            )
-          ) : (
-            <StudioCanvas muted>
-              <div className="flex min-h-[23rem] flex-col items-center justify-center text-center sm:min-h-[27rem]">
-                <div className="flex size-16 items-center justify-center rounded-full bg-surface-dark-control text-primary-foreground shadow-control">
-                  <Mic className="size-6" />
-                </div>
-                <p className="mt-6 text-[1.7rem] font-semibold tracking-tight text-foreground">
-                  Start a speaking attempt here
-                </p>
-                <p className="mt-3 max-w-lg text-sm leading-7 text-muted-foreground">
-                  Use one focused speaking surface: answer the prompt, finish the
-                  session, then leave a rough transcript in the same studio.
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+
+              <textarea
+                id="practice-speaking-transcript"
+                value={workspace.transcriptDraft}
+                onChange={(event) => workspace.handleTranscriptChange(event.target.value)}
+                placeholder="Type or paste a rough transcript of what you said."
+                className="mt-5 min-h-[16rem] w-full resize-none rounded-[1.9rem] border border-surface-stroke-strong bg-surface-panel px-4 py-4 text-sm leading-7 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-all duration-200 ease-out placeholder:text-muted-foreground focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-blue/35 sm:px-5 sm:py-5"
+              />
+
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
+                  {workspace.transcriptSummary.detail}
                 </p>
 
-                <div className="mt-6">
+                <div className="flex flex-wrap gap-3">
                   <button
                     type="button"
-                    onClick={() => workspace.handleStartSession()}
+                    onClick={() => workspace.handleClearSession()}
+                    className={buttonVariants({ variant: "outline" })}
+                  >
+                    Clear session
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void workspace.handleSaveSession()}
                     className={buttonVariants({ size: "lg" })}
                   >
-                    Start speaking
+                    Save speaking attempt
                   </button>
                 </div>
               </div>
-            </StudioCanvas>
+            </StudioActiveArea>
+          ) : (
+            <StudioActiveArea centered>
+              <div className="flex size-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-control">
+                <Waves className="size-6" />
+              </div>
+              <p className="mt-6 text-[3rem] font-semibold tracking-tight text-foreground sm:text-[4.5rem]">
+                {formatSpeakingDuration(workspace.elapsedSeconds)}
+              </p>
+              <p className="mt-4 max-w-lg text-sm leading-7 text-muted-foreground">
+                {workspace.sessionSummary.detail}
+              </p>
+
+              <div className="mt-6 flex flex-wrap justify-center gap-3">
+                {activeSession.status === "active" ? (
+                  <button
+                    type="button"
+                    onClick={() => workspace.handlePauseSession()}
+                    className={buttonVariants({ variant: "outline" })}
+                  >
+                    Pause
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => workspace.handleResumeSession()}
+                    className={buttonVariants({ variant: "outline" })}
+                  >
+                    Resume
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => workspace.handleFinishSession()}
+                  className={buttonVariants({ size: "lg" })}
+                >
+                  Finish speaking
+                </button>
+              </div>
+            </StudioActiveArea>
           )
         ) : (
-          <StudioCanvas muted>
-            <div className="flex min-h-[23rem] flex-col items-center justify-center text-center sm:min-h-[27rem]">
-              <p className="text-[1.7rem] font-semibold tracking-tight text-foreground">
-                No speaking prompt yet
-              </p>
-              <p className="mt-3 max-w-lg text-sm leading-7 text-muted-foreground">
-                Seeded speaking prompts will appear here when the roadmap block includes
-                spoken output practice.
-              </p>
+          <StudioActiveArea muted centered>
+            <div className="flex size-16 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-control">
+              <Mic className="size-6" />
             </div>
-          </StudioCanvas>
-        )}
-      </div>
+            <p className="mt-6 text-[1.7rem] font-semibold tracking-tight text-foreground">
+              Start a speaking attempt here
+            </p>
+            <p className="mt-3 max-w-lg text-sm leading-7 text-muted-foreground">
+              Answer the prompt in this same studio, then leave a quick reflection and
+              rough transcript before saving the attempt.
+            </p>
 
-      <StudioFooter
-        icon={Mic}
-        label="Transcript and feedback"
-        lead="Transcript and feedback will appear here after submission."
-        body="Speaking feedback will be connected later. This workspace is ready for speaking submissions."
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={() => workspace.handleStartSession()}
+                className={buttonVariants({ size: "lg" })}
+              >
+                Start speaking
+              </button>
+            </div>
+          </StudioActiveArea>
+        )
+      ) : (
+        <StudioActiveArea muted centered>
+          <p className="text-[1.7rem] font-semibold tracking-tight text-foreground">
+            No speaking prompt yet
+          </p>
+          <p className="mt-3 max-w-lg text-sm leading-7 text-muted-foreground">
+            Seeded speaking prompts will appear here when the current roadmap block
+            includes spoken output practice.
+          </p>
+        </StudioActiveArea>
+      )}
+
+      <StudioFeedbackRegion
+        title={
+          activeSession?.status === "reflecting"
+            ? "Transcript is ready for the next feedback step."
+            : "Transcript and feedback will appear here after you save the attempt."
+        }
         detail={
           activeSession?.status === "reflecting"
             ? workspace.transcriptSummary.detail
             : workspace.reflectionLabel
               ? `Latest reflection signal: ${workspace.reflectionLabel}.`
-              : undefined
+              : "Audio analysis is not connected yet. This reserved area will hold transcript-based feedback later."
         }
+        meta={activeSession ? workspace.sessionSummary.label : null}
       />
     </div>
   );
 }
 
-function StudioPromptLine({
+function StudioPromptStrip({
   children,
   control,
   icon: Icon,
@@ -540,15 +513,19 @@ function StudioPromptLine({
   meta: string | null;
 }) {
   return (
-    <div className="border-b border-white/70 pb-5">
+    <div className="border-b border-surface-stroke pb-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 max-w-4xl">
           <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             <Icon className="size-3.5" />
             <span>{label}</span>
-            {meta ? <span className="normal-case tracking-normal">{meta}</span> : null}
+            {meta ? (
+              <span className="normal-case tracking-normal text-muted-foreground">
+                {meta}
+              </span>
+            ) : null}
           </div>
-          <p className="mt-3 text-base leading-7 text-foreground sm:text-[1.02rem]">
+          <p className="mt-3 text-sm leading-7 text-foreground sm:text-[1rem]">
             {children}
           </p>
         </div>
@@ -559,11 +536,34 @@ function StudioPromptLine({
   );
 }
 
-function StudioCanvas({
+function StudioNoticeStack({
+  error,
+  notice,
+}: {
+  error: string | null;
+  notice: string | null;
+}) {
+  if (!notice && !error) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-2">
+      {notice ? <InlineMessage tone="success">{notice}</InlineMessage> : null}
+      {error ? <InlineMessage tone="error">{error}</InlineMessage> : null}
+    </div>
+  );
+}
+
+function StudioActiveArea({
+  centered = false,
   children,
+  className,
   muted = false,
 }: {
+  centered?: boolean;
   children: ReactNode;
+  className?: string;
   muted?: boolean;
 }) {
   return (
@@ -571,8 +571,10 @@ function StudioCanvas({
       className={cn(
         "rounded-[2rem] border px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_18px_42px_rgba(20,20,30,0.06)] sm:px-5 sm:py-5",
         muted
-          ? "border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.58),rgba(247,243,237,0.78))]"
-          : "border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.7),rgba(255,255,255,0.5))]",
+          ? "border-surface-stroke-strong bg-[linear-gradient(180deg,var(--surface-panel-muted),var(--surface-panel))]"
+          : "border-surface-stroke-strong bg-[linear-gradient(180deg,var(--surface-panel),var(--surface-panel-muted))]",
+        centered && "flex min-h-[24rem] flex-col items-center justify-center text-center sm:min-h-[28rem]",
+        className,
       )}
     >
       {children}
@@ -580,37 +582,22 @@ function StudioCanvas({
   );
 }
 
-function StudioFooter({
-  body,
+function StudioFeedbackRegion({
   detail,
-  icon: Icon,
-  label,
-  lead,
+  meta,
+  title,
 }: {
-  body: string;
-  detail?: string;
-  icon: typeof PenSquare;
-  label: string;
-  lead: string;
+  detail: string;
+  meta?: string | null;
+  title: string;
 }) {
   return (
-    <div className="border-t border-white/70 pt-5">
-      <div className="flex items-start gap-3">
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-full border border-white/75 bg-white/58 text-muted-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
-          <Icon className="size-4" />
-        </div>
-
-        <div className="min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            {label}
-          </p>
-          <p className="mt-2 text-sm leading-7 text-foreground">{lead}</p>
-          <p className="mt-1 text-sm leading-7 text-muted-foreground">{body}</p>
-          {detail ? (
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">{detail}</p>
-          ) : null}
-        </div>
-      </div>
+    <div className="border-t border-surface-stroke pt-5">
+      <p className="text-sm font-medium text-foreground">{title}</p>
+      <p className="mt-1 text-sm leading-6 text-muted-foreground">{detail}</p>
+      {meta ? (
+        <p className="mt-2 text-xs leading-5 text-muted-foreground">{meta}</p>
+      ) : null}
     </div>
   );
 }
@@ -625,7 +612,7 @@ function InlineMessage({
   return (
     <div
       className={cn(
-        "rounded-[1.1rem] border px-4 py-3 text-sm",
+        "rounded-[1.2rem] border px-4 py-3 text-sm",
         tone === "success" &&
           "border-state-complete-border bg-surface-state-success text-state-complete-text",
         tone === "error" && "border-destructive/20 bg-destructive/10 text-destructive",
@@ -654,7 +641,7 @@ function StudioSelect({
         aria-label={ariaLabel}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="min-w-[13rem] rounded-full border border-white/80 bg-white/78 px-4 py-2 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.82)] outline-none transition-all duration-200 ease-out focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-lavender/45"
+        className="min-w-[13rem] rounded-full border border-surface-stroke-strong bg-surface-panel px-4 py-2 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-all duration-200 ease-out focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-blue/35"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -666,12 +653,7 @@ function StudioSelect({
   );
 }
 
-function formatWritingMeta(
-  task:
-    | WritingWorkspaceApi["activeTask"]
-    | undefined
-    | null,
-) {
+function formatWritingMeta(task: WritingWorkspaceApi["activeTask"] | undefined | null) {
   if (!task) {
     return null;
   }
@@ -684,10 +666,7 @@ function formatWritingMeta(
 }
 
 function formatSpeakingMeta(
-  prompt:
-    | SpeakingWorkspaceApi["activePrompt"]
-    | undefined
-    | null,
+  prompt: SpeakingWorkspaceApi["activePrompt"] | undefined | null,
 ) {
   if (!prompt) {
     return null;
@@ -700,10 +679,33 @@ function formatSpeakingMeta(
   ]);
 }
 
+function getWritingStatusLine(
+  saveState: WritingWorkspaceApi["saveState"],
+  lastSubmittedAt: number | null | undefined,
+) {
+  if (saveState === "submitting") {
+    return "Recording the submission locally...";
+  }
+
+  if (saveState === "saving" || saveState === "dirty") {
+    return "Saving changes locally...";
+  }
+
+  if (lastSubmittedAt) {
+    return `Latest submission ${formatRelativeTimestamp(lastSubmittedAt)}.`;
+  }
+
+  if (saveState === "saved") {
+    return "Draft saved locally.";
+  }
+
+  return "Start writing when you are ready.";
+}
+
 function joinMetaParts(parts: Array<string | null>) {
   const filteredParts = parts.filter(Boolean);
 
-  return filteredParts.length > 0 ? filteredParts.join(" • ") : null;
+  return filteredParts.length > 0 ? filteredParts.join(" / ") : null;
 }
 
 function formatWordRange(min: number | null, max: number | null) {

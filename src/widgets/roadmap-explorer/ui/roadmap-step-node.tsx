@@ -33,14 +33,14 @@ type RoadmapStepNodeProps = {
 };
 
 const stateClasses = {
-  not_started: "border-slate-200 bg-white/76 text-slate-700 shadow-panel",
-  current: "border-sky-200 bg-sky-50/85 text-sky-900 shadow-[0_18px_46px_rgba(14,165,233,0.18)]",
-  in_progress: "border-indigo-200 bg-indigo-50/85 text-indigo-900 shadow-[0_18px_46px_rgba(99,102,241,0.16)]",
-  completed: "border-emerald-200 bg-emerald-50/90 text-emerald-900 shadow-[0_18px_46px_rgba(16,185,129,0.14)]",
-  difficult: "border-rose-200 bg-rose-50/90 text-rose-900 shadow-[0_18px_46px_rgba(244,63,94,0.14)]",
-  needs_review: "border-amber-200 bg-amber-50/90 text-amber-900 shadow-[0_18px_46px_rgba(245,158,11,0.15)]",
-  skipped_for_now: "border-slate-200 bg-slate-100/70 text-slate-500 opacity-70 shadow-panel",
-  locked_later: "border-slate-200 bg-white/45 text-slate-400 opacity-65 shadow-panel",
+  not_started: "border-surface-stroke-strong bg-surface-panel text-foreground shadow-panel",
+  current: "border-surface-stroke-strong bg-surface-module-blue text-foreground shadow-[0_18px_46px_rgba(14,165,233,0.18)]",
+  in_progress: "border-surface-stroke-strong bg-surface-module-lavender text-foreground shadow-[0_18px_46px_rgba(99,102,241,0.16)]",
+  completed: "border-surface-stroke-strong bg-surface-module-green text-foreground shadow-[0_18px_46px_rgba(16,185,129,0.14)]",
+  difficult: "border-surface-stroke-strong bg-surface-module-pink text-foreground shadow-[0_18px_46px_rgba(244,63,94,0.14)]",
+  needs_review: "border-surface-stroke-strong bg-surface-module-cream text-foreground shadow-[0_18px_46px_rgba(245,158,11,0.15)]",
+  skipped_for_now: "border-surface-stroke-strong bg-surface-panel-muted text-muted-foreground opacity-70 shadow-panel",
+  locked_later: "border-surface-stroke bg-surface-panel-muted text-muted-foreground opacity-65 shadow-panel",
 };
 
 const ringTones = {
@@ -92,11 +92,11 @@ export function RoadmapStepNode({
         type="button"
       >
         <div className="flex items-center gap-3">
-          <span className="relative flex size-[4.5rem] shrink-0 items-center justify-center rounded-full bg-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_12px_28px_rgba(31,35,48,0.08)]">
+          <span className="relative flex size-[4.5rem] shrink-0 items-center justify-center rounded-full bg-surface-panel-strong shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_12px_28px_rgba(31,35,48,0.08)]">
             <RoadmapProgressRing progress={progress} tone={ringTones[state]} />
             <SkillGlyph label={skillLabel} />
             {state === "completed" ? (
-              <span className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-emerald-500 text-white shadow-control">
+              <span className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-control">
                 <CheckCircle2 className="size-3.5" />
               </span>
             ) : null}
@@ -113,12 +113,12 @@ export function RoadmapStepNode({
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <RoadmapStateBadge state={state} />
           {step.block.cefrLabel ? (
-            <span className="rounded-full border border-surface-stroke-strong bg-white/60 px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">
+            <span className="rounded-full border border-surface-stroke-strong bg-surface-pill px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">
               {step.block.cefrLabel}
             </span>
           ) : null}
           {step.block.resources.length ? (
-            <span className="rounded-full border border-surface-stroke-strong bg-white/60 px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">
+            <span className="rounded-full border border-surface-stroke-strong bg-surface-pill px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">
               {step.block.resources.length} resource
             </span>
           ) : null}

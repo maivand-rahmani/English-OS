@@ -41,11 +41,10 @@ export function RoadmapCanvas({
   return (
     <section
       aria-label="Interactive English learning roadmap"
-      className="relative min-h-[calc(100vh-11rem)] overflow-hidden rounded-[2.2rem] border border-surface-stroke bg-surface-panel-strong p-4 text-foreground shadow-float backdrop-blur-2xl sm:p-5"
-      data-theme="light"
+      className="relative min-h-[calc(100vh-11rem)] overflow-hidden rounded-[2.2rem] border border-surface-stroke bg-[linear-gradient(180deg,var(--surface-panel-strong),var(--surface-panel))] p-4 text-foreground shadow-float backdrop-blur-2xl sm:p-5"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(125,211,252,0.22),transparent_24%),radial-gradient(circle_at_88%_18%,rgba(253,186,116,0.16),transparent_20%),radial-gradient(circle_at_70%_86%,rgba(167,243,208,0.18),transparent_22%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.42),rgba(255,255,255,0.08))]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,var(--surface-module-blue),transparent_24%),radial-gradient(circle_at_88%_18%,var(--surface-module-cream),transparent_20%),radial-gradient(circle_at_70%_86%,var(--surface-module-green),transparent_22%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,var(--surface-highlight),transparent_70%)]" />
 
       <RoadmapStatusBar
         completedBlocks={completedBlocks}
@@ -68,7 +67,7 @@ export function RoadmapCanvas({
         <div className="grid gap-7">
           {stageGroups.map((group, stageIndex) => (
             <section
-              className="relative overflow-hidden rounded-[1.8rem] border border-white/65 bg-white/24 px-3 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.42)] backdrop-blur-sm sm:px-5"
+              className="relative overflow-hidden rounded-[1.8rem] border border-surface-stroke-strong bg-surface-2 px-3 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-sm sm:px-5"
               key={group.stage.id}
             >
               <div className="mb-5 flex flex-wrap items-center gap-2 pl-12 md:justify-center md:pl-0">
@@ -156,11 +155,11 @@ function RoadmapFlowRow({
         <button
           aria-label={`Open step ${step.index + 1}: ${step.block.title}. ${humanizeState(state)}.`}
           className={cn(
-            "flex size-12 items-center justify-center rounded-full border bg-white/90 text-sm font-semibold shadow-[0_12px_30px_rgba(31,35,48,0.12)] backdrop-blur-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60",
-            isCurrent && "scale-110 border-sky-300 text-sky-700 shadow-[0_18px_42px_rgba(14,165,233,0.20)]",
-            state === "completed" && "border-emerald-300 text-emerald-700",
-            state === "difficult" && "border-rose-300 text-rose-700",
-            state === "needs_review" && "border-amber-300 text-amber-700",
+            "flex size-12 items-center justify-center rounded-full border border-surface-stroke-strong bg-surface-panel-strong text-sm font-semibold text-foreground shadow-panel backdrop-blur-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-module-blue/60",
+            isCurrent && "scale-110 bg-surface-module-blue shadow-[0_18px_42px_rgba(14,165,233,0.20)]",
+            state === "completed" && "bg-surface-module-green",
+            state === "difficult" && "bg-surface-module-pink",
+            state === "needs_review" && "bg-surface-module-cream",
             state === "skipped_for_now" && "opacity-65",
           )}
           onClick={onOpen}
@@ -183,7 +182,7 @@ function RoadmapFlowRow({
 
       <div
         className={cn(
-          "pointer-events-none hidden rounded-[1.15rem] border border-surface-stroke-strong bg-white/70 p-3 text-xs leading-5 text-muted-foreground opacity-0 shadow-panel backdrop-blur-xl transition-opacity duration-200 md:block",
+          "pointer-events-none hidden rounded-[1.15rem] border border-surface-stroke-strong bg-surface-panel p-3 text-xs leading-5 text-muted-foreground opacity-0 shadow-panel backdrop-blur-xl transition-opacity duration-200 md:block",
           side === "left" ? "md:col-start-3" : "md:col-start-1 md:row-start-1",
           previewIndex === step.index && "opacity-100",
         )}
@@ -211,13 +210,13 @@ function RoadmapStatusBar({
   roadmapCompletion,
 }: RoadmapStatusBarProps) {
   return (
-    <div className="relative z-10 rounded-[1.5rem] border border-surface-stroke-strong bg-white/64 px-4 py-3 shadow-panel backdrop-blur-xl">
+    <div className="relative z-10 rounded-[1.5rem] border border-surface-stroke-strong bg-surface-panel px-4 py-3 shadow-panel backdrop-blur-xl">
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             <Map className="size-3.5" />
             <span>{content.templateTitle}</span>
-            <span className="text-slate-300">/</span>
+            <span className="text-muted-foreground/50">/</span>
             <span>{content.estimatedWeeks ?? 8} week path</span>
           </div>
           <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -238,7 +237,7 @@ function RoadmapStatusBar({
               {completedBlocks}/{content.blockCount} steps
             </span>
           </div>
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200/70">
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-pill">
             <motion.div
               animate={{ width: `${roadmapCompletion}%` }}
               className="h-full rounded-full bg-gradient-to-r from-sky-400 via-emerald-400 to-lime-300"

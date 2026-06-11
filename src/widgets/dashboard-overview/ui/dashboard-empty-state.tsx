@@ -8,7 +8,7 @@ import { DashboardCard, SectionEyebrow } from "@/shared/ui/surfaces";
 export function DashboardEmptyState() {
   return (
     <section className="grid gap-[var(--layout-gap)] xl:grid-cols-[minmax(0,1.2fr)_20rem]">
-      <DashboardCard className="bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(248,244,255,0.92))] p-6 sm:p-7">
+      <DashboardCard className="bg-[linear-gradient(180deg,var(--surface-panel-strong),var(--surface-panel))] p-6 sm:p-7">
         <SectionEyebrow icon={Sparkles}>Dashboard reset</SectionEyebrow>
         <h2 className="mt-5 max-w-2xl text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           Curated content is not loaded yet.
@@ -42,7 +42,7 @@ export function DashboardEmptyState() {
           ].map((item) => (
             <li
               key={item}
-              className="rounded-[1.2rem] border border-white/70 bg-surface-2 px-4 py-3 text-sm text-muted-foreground"
+              className="rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel-muted px-4 py-3 text-sm text-muted-foreground"
             >
               {item}
             </li>

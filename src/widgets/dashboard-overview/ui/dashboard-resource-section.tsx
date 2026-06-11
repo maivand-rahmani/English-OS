@@ -58,7 +58,7 @@ export function DashboardResourceSection({
             )}
           </p>
 
-          <div className="mt-4 rounded-[1.25rem] border border-white/70 bg-surface-2 p-4">
+          <div className="mt-4 rounded-[1.25rem] border border-surface-stroke-strong bg-surface-panel-muted p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Supports
             </p>
@@ -85,7 +85,7 @@ export function DashboardResourceSection({
               disabled={busyAction === `resource:${focusResource.id}:complete`}
               className={cn(
                 buttonVariants({ variant: "outline" }),
-                "rounded-full border-white/70 bg-white/80",
+                "rounded-full border-surface-stroke-strong bg-surface-panel",
               )}
             >
               Mark useful and done
@@ -96,7 +96,7 @@ export function DashboardResourceSection({
               disabled={busyAction === `resource:${focusResource.id}:difficult`}
               className={cn(
                 buttonVariants({ variant: "ghost" }),
-                "rounded-full border border-transparent text-foreground hover:bg-black/5",
+                "rounded-full border border-transparent text-foreground hover:bg-surface-pill",
               )}
             >
               Mark difficult

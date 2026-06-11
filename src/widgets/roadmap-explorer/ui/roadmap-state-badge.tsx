@@ -21,14 +21,14 @@ type RoadmapStateBadgeProps = {
 };
 
 const stateStyles = {
-  not_started: "border-slate-200 bg-white/70 text-slate-600",
-  current: "border-sky-200 bg-sky-50/90 text-sky-700",
-  in_progress: "border-indigo-200 bg-indigo-50/90 text-indigo-700",
-  completed: "border-emerald-200 bg-emerald-50/90 text-emerald-700",
-  difficult: "border-rose-200 bg-rose-50/90 text-rose-700",
-  needs_review: "border-amber-200 bg-amber-50/90 text-amber-700",
-  skipped_for_now: "border-slate-200 bg-slate-100/80 text-slate-500",
-  locked_later: "border-slate-200 bg-white/45 text-slate-400",
+  not_started: "border-surface-stroke-strong bg-surface-pill text-muted-foreground",
+  current: "border-surface-stroke-strong bg-surface-module-blue text-foreground",
+  in_progress: "border-surface-stroke-strong bg-surface-module-lavender text-foreground",
+  completed: "border-surface-stroke-strong bg-surface-module-green text-foreground",
+  difficult: "border-surface-stroke-strong bg-surface-module-pink text-foreground",
+  needs_review: "border-surface-stroke-strong bg-surface-module-cream text-foreground",
+  skipped_for_now: "border-surface-stroke-strong bg-surface-panel-muted text-muted-foreground",
+  locked_later: "border-surface-stroke bg-surface-panel-muted text-muted-foreground",
 };
 
 const stateIcons = {

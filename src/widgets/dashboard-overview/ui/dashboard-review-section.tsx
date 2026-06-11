@@ -30,7 +30,7 @@ export function DashboardReviewSection({
           href="/roadmap"
           className={cn(
             buttonVariants({ variant: "ghost", size: "sm" }),
-            "w-full rounded-full px-3 text-foreground hover:bg-black/5 sm:w-auto",
+            "w-full rounded-full px-3 text-foreground hover:bg-surface-pill sm:w-auto",
           )}
         >
           Open roadmap
@@ -42,7 +42,7 @@ export function DashboardReviewSection({
           reviewPreviewItems.slice(0, 3).map((item) => (
             <div
               key={item.id}
-              className="rounded-[1.2rem] border border-white/70 bg-surface-2 px-4 py-3"
+              className="rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel-muted px-4 py-3"
             >
               <p className="text-sm font-medium text-foreground">{item.label}</p>
               <p className="mt-1 text-sm text-muted-foreground">{item.context}</p>
@@ -52,7 +52,7 @@ export function DashboardReviewSection({
             </div>
           ))
         ) : (
-          <div className="rounded-[1.2rem] border border-dashed border-black/10 bg-black/5 px-4 py-4 text-sm leading-6 text-muted-foreground">
+          <div className="rounded-[1.2rem] border border-dashed border-surface-stroke-strong bg-surface-panel-muted px-4 py-4 text-sm leading-6 text-muted-foreground">
             Review pressure will appear here when you mark a block or resource
             difficult, skip something, or explicitly set it to needs review.
           </div>

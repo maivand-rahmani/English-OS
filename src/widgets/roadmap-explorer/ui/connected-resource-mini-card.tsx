@@ -16,7 +16,7 @@ export function ConnectedResourceMiniCard({ resource }: ConnectedResourceMiniCar
   const primarySkill = resource.skills.find((skill) => skill.emphasis === "primary") ?? resource.skills[0];
 
   return (
-    <div className="rounded-[1.25rem] border border-surface-stroke-strong bg-white/55 p-4 shadow-panel">
+    <div className="rounded-[1.25rem] border border-surface-stroke-strong bg-surface-panel-muted p-4 shadow-panel">
       <div className="flex flex-wrap gap-2">
         <SmallTag>{resource.role}</SmallTag>
         <SmallTag>{primarySkill?.title ?? resource.primaryUseCaseLabel}</SmallTag>
