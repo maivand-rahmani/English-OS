@@ -80,7 +80,7 @@ export function PracticeOverview({ content, mode: initialMode }: PracticeOvervie
 
   return (
     <Wrapper
-      className="mx-auto w-full max-w-[68rem]"
+      className="mx-auto w-full max-w-full"
       {...getWorkspaceShellMotion(reduced)}
     >
       <WorkspaceFrame className="relative overflow-hidden border-surface-stroke-strong bg-[linear-gradient(180deg,var(--surface-panel-strong),var(--surface-panel))] shadow-float">

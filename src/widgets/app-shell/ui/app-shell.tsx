@@ -211,7 +211,7 @@ function DesktopAppShell({
           </div>
         </header>
 
-        <div className="min-h-0 flex-1 px-6 py-6 lg:px-8 lg:py-7">
+        <div className="min-h-0 flex-1 px-1 py-1 lg:px-3 lg:py-3">
           <main
             key={pathname}
             className="h-full animate-slide-in-from-bottom"
