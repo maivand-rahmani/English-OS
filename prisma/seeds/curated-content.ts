@@ -388,8 +388,8 @@ export async function seedCuratedContent(prisma: PrismaClient) {
       }
     },
     {
-      maxWait: 10_000,
-      timeout: 30_000,
+      maxWait: 20_000,
+      timeout: 60_000,
     },
   );
 }
