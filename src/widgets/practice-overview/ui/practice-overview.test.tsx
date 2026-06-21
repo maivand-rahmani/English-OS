@@ -60,11 +60,11 @@ vi.mock("@/shared/hooks/use-reduced-motion", () => ({
   useReducedMotion: () => useReducedMotionMock(),
 }));
 
-vi.mock("@/widgets/writing-overview/model/use-writing-workspace", () => ({
+vi.mock("../model/writing/use-writing-workspace", () => ({
   useWritingWorkspace: () => useWritingWorkspaceMock(),
 }));
 
-vi.mock("@/widgets/speaking-overview/model/use-speaking-workspace", () => ({
+vi.mock("../model/speaking/use-speaking-workspace", () => ({
   useSpeakingWorkspace: () => useSpeakingWorkspaceMock(),
 }));
 
@@ -221,6 +221,10 @@ function buildWritingWorkspaceMock() {
     ],
     wordCount: 6,
     workspaceError: null,
+    aiFeedback: null,
+    aiFeedbackLoading: false,
+    aiFeedbackError: null,
+    requestAiFeedback: vi.fn(),
   } as const;
 }
 
@@ -329,5 +333,9 @@ function buildSpeakingWorkspaceMock({
       wordCount: 0,
     },
     workspaceError: null,
+    aiFeedback: null,
+    aiFeedbackLoading: false,
+    aiFeedbackError: null,
+    requestAiFeedback: vi.fn(),
   } as const;
 }

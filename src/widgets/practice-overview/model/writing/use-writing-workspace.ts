@@ -14,6 +14,17 @@ import { getWritingWorkspaceState } from "./writing-workspace-state";
 
 type SaveState = "idle" | "dirty" | "saved" | "saving" | "submitting";
 
+type AiWritingFeedbackResult = {
+  overallSummary: string;
+  correctedVersion: string | null;
+  keyIssues: Array<{ title: string; detail: string }>;
+  naturalnessSuggestions: string[];
+  grammarNotes: string[];
+  vocabularySuggestions: string[];
+  nextPracticeFocus: string;
+  detectedPatterns: Array<{ label: string; detail: string }>;
+};
+
 export function useWritingWorkspace(content: DashboardContentState) {
   const { entries } = useLocalProgress();
   const { drafts, createDraft, getDraft, saveDraft } = useDrafts();
@@ -26,6 +37,12 @@ export function useWritingWorkspace(content: DashboardContentState) {
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [workspaceError, setWorkspaceError] = useState<string | null>(null);
+
+  const [aiFeedback, setAiFeedback] = useState<AiWritingFeedbackResult | null>(
+    null,
+  );
+  const [aiFeedbackLoading, setAiFeedbackLoading] = useState(false);
+  const [aiFeedbackError, setAiFeedbackError] = useState<string | null>(null);
 
   const autosaveTimeoutRef = useRef<number | null>(null);
   const workspace = getWritingWorkspaceState(content, entries, drafts, selectedTaskId);
@@ -245,6 +262,43 @@ export function useWritingWorkspace(content: DashboardContentState) {
     setNotice("Submission recorded locally. Feedback can build from this attempt next.");
   }, [activeDraft, clearAutosave, editorContent, persistDraft, recordEvent]);
 
+  const requestAiFeedback = useCallback(async () => {
+    if (!activeDraft || !activeTask) {
+      return;
+    }
+
+    setAiFeedbackLoading(true);
+    setAiFeedbackError(null);
+
+    try {
+      const response = await fetch("/api/ai/writing-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          learnerLevel: content.learnerLevelLabel ?? "Beginner",
+          taskPrompt: activeTask.instructions || activeTask.title,
+          learnerResponse: editorContent,
+          roadmapContext: activeTask.blockTitle ?? undefined,
+        }),
+      });
+
+      const json = await response.json();
+
+      if (json.ok && json.data) {
+        setAiFeedback(json.data);
+        setAiFeedbackError(null);
+      } else {
+        setAiFeedbackError(
+          json.error?.message ?? "AI feedback unavailable right now.",
+        );
+      }
+    } catch {
+      setAiFeedbackError("Could not reach the AI feedback service.");
+    } finally {
+      setAiFeedbackLoading(false);
+    }
+  }, [activeDraft, activeTask, editorContent, content.learnerLevelLabel]);
+
   return {
     activeDraft,
     activeTask,
@@ -264,5 +318,9 @@ export function useWritingWorkspace(content: DashboardContentState) {
     tasks: workspace.tasks,
     wordCount,
     workspaceError,
+    aiFeedback,
+    aiFeedbackLoading,
+    aiFeedbackError,
+    requestAiFeedback,
   } as const;
 }

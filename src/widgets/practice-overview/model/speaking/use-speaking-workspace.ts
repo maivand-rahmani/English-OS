@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { DashboardContentState } from "@/entities/dashboard";
 import { useLearningEvents } from "@/shared/hooks/use-learning-events";
@@ -15,6 +15,18 @@ import {
   type ActiveSpeakingSession,
   type SpeakingReflection,
 } from "@/shared/types";
+
+type AiSpeakingFeedbackResult = {
+  overallSummary: string;
+  clarityFeedback: string;
+  grammarFeedback: string;
+  vocabularyFeedback: string;
+  fluencyFeedback: string;
+  strongerResponseExample: string;
+  nextPracticeFocus: string;
+  detectedPatterns: Array<{ label: string; detail: string }>;
+  confidenceNote: string;
+};
 
 import {
   getReflectionLabel,
@@ -38,6 +50,12 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
   const [notice, setNotice] = useState<string | null>(null);
   const [workspaceError, setWorkspaceError] = useState<string | null>(null);
   const [timerNow, setTimerNow] = useState(0);
+
+  const [aiFeedback, setAiFeedback] = useState<AiSpeakingFeedbackResult | null>(
+    null,
+  );
+  const [aiFeedbackLoading, setAiFeedbackLoading] = useState(false);
+  const [aiFeedbackError, setAiFeedbackError] = useState<string | null>(null);
 
   const rawWorkspace = getSpeakingWorkspaceState(
     content,
@@ -248,6 +266,49 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
     setNotice("The local speaking session was cleared.");
   }
 
+  const requestAiFeedback = useCallback(async () => {
+    if (!activePrompt || !transcriptDraft.trim()) {
+      return;
+    }
+
+    setAiFeedbackLoading(true);
+    setAiFeedbackError(null);
+
+    try {
+      const response = await fetch("/api/ai/speaking-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          learnerLevel: content.learnerLevelLabel ?? "Beginner",
+          promptText: activePrompt.promptText,
+          transcript: transcriptDraft,
+          learnerReflection: reflectionLabel ?? undefined,
+          roadmapContext: activePrompt.blockTitle ?? undefined,
+        }),
+      });
+
+      const json = await response.json();
+
+      if (json.ok && json.data) {
+        setAiFeedback(json.data);
+        setAiFeedbackError(null);
+      } else {
+        setAiFeedbackError(
+          json.error?.message ?? "AI feedback unavailable right now.",
+        );
+      }
+    } catch {
+      setAiFeedbackError("Could not reach the AI feedback service.");
+    } finally {
+      setAiFeedbackLoading(false);
+    }
+  }, [
+    activePrompt,
+    transcriptDraft,
+    reflectionLabel,
+    content.learnerLevelLabel,
+  ]);
+
   return {
     activePrompt,
     activeSession: session,
@@ -272,5 +333,9 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
     transcriptDraft,
     transcriptSummary,
     workspaceError: resolvedWorkspaceError,
+    aiFeedback,
+    aiFeedbackLoading,
+    aiFeedbackError,
+    requestAiFeedback,
   } as const;
 }
