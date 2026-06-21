@@ -48,3 +48,6 @@ tmp-next-app
 /src/server/generated/prisma
 .vscode
 .sisyphus
+
+.*
+.playwright-*
