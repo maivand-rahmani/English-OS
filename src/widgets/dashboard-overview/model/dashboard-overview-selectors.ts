@@ -71,12 +71,13 @@ export function getFocusBlock(
   blocks: DashboardBlock[],
   progressById: Map<string, ProgressEntry>,
 ) {
-  return (
-    blocks.find((block) => {
-      const state = getEntryState(progressById.get(block.id));
-      return state !== "completed" && state !== "skipped_for_now";
-    }) ?? blocks.at(-1) ?? null
-  );
+  const incomplete = blocks.find((block) => {
+    const state = getEntryState(progressById.get(block.id));
+    return state !== "completed" && state !== "skipped_for_now";
+  });
+
+  // Return the first incomplete block, or null if all are done (all-done state)
+  return incomplete ?? null;
 }
 
 export function pickFocusResource(

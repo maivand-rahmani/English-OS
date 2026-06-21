@@ -6,8 +6,16 @@ import { buttonVariants } from "@/shared/ui/button";
 
 import { formatMinutes, getSkillLine } from "../model/dashboard-overview-formatters";
 import { DashboardCard, InfoTile } from "@/shared/ui/surfaces";
+import { DashboardCelebrationCard } from "./dashboard-celebration-card";
+
+function getGreeting(hour: number): string {
+  if (hour >= 5 && hour < 12) return "Good morning";
+  if (hour >= 12 && hour < 18) return "Good afternoon";
+  return "Good evening";
+}
 
 type DashboardHeroSectionProps = {
+  displayName: string;
   focusBlock: DashboardBlock | null;
   focusBlockState: BlockState;
   totalPlanMinutes: number;
@@ -18,77 +26,68 @@ type DashboardHeroSectionProps = {
 };
 
 export function DashboardHeroSection({
+  displayName,
   focusBlock,
   focusBlockState,
   totalPlanMinutes,
   busyAction,
-  onCompleteBlock,
-  onMarkBlockForReview,
+  onCompleteBlock: _onCompleteBlock,
+  onMarkBlockForReview: _onMarkBlockForReview,
   onStartBlock,
 }: DashboardHeroSectionProps) {
+  const hour = new Date().getHours();
+  const greeting = getGreeting(hour);
+
+  if (!focusBlock) {
+    return (
+      <DashboardCelebrationCard
+        title="Roadmap complete!"
+        message="You've completed every step in your roadmap."
+        primaryAction={{ label: "View roadmap", href: "/roadmap" }}
+      />
+    );
+  }
+
   return (
     <DashboardCard className="overflow-hidden bg-[linear-gradient(180deg,var(--surface-panel-strong),var(--surface-panel))] p-6 sm:p-7">
       <div className="absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_left,var(--surface-module-pink),transparent_60%),radial-gradient(circle_at_top_right,var(--surface-module-blue),transparent_55%)]" />
       <div className="relative">
-        <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+        <p className="text-sm font-medium text-muted-foreground">
+          {greeting}, {displayName}
+        </p>
+
+        <div className="mt-2 flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
           <div className="max-w-2xl">
             <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              {focusBlock?.title ?? "Your next block will appear here."}
+              {focusBlock.title}
             </h2>
             <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
-              {focusBlock?.summary ?? "Choose a block to continue."}
+              {focusBlock.summary}
             </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 xl:w-[20rem] xl:grid-cols-1">
             <InfoTile
               label="Focus"
-              value={focusBlock ? getSkillLine(focusBlock.skills) : "No focus yet"}
+              value={getSkillLine(focusBlock.skills)}
             />
             <InfoTile label="Time" value={formatMinutes(totalPlanMinutes)} />
           </div>
         </div>
 
-        {focusBlock ? (
-          <div className="mt-8 space-y-3">
-            <button
-              type="button"
-              onClick={() => onStartBlock(focusBlock, focusBlockState)}
-              disabled={busyAction === `block:${focusBlock.id}:start`}
-              className={cn(
-                buttonVariants({ size: "lg" }),
-                "w-full justify-center rounded-full px-5 sm:w-auto",
-              )}
-            >
-              {focusBlockState === "in_progress" ? "Resume block" : "Start block"}
-            </button>
-
-            <div className="mobile-stacked-actions">
-              <button
-                type="button"
-                onClick={() => onCompleteBlock(focusBlock)}
-                disabled={busyAction === `block:${focusBlock.id}:complete`}
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "rounded-full border-surface-stroke-strong bg-surface-panel",
-                )}
-              >
-                Mark block complete
-              </button>
-              <button
-                type="button"
-                onClick={() => onMarkBlockForReview(focusBlock)}
-                disabled={busyAction === `block:${focusBlock.id}:review`}
-                className={cn(
-                  buttonVariants({ variant: "ghost" }),
-                  "rounded-full border border-transparent text-foreground hover:bg-surface-pill",
-                )}
-              >
-                Mark for review
-              </button>
-            </div>
-          </div>
-        ) : null}
+        <div className="mt-8">
+          <button
+            type="button"
+            onClick={() => onStartBlock(focusBlock, focusBlockState)}
+            disabled={busyAction === `block:${focusBlock.id}:start`}
+            className={cn(
+              buttonVariants({ size: "lg" }),
+              "w-full justify-center rounded-full px-5 sm:w-auto",
+            )}
+          >
+            {focusBlockState === "in_progress" ? "Resume step" : "Start step"}
+          </button>
+        </div>
       </div>
     </DashboardCard>
   );
