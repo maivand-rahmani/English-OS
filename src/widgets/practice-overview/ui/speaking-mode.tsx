@@ -77,7 +77,7 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
                     type="button"
                     onClick={() => workspace.handleChooseReflection(option.value)}
                     className={cn(
-                      "rounded-full border px-3 py-2 text-sm transition-all duration-200 ease-out",
+                      "rounded-full border px-3 py-2 text-sm transition-all duration-[var(--motion-duration-fast)] ease-out",
                       activeSession.reflection === option.value
                         ? "border-transparent bg-primary text-primary-foreground shadow-control"
                         : "border-surface-stroke-strong bg-surface-panel text-foreground hover:bg-surface-panel-strong",
@@ -93,7 +93,7 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
                 value={workspace.transcriptDraft}
                 onChange={(event) => workspace.handleTranscriptChange(event.target.value)}
                 placeholder="Type or paste a rough transcript of what you said."
-                className="mt-5 min-h-[16rem] w-full resize-none rounded-[1.9rem] border border-surface-stroke-strong bg-surface-panel px-4 py-4 text-sm leading-7 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-all duration-200 ease-out placeholder:text-muted-foreground focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-blue/35 sm:px-5 sm:py-5"
+                className="mt-5 min-h-[16rem] w-full resize-none rounded-[1.9rem] border border-surface-stroke-strong bg-surface-panel px-4 py-4 text-sm leading-7 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-all duration-[var(--motion-duration-fast)] ease-out placeholder:text-muted-foreground focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-blue/35 sm:px-5 sm:py-5"
               />
 
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -489,7 +489,7 @@ function StudioSelect({
         aria-label={ariaLabel}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="min-w-[13rem] rounded-full border border-surface-stroke-strong bg-surface-panel px-4 py-2 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-all duration-200 ease-out focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-blue/35"
+        className="min-w-[13rem] rounded-full border border-surface-stroke-strong bg-surface-panel px-4 py-2 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-all duration-[var(--motion-duration-fast)] ease-out focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-blue/35"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

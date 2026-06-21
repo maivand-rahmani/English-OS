@@ -90,7 +90,7 @@ export function WritingMode({ content }: WritingModeProps) {
               value={workspace.editorContent}
               onChange={(event) => workspace.handleEditorChange(event.target.value)}
               placeholder="Write your response here. Start simply, then tighten the next pass."
-              className="min-h-[24rem] w-full resize-none rounded-[1.9rem] border border-surface-stroke-strong bg-surface-panel px-4 py-4 text-sm leading-7 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-all duration-200 ease-out placeholder:text-muted-foreground focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-blue/35 sm:min-h-[28rem] sm:px-5 sm:py-5"
+              className="min-h-[24rem] w-full resize-none rounded-[1.9rem] border border-surface-stroke-strong bg-surface-panel px-4 py-4 text-sm leading-7 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-all duration-[var(--motion-duration-fast)] ease-out placeholder:text-muted-foreground focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-blue/35 sm:min-h-[28rem] sm:px-5 sm:py-5"
             />
 
             <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -433,7 +433,7 @@ function StudioSelect({
         aria-label={ariaLabel}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="min-w-[13rem] rounded-full border border-surface-stroke-strong bg-surface-panel px-4 py-2 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-all duration-200 ease-out focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-blue/35"
+        className="min-w-[13rem] rounded-full border border-surface-stroke-strong bg-surface-panel px-4 py-2 text-sm text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.16)] outline-none transition-all duration-[var(--motion-duration-fast)] ease-out focus:border-surface-stroke-strong focus:ring-2 focus:ring-surface-module-blue/35"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

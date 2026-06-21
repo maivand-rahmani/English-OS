@@ -80,7 +80,7 @@ export function RoadmapStepNode({
       <button
         aria-label={`Step ${step.index + 1}: ${step.block.title}. ${humanizeState(state)}.`}
         className={cn(
-          "group relative w-full rounded-[1.6rem] border p-3 text-left backdrop-blur-xl transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60 lg:hover:-translate-y-1",
+          "group relative w-full rounded-[1.6rem] border p-3 text-left backdrop-blur-xl transition-all duration-[var(--motion-duration-slow)] ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60 lg:hover:-translate-y-1",
           stateClasses[state],
           isCurrent && "roadmap-active-node",
         )}

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowUpRight,
   Filter,
@@ -9,6 +9,7 @@ import {
   Link2,
   Search,
   SlidersHorizontal,
+  X,
 } from "lucide-react";
 
 import type { ResourcesPageData } from "@/entities/resources";
@@ -59,6 +60,13 @@ export function ResourcesLibrary({ content }: ResourcesLibraryProps) {
 
   const hasResources = library.resources.length > 0;
 
+  useEffect(() => {
+    if (library.actionError) {
+      const timer = window.setTimeout(library.clearActionError, 5000);
+      return () => window.clearTimeout(timer);
+    }
+  }, [library.actionError]);
+
   function openMobileFilters() {
     setMobileDraft({
       format: library.formatFilter,
@@ -96,9 +104,13 @@ export function ResourcesLibrary({ content }: ResourcesLibraryProps) {
     resource: LibraryResource,
     action: ResourcePrimaryAction,
   ) {
-    await library.applyResourceAction(resource, action);
-    setNotice(getNoticeMessage(resource.title, action));
-    window.setTimeout(() => setNotice(null), 1800);
+    try {
+      await library.applyResourceAction(resource, action);
+      setNotice(getNoticeMessage(resource.title, action));
+      window.setTimeout(() => setNotice(null), 1800);
+    } catch {
+      // empty — error surfaced via hook actionError
+    }
   }
 
   function handlePrimaryOpen(resource: LibraryResource) {
@@ -106,7 +118,7 @@ export function ResourcesLibrary({ content }: ResourcesLibraryProps) {
       resource.signal.state === "not_started" ||
       resource.signal.state === "skipped_for_now"
     ) {
-      void library.applyResourceAction(resource, "start");
+      library.applyResourceAction(resource, "start").catch(() => {});
     }
   }
 
@@ -157,6 +169,13 @@ export function ResourcesLibrary({ content }: ResourcesLibraryProps) {
         suggestedFilters={library.suggestedFilters}
         useCaseFilter={library.useCaseFilter}
       />
+
+      {library.actionError ? (
+        <InlineErrorBanner
+          message={library.actionError}
+          onDismiss={library.clearActionError}
+        />
+      ) : null}
 
       {isDesktopFiltersOpen ? (
         <DashboardCard className="hidden p-4 lg:block">
@@ -628,7 +647,7 @@ function ResourceTile({
   return (
     <article
       className={cn(
-        "group rounded-[1.55rem] border p-4 shadow-panel transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_42px_rgba(20,20,30,0.10)]",
+        "group rounded-[1.55rem] border p-4 shadow-panel transition-all duration-[var(--motion-duration-fast)] ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_42px_rgba(20,20,30,0.10)]",
         getCardTone(resource),
       )}
       id={`resource-${resource.id}`}
@@ -886,6 +905,32 @@ function getCardTone(resource: LibraryResource) {
   }
 
   return "border-surface-stroke-strong bg-[linear-gradient(135deg,var(--surface-panel-strong),var(--surface-module-lavender))]";
+}
+
+function InlineErrorBanner({
+  message,
+  onDismiss,
+}: {
+  message: string;
+  onDismiss: () => void;
+}) {
+  return (
+    <div
+      role="alert"
+      aria-live="assertive"
+      className="flex items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800/30 dark:bg-red-950/60 dark:text-red-400"
+    >
+      <span className="flex-1">{message}</span>
+      <button
+        className="flex size-6 shrink-0 items-center justify-center rounded-full hover:bg-red-200 dark:hover:bg-red-800/40"
+        onClick={onDismiss}
+        type="button"
+        aria-label="Dismiss error"
+      >
+        <X className="size-4" />
+      </button>
+    </div>
+  );
 }
 
 function getNoticeMessage(title: string, action: ResourcePrimaryAction) {

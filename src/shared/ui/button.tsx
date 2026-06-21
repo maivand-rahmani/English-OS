@@ -26,13 +26,13 @@ const buttonVariants = cva(
         sm: "h-8 gap-1 rounded-[0.75rem] px-3 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 [&_svg:not([class*='size-'])]:size-3.5",
         lg: "h-12 gap-2 px-5 text-sm has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
         icon:
-          "size-8 bg-surface-dark-control text-primary-foreground shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-surface-dark-control/90 hover:shadow-[0_10px_24px_rgba(0,0,0,0.16)] transition-all duration-200 ease-out",
+          "size-8 bg-surface-dark-control text-primary-foreground shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-surface-dark-control/90 hover:shadow-[0_10px_24px_rgba(0,0,0,0.16)] transition-all duration-[var(--motion-duration-fast)] ease-out",
         "icon-xs":
-          "size-6 rounded-[min(var(--radius-md),10px)] bg-surface-dark-control text-primary-foreground shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-surface-dark-control/90 hover:shadow-[0_10px_24px_rgba(0,0,0,0.16)] transition-all duration-200 ease-out in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
+          "size-6 rounded-[min(var(--radius-md),10px)] bg-surface-dark-control text-primary-foreground shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-surface-dark-control/90 hover:shadow-[0_10px_24px_rgba(0,0,0,0.16)] transition-all duration-[var(--motion-duration-fast)] ease-out in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
         "icon-sm":
-          "size-7 rounded-[min(var(--radius-md),12px)] bg-surface-dark-control text-primary-foreground shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-surface-dark-control/90 hover:shadow-[0_10px_24px_rgba(0,0,0,0.16)] transition-all duration-200 ease-out in-data-[slot=button-group]:rounded-lg",
+          "size-7 rounded-[min(var(--radius-md),12px)] bg-surface-dark-control text-primary-foreground shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-surface-dark-control/90 hover:shadow-[0_10px_24px_rgba(0,0,0,0.16)] transition-all duration-[var(--motion-duration-fast)] ease-out in-data-[slot=button-group]:rounded-lg",
         "icon-lg":
-          "size-9 bg-surface-dark-control text-primary-foreground shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-surface-dark-control/90 hover:shadow-[0_10px_24px_rgba(0,0,0,0.16)] transition-all duration-200 ease-out",
+          "size-9 bg-surface-dark-control text-primary-foreground shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:bg-surface-dark-control/90 hover:shadow-[0_10px_24px_rgba(0,0,0,0.16)] transition-all duration-[var(--motion-duration-fast)] ease-out",
       },
     },
     defaultVariants: {

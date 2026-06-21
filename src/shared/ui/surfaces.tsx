@@ -52,7 +52,7 @@ export function InsetPanel({
     <div
       {...props}
       className={cn(
-        "rounded-[1.55rem] border border-surface-stroke-strong shadow-panel transition-all duration-200 ease-out hover:translate-y-[-1px] hover:shadow-[0_14px_36px_rgba(20,20,30,0.07)]",
+        "rounded-[1.55rem] border border-surface-stroke-strong shadow-panel transition-all duration-[var(--motion-duration-fast)] ease-out hover:translate-y-[-1px] hover:shadow-[0_14px_36px_rgba(20,20,30,0.07)]",
         tone === "default" ? "bg-surface-panel-muted" : surfaceToneClasses[tone],
         className,
       )}
@@ -95,7 +95,7 @@ export function DashboardCard({
     <article
       {...props}
       className={cn(
-        "relative overflow-hidden rounded-[2rem] border border-surface-stroke shadow-panel animate-in fade-in slide-in-from-bottom-4 duration-[var(--motion-duration-slow)] ease-[var(--motion-ease-standard)] transition-all duration-200 ease-out hover:translate-y-[-2px] hover:shadow-[0_16px_40px_rgba(20,20,30,0.08)]",
+        "relative overflow-hidden rounded-[2rem] border border-surface-stroke shadow-panel animate-in fade-in slide-in-from-bottom-4 duration-[var(--motion-duration-slow)] ease-[var(--motion-ease-standard)] transition-all duration-[var(--motion-duration-fast)] ease-out hover:translate-y-[-2px] hover:shadow-[0_16px_40px_rgba(20,20,30,0.08)]",
         surfaceToneClasses[tone],
         className,
       )}
@@ -196,7 +196,7 @@ export function InfoTile({ label, value, tone = "default", detail }: InfoTilePro
   return (
     <div
       className={cn(
-        "rounded-[1.25rem] border border-surface-stroke-strong px-4 py-3 transition-all duration-200 ease-out hover:translate-y-[-1px] hover:shadow-[0_12px_32px_rgba(20,20,30,0.06)]",
+        "rounded-[1.25rem] border border-surface-stroke-strong px-4 py-3 transition-all duration-[var(--motion-duration-fast)] ease-out hover:translate-y-[-1px] hover:shadow-[0_12px_32px_rgba(20,20,30,0.06)]",
         surfaceToneClasses[tone],
       )}
     >
@@ -229,7 +229,7 @@ export function MetricTile({
   return (
     <div
       className={cn(
-        "rounded-[1.45rem] border border-surface-stroke-strong px-4 py-3 transition-all duration-200 ease-out hover:translate-y-[-1px] hover:shadow-[0_12px_32px_rgba(20,20,30,0.06)]",
+        "rounded-[1.45rem] border border-surface-stroke-strong px-4 py-3 transition-all duration-[var(--motion-duration-fast)] ease-out hover:translate-y-[-1px] hover:shadow-[0_12px_32px_rgba(20,20,30,0.06)]",
         surfaceToneClasses[tone],
       )}
     >
@@ -273,7 +273,7 @@ export function QuickActionCard({
   return (
     <div
       className={cn(
-        "rounded-[1.55rem] border border-surface-stroke-strong px-4 py-4 transition-all duration-200 ease-out hover:translate-y-[-2px] hover:shadow-[0_16px_40px_rgba(20,20,30,0.08)]",
+        "rounded-[1.55rem] border border-surface-stroke-strong px-4 py-4 transition-all duration-[var(--motion-duration-fast)] ease-out hover:translate-y-[-2px] hover:shadow-[0_16px_40px_rgba(20,20,30,0.08)]",
         surfaceToneClasses[(tone as SurfaceTone) ?? "default"],
       )}
     >

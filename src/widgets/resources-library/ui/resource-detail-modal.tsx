@@ -116,7 +116,7 @@ export function ResourceDetailModal({
       <div
         className={cn(
           "relative flex max-h-[96vh] w-full max-w-6xl flex-col overflow-hidden rounded-[2rem] border border-surface-stroke-strong bg-[linear-gradient(135deg,var(--surface-panel-strong),var(--surface-panel))] shadow-[0_40px_130px_rgba(15,23,42,0.32)]",
-          reducedMotion ? "" : "animate-in fade-in zoom-in-95 duration-300",
+          reducedMotion ? "" : "animate-in fade-in zoom-in-95 duration-[var(--motion-duration-slow)]",
         )}
         onClick={(event) => event.stopPropagation()}
         ref={modalRef}

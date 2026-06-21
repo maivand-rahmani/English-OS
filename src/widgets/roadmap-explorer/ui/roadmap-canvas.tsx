@@ -155,7 +155,7 @@ function RoadmapFlowRow({
         <button
           aria-label={`Open step ${step.index + 1}: ${step.block.title}. ${humanizeState(state)}.`}
           className={cn(
-            "flex size-12 items-center justify-center rounded-full border border-surface-stroke-strong bg-surface-panel-strong text-sm font-semibold text-foreground shadow-panel backdrop-blur-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-module-blue/60",
+            "flex size-12 items-center justify-center rounded-full border border-surface-stroke-strong bg-surface-panel-strong text-sm font-semibold text-foreground shadow-panel backdrop-blur-xl transition-all duration-[var(--motion-duration-fast)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-module-blue/60",
             isCurrent && "scale-110 bg-surface-module-blue shadow-[0_18px_42px_rgba(14,165,233,0.20)]",
             state === "completed" && "bg-surface-module-green",
             state === "difficult" && "bg-surface-module-pink",
@@ -182,7 +182,7 @@ function RoadmapFlowRow({
 
       <div
         className={cn(
-          "pointer-events-none hidden rounded-[1.15rem] border border-surface-stroke-strong bg-surface-panel p-3 text-xs leading-5 text-muted-foreground opacity-0 shadow-panel backdrop-blur-xl transition-opacity duration-200 md:block",
+          "pointer-events-none hidden rounded-[1.15rem] border border-surface-stroke-strong bg-surface-panel p-3 text-xs leading-5 text-muted-foreground opacity-0 shadow-panel backdrop-blur-xl transition-opacity duration-[var(--motion-duration-fast)] md:block",
           side === "left" ? "md:col-start-3" : "md:col-start-1 md:row-start-1",
           previewIndex === step.index && "opacity-100",
         )}
