@@ -129,8 +129,20 @@ describe("PracticeOverview", () => {
   });
 });
 
-function buildContentStub() {
-  return {} as DashboardContentState;
+function buildContentStub(): DashboardContentState {
+  return {
+    displayName: "Test User",
+    learnerLevelLabel: "A1",
+    goalLabel: "Test goal",
+    templateTitle: "Test template",
+    templateDescription: null,
+    audienceLabel: "Beginner",
+    estimatedWeeks: null,
+    stageCount: 0,
+    blockCount: 0,
+    resourceCount: 0,
+    stages: [],
+  };
 }
 
 function buildWritingWorkspaceMock() {

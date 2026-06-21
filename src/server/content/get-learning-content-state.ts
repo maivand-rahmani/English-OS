@@ -122,6 +122,10 @@ export async function getLearningContentState(): Promise<DashboardContentState> 
   const firstBlock = stages.flatMap((stage) => stage.blocks)[0];
 
   return {
+    displayName:
+      session?.user?.name ??
+      session?.user?.email?.split("@")[0] ??
+      "Learner",
     learnerLevelLabel:
       learnerProfile?.currentLevel ??
       firstBlock?.cefrLabel ??
@@ -305,6 +309,7 @@ function formatCefrValue(value: string) {
 
 function getEmptyDashboardState(): DashboardContentState {
   return {
+    displayName: "Learner",
     learnerLevelLabel: "Starter path",
     goalLabel: "Load curated content to unlock a daily plan and next actions.",
     templateTitle: "Dashboard content unavailable",

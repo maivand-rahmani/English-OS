@@ -87,6 +87,7 @@ export type DashboardStage = {
 };
 
 export type DashboardContentState = {
+  displayName: string;
   learnerLevelLabel: string;
   goalLabel: string;
   templateTitle: string;

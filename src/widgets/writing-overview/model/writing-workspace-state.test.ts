@@ -83,6 +83,7 @@ describe("writing-workspace-state", () => {
 
 function buildContentStub(): DashboardContentState {
   return {
+    displayName: "Test User",
     audienceLabel: "Beginner self-learner",
     blockCount: 2,
     estimatedWeeks: 4,
