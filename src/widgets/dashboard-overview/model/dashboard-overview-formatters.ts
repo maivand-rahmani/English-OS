@@ -1,10 +1,25 @@
-import type { DashboardBlock, DashboardSkill } from "@/entities/dashboard";
+import type { DashboardBlock } from "@/entities/dashboard";
 import {
   LearningEventType,
   type BlockState,
   type LearningEvent,
   type ProgressEntry,
 } from "@/shared/types";
+import {
+  getEntryState,
+  getLatestEventTimestamp,
+  isRecent,
+  formatMinutes,
+  getSkillLine,
+} from "@/shared/lib/recommendation-helpers";
+
+export {
+  getEntryState,
+  getLatestEventTimestamp,
+  isRecent,
+  formatMinutes,
+  getSkillLine,
+};
 
 import type { ResourceWithContext } from "./dashboard-overview-types";
 
@@ -199,35 +214,6 @@ export function getSpeakingStatus(events: LearningEvent[]) {
     : "Speaking needs another return";
 }
 
-export function getLatestEventTimestamp(
-  events: LearningEvent[],
-  type: LearningEvent["type"],
-) {
-  return events.find((event) => event.type === type)?.timestamp ?? null;
-}
-
-export function getEntryState(entry: ProgressEntry | undefined): BlockState {
-  return entry?.state ?? "not_started";
-}
-
-export function getSkillLine(skills: DashboardSkill[]) {
-  if (skills.length === 0) {
-    return "No skill links yet";
-  }
-
-  return skills
-    .slice()
-    .sort((left, right) =>
-      left.emphasis === right.emphasis
-        ? 0
-        : left.emphasis === "primary"
-          ? -1
-          : 1,
-    )
-    .map((skill) => skill.title)
-    .join(" / ");
-}
-
 export function humanizeState(state: BlockState) {
   switch (state) {
     case "in_progress":
@@ -243,25 +229,6 @@ export function humanizeState(state: BlockState) {
     default:
       return "Not started";
   }
-}
-
-export function formatMinutes(minutes: number | null | undefined) {
-  if (!minutes || minutes <= 0) {
-    return "Flexible time";
-  }
-
-  if (minutes < 60) {
-    return `${minutes} min`;
-  }
-
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-
-  if (remainingMinutes === 0) {
-    return `${hours} hr`;
-  }
-
-  return `${hours} hr ${remainingMinutes} min`;
 }
 
 export function formatRelativeTimestamp(timestamp: number) {
@@ -292,6 +259,3 @@ export function formatRelativeTimestamp(timestamp: number) {
   }).format(timestamp);
 }
 
-export function isRecent(timestamp: number, days: number) {
-  return Date.now() - timestamp <= days * 24 * 60 * 60 * 1000;
-}

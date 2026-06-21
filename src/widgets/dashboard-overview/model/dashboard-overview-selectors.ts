@@ -9,7 +9,6 @@ import {
   formatMinutes,
   getEntryState,
   getLatestEventTimestamp,
-  getSkillLine,
   isRecent,
   formatRelativeTimestamp,
 } from "./dashboard-overview-formatters";
@@ -20,8 +19,18 @@ import type {
   ResourceWithContext,
   ReviewPreviewItem,
   SpeakingPromptWithContext,
+  WeakAreaSignal,
   WritingTaskWithContext,
 } from "./dashboard-overview-types";
+import {
+  generateDailyPlan,
+  selectBestNextResource,
+} from "@/server/recommendations/engine";
+import {
+  generateReviewQueue,
+  detectWeakAreas,
+  detectNeglectedSkills,
+} from "@/server/review/queue";
 
 export function buildDashboardCollections(
   content: DashboardContentState,
@@ -189,62 +198,16 @@ export function getReviewPreviewItems(
   events: LearningEvent[],
   blockById: Map<string, DashboardBlock>,
   resourceById: Map<string, ResourceWithContext>,
-) {
-  const deduped = new Map<string, ReviewPreviewItem>();
+): ReviewPreviewItem[] {
+  const queueItems = generateReviewQueue(entries, events, blockById, resourceById);
 
-  for (const entry of entries) {
-    if (entry.state !== "needs_review") {
-      continue;
-    }
-
-    if (entry.entryType === "block") {
-      const block = blockById.get(entry.id);
-      if (!block) {
-        continue;
-      }
-
-      deduped.set(`block:${block.id}`, {
-        id: `block:${block.id}`,
-        label: block.title,
-        context: `${block.stageTitle} / ${getSkillLine(block.skills)}`,
-        urgency: "needs review",
-      });
-    }
-
-    if (entry.entryType === "resource") {
-      const resource = resourceById.get(entry.id);
-      if (!resource) {
-        continue;
-      }
-
-      deduped.set(`resource:${resource.id}`, {
-        id: `resource:${resource.id}`,
-        label: resource.title,
-        context: `${resource.blockTitle} / ${resource.sourceName}`,
-        urgency: "needs review",
-      });
-    }
-  }
-
-  for (const event of events) {
-    if (event.type !== LearningEventType.ResourceMarkedDifficult) {
-      continue;
-    }
-
-    const resource = resourceById.get(event.payload.resourceId);
-    if (!resource) {
-      continue;
-    }
-
-    deduped.set(`resource:${resource.id}:difficult`, {
-      id: `resource:${resource.id}:difficult`,
-      label: resource.title,
-      context: `${resource.blockTitle} / marked difficult`,
-      urgency: "marked difficult",
-    });
-  }
-
-  return [...deduped.values()].slice(0, 4);
+  return queueItems.slice(0, 4).map((item) => ({
+    id: item.id,
+    label: item.label,
+    context: item.context,
+    urgency: item.urgency,
+    urgencyCategory: item.urgency,
+  }));
 }
 
 export function getRecentActivity(
@@ -334,4 +297,44 @@ export function getRecentActivity(
   }
 
   return items.slice(0, 5);
+}
+
+export function getDailyPlan(
+  collections: DashboardCollections,
+  progressById: Map<string, ProgressEntry>,
+  events: LearningEvent[],
+): {
+  focusBlock: DashboardBlock | null;
+  reviewItems: ReviewPreviewItem[];
+  outputTask: OutputFocus | null;
+  totalPlanMinutes: number;
+  planHeadline: string;
+} {
+  return generateDailyPlan(collections, progressById, events);
+}
+
+export function getBestNextResource(
+  collections: DashboardCollections,
+  progressById: Map<string, ProgressEntry>,
+  events: LearningEvent[],
+  focusBlockId?: string,
+): { resource: ResourceWithContext | null; reason: string; urgency: "now" | "soon" | "optional" } {
+  return selectBestNextResource(collections, progressById, events, focusBlockId);
+}
+
+export function getWeakAreas(
+  entries: ProgressEntry[],
+  events: LearningEvent[],
+  blocks: DashboardBlock[],
+  resources: ResourceWithContext[],
+): WeakAreaSignal[] {
+  return detectWeakAreas(entries, events, blocks, resources);
+}
+
+export function getNeglectedAreas(
+  events: LearningEvent[],
+  blocks: DashboardBlock[],
+  resources: ResourceWithContext[],
+): WeakAreaSignal[] {
+  return detectNeglectedSkills(events, blocks, resources);
 }

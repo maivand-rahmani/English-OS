@@ -20,6 +20,7 @@ type DashboardResourceSectionProps = {
   focusBlockState: BlockState;
   focusResource: ResourceWithContext | null;
   focusResourceEntry: ProgressEntry | undefined;
+  recommendationReason?: string;
   onCompleteResource: (resource: ResourceWithContext) => void;
   onMarkResourceDifficult: (resource: ResourceWithContext) => void;
   onStartResource: (resource: ResourceWithContext) => void;
@@ -30,6 +31,7 @@ export function DashboardResourceSection({
   focusBlockState,
   focusResource,
   focusResourceEntry,
+  recommendationReason,
   onCompleteResource,
   onMarkResourceDifficult,
   onStartResource,
@@ -60,6 +62,12 @@ export function DashboardResourceSection({
               focusBlockState,
             )}
           </p>
+
+          {recommendationReason ? (
+            <p className="mt-2 text-xs leading-5 text-muted-foreground/70">
+              {recommendationReason}
+            </p>
+          ) : null}
 
           <div className="mt-4 rounded-[1.25rem] border border-surface-stroke-strong bg-surface-panel-muted p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">

@@ -23,10 +23,12 @@ import {
 } from "./dashboard-overview-formatters";
 import {
   buildDashboardCollections,
-  getFocusBlock,
+  getBestNextResource,
+  getDailyPlan,
+  getNeglectedAreas,
   getRecentActivity,
   getReviewPreviewItems,
-  pickFocusResource,
+  getWeakAreas,
   pickOutputPrompt,
   pickOutputTask,
   pickTodayOutput,
@@ -47,22 +49,50 @@ export function useDashboardOverview(content: DashboardContentState) {
   const progressById = new Map(entries.map((entry) => [entry.id, entry]));
 
   const localStateLoading = progressLoading || eventsLoading || draftsLoading;
-  const focusBlock = getFocusBlock(collections.allBlocks, progressById);
+
+  const plan = getDailyPlan(collections, progressById, events);
+  const focusBlock = plan.focusBlock;
+  const totalPlanMinutes = plan.totalPlanMinutes;
+  const planHeadline = plan.planHeadline;
+
   const focusBlockState = focusBlock
     ? getEntryState(progressById.get(focusBlock.id))
     : "not_started";
-  const focusResource = focusBlock
-    ? pickFocusResource(
-        collections.resources.filter((resource) => resource.blockId === focusBlock.id),
-        progressById,
-      )
-    : null;
+
+  const bestResource = getBestNextResource(
+    collections,
+    progressById,
+    events,
+    focusBlock?.id,
+  );
+  const focusResource = bestResource.resource;
+  const recommendationReason = bestResource.reason;
+
   const reviewPreviewItems = getReviewPreviewItems(
     entries,
     events,
     collections.blockById,
     collections.resourceById,
   );
+  const reviewHeadline =
+    reviewPreviewItems.length > 0
+      ? `${reviewPreviewItems.length} item${
+          reviewPreviewItems.length === 1 ? "" : "s"
+        } need attention`
+      : "No urgent review yet";
+
+  const weakAreas = getWeakAreas(
+    entries,
+    events,
+    collections.allBlocks,
+    collections.resources,
+  );
+  const neglectedAreas = getNeglectedAreas(
+    events,
+    collections.allBlocks,
+    collections.resources,
+  );
+
   const recentActivity = getRecentActivity(
     events,
     collections.blockById,
@@ -97,19 +127,6 @@ export function useDashboardOverview(content: DashboardContentState) {
     drafts.length > 0,
     events,
   );
-  const totalPlanMinutes =
-    (focusBlock?.estimatedMinutes ?? 0) +
-    (reviewPreviewItems.length > 0 ? Math.min(15, reviewPreviewItems.length * 5) : 0) +
-    (outputFocus?.estimatedMinutes ?? 0);
-  const reviewHeadline =
-    reviewPreviewItems.length > 0
-      ? `${reviewPreviewItems.length} item${
-          reviewPreviewItems.length === 1 ? "" : "s"
-        } need attention`
-      : "No urgent review yet";
-  const planHeadline = focusBlock
-    ? `Keep moving through ${focusBlock.stageTitle.toLowerCase()}.`
-    : "Curated content will land here once the roadmap is available.";
 
   async function handleBlockStateChange(
     block: DashboardBlock,
@@ -242,17 +259,20 @@ export function useDashboardOverview(content: DashboardContentState) {
       ? progressById.get(focusResource.id)
       : undefined,
     localStateLoading,
+    neglectedAreas,
     nextSpeakingPrompt,
     nextWritingTask,
     outputFocus,
     planHeadline,
     recentActivity,
+    recommendationReason,
     resourceProgressCount: resourceProgressEntries.length,
     reviewHeadline,
     reviewPreviewItems,
     roadmapCompletion,
     strongestSkill,
     totalPlanMinutes,
+    weakAreas,
     weakestSkill,
     handleBlockStateChange,
     handleCreateDraft,

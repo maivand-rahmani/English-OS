@@ -411,7 +411,7 @@ Related docs:
 
 Status:
 
-- [ ] Not started
+- [x] Complete
 
 Goal:
 
@@ -419,25 +419,25 @@ Make the system guide the learner.
 
 Tasks:
 
-- [ ] Implement rule-based daily plan logic
-- [ ] Implement best next resource logic
-- [ ] Implement review queue generation
-- [ ] Implement weak or neglected area signals
-- [ ] Add recommendation reasons
-- [ ] Connect recommendation logic to dashboard
+- [x] Implement rule-based daily plan logic
+- [x] Implement best next resource logic
+- [x] Implement review queue generation
+- [x] Implement weak or neglected area signals
+- [x] Add recommendation reasons
+- [x] Connect recommendation logic to dashboard
 
 Mobile version:
 
-- [ ] Define compact recommendation explanation hierarchy for phone
-- [ ] Define mobile review surfaces that stay readable without deep panel layouts
+- [x] Define compact recommendation explanation hierarchy for phone
+- [x] Define mobile review surfaces that stay readable without deep panel layouts
 
 Done when:
 
-- [ ] dashboard can recommend a coherent daily stack
-- [ ] review appears from learner behavior
-- [ ] recommendations are explainable
-- [ ] recommendation reasons remain understandable in compact mobile layouts
-- [ ] mobile review surfaces keep the next action obvious
+- [x] dashboard can recommend a coherent daily stack
+- [x] review appears from learner behavior
+- [x] recommendations are explainable
+- [x] recommendation reasons remain understandable in compact mobile layouts
+- [x] mobile review surfaces keep the next action obvious
 
 Related docs:
 
@@ -450,7 +450,7 @@ Related docs:
 
 Status:
 
-- [ ] Not started
+- [x] Complete
 
 Goal:
 
@@ -458,25 +458,25 @@ Add useful AI without making AI the product.
 
 Tasks:
 
-- [ ] Add server-side OpenAI-compitable service boundary
-- [ ] Add writing feedback service
-- [ ] Add speaking feedback service
-- [ ] Add recommendation explanation support
-- [ ] Add structured AI response shapes
-- [ ] Add AI error handling
+- [x] Add server-side OpenAI-compatible service boundary
+- [x] Add writing feedback service
+- [x] Add speaking feedback service
+- [x] Add recommendation explanation support
+- [x] Add structured AI response shapes
+- [x] Add AI error handling
 
 Mobile version:
 
-- [ ] Define readable mobile AI response blocks for writing, speaking, and recommendation surfaces
-- [ ] Define compact mobile-safe AI failure and recovery states
+- [x] Define readable mobile AI response blocks for writing, speaking, and recommendation surfaces
+- [x] Define compact mobile-safe AI failure and recovery states
 
 Done when:
 
-- [ ] AI feedback works server-side
-- [ ] no provider keys are exposed to the browser
-- [ ] AI outputs can be stored or shown consistently
-- [ ] AI feedback panels remain readable and calm on phone
-- [ ] AI failure states are understandable without overwhelming mobile layouts
+- [x] AI feedback works server-side
+- [x] no provider keys are exposed to the browser
+- [x] AI outputs can be stored or shown consistently
+- [x] AI feedback panels remain readable and calm on phone
+- [x] AI failure states are understandable without overwhelming mobile layouts
 
 Related docs:
 
