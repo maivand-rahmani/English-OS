@@ -8,6 +8,8 @@ import { useLearningEvents } from "@/shared/hooks/use-learning-events";
 import { useLocalProgress } from "@/shared/hooks/use-local-progress";
 import { LearningEventType, type BlockState } from "@/shared/types";
 
+import { triggerConfetti } from "../lib/confetti";
+
 import type {
   ResourceWithContext,
   WritingTaskWithContext,
@@ -147,6 +149,7 @@ export function useDashboardOverview(content: DashboardContentState) {
             stageId: block.stageId,
           },
         });
+        await triggerConfetti();
       }
     } finally {
       setBusyAction(null);
