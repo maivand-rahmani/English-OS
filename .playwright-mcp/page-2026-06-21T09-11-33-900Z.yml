@@ -1,0 +1,98 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - link "EO" [ref=e7] [cursor=pointer]:
+        - /url: /dashboard
+      - generic [ref=e8]:
+        - button "Notifications" [ref=e9]:
+          - img [ref=e10]
+        - button "Settings" [ref=e13]:
+          - img [ref=e14]
+        - button "Open account settings" [ref=e17]: G
+    - main [ref=e18]:
+      - generic [ref=e20]:
+        - article [ref=e22]:
+          - generic [ref=e24]:
+            - paragraph [ref=e25]: Good afternoon, Learner
+            - generic [ref=e26]:
+              - generic [ref=e27]:
+                - heading "Build simple sentences about yourself" [level=2] [ref=e28]
+                - paragraph [ref=e29]: Learn to say who you are, where you are from, and what your life looks like in very simple English.
+              - generic [ref=e30]:
+                - generic [ref=e31]:
+                  - paragraph [ref=e32]: Focus
+                  - paragraph [ref=e33]: Grammar / Speaking
+                - generic [ref=e34]:
+                  - paragraph [ref=e35]: Time
+                  - paragraph [ref=e36]: 55 min
+            - button "Start step" [ref=e38] [cursor=pointer]
+        - article [ref=e40]:
+          - generic [ref=e41]:
+            - img [ref=e42]
+            - text: Progress snapshot
+          - generic [ref=e45]:
+            - paragraph [ref=e47]: 0%
+            - generic [ref=e48]:
+              - paragraph [ref=e49]: Consistency
+              - paragraph [ref=e50]: No recent rhythm yet
+          - generic [ref=e52]:
+            - generic [ref=e53]:
+              - generic [ref=e54]:
+                - img [ref=e55]
+                - paragraph [ref=e57]: Active days this week
+              - paragraph [ref=e58]: 0/7
+              - paragraph [ref=e59]: Counted from your local learning events.
+            - generic [ref=e60]:
+              - generic [ref=e61]:
+                - img [ref=e62]
+                - paragraph [ref=e65]: Strongest current area
+              - paragraph [ref=e66]: Grammar
+              - paragraph [ref=e67]: Weighted more heavily toward completed and active blocks.
+            - generic [ref=e68]:
+              - generic [ref=e69]:
+                - img [ref=e70]
+                - paragraph [ref=e73]: Current friction
+              - paragraph [ref=e74]: No urgent weak area
+              - paragraph [ref=e75]: Driven by needs-review and difficulty signals.
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - img [ref=e78]
+              - text: Recent activity
+            - generic [ref=e81]: Your local event feed will start filling after you begin a roadmap block, complete a resource, or submit practice.
+          - generic [ref=e82]:
+            - link "Write now" [ref=e83] [cursor=pointer]:
+              - /url: /practice?mode=writing
+              - img
+              - text: Write now
+            - link "Speak now" [ref=e84] [cursor=pointer]:
+              - /url: /practice?mode=speaking
+              - img
+              - text: Speak now
+        - article [ref=e86]:
+          - generic [ref=e87]:
+            - img [ref=e88]
+            - text: Best next resource
+          - generic [ref=e90]:
+            - generic [ref=e91]: core
+            - generic [ref=e92]: course
+            - generic [ref=e93]: 20 min
+            - generic [ref=e94]: British Council
+          - heading "British Council LearnEnglish" [level=3] [ref=e95]
+          - paragraph [ref=e96]: foundation
+          - paragraph [ref=e97]: Recommended because it is the core support resource for your current step and helps you start cleanly.
+          - generic [ref=e98]:
+            - paragraph [ref=e99]: Supports
+            - paragraph [ref=e100]: Build simple sentences about yourself
+            - paragraph [ref=e101]: Use a structured lesson first so the learner sees a clear sentence pattern.
+          - generic [ref=e102]:
+            - button "Start resource" [ref=e103] [cursor=pointer]
+            - button "Mark useful and done" [ref=e104] [cursor=pointer]
+            - button "Mark difficult" [ref=e105] [cursor=pointer]
+        - article [ref=e107]:
+          - generic [ref=e108]:
+            - img [ref=e109]
+            - text: Review preview
+          - paragraph [ref=e112]: No urgent review yet
+          - paragraph [ref=e114]: Review pressure will appear here when you mark a block or resource difficult, skip something, or explicitly set it to needs review.
+  - button "Open Next.js Dev Tools" [ref=e120] [cursor=pointer]:
+    - img [ref=e121]

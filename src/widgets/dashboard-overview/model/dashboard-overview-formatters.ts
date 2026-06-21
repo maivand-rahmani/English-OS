@@ -159,7 +159,7 @@ export function getResourceReason(
   }
 
   if (blockState === "not_started" && resource.role === "core") {
-    return "Recommended because it is the core support resource for your current block and helps you start cleanly.";
+    return "Recommended because it is the core support resource for your current step and helps you start cleanly.";
   }
 
   return resource.note ?? resource.whyRecommended;
