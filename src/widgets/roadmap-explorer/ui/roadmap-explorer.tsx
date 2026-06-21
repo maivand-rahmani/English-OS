@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 
 import type { BlockState } from "@/shared/types";
 import { useReducedMotion } from "@/shared/hooks/use-reduced-motion";
+import { ErrorState } from "@/shared/ui/error-state";
+import { SkeletonGrid } from "@/shared/ui/skeleton";
 import { RoadmapCanvas } from "./roadmap-canvas";
 import { RoadmapStepModal } from "./roadmap-step-modal";
 import type { RoadmapStatusAction } from "./roadmap-status-controls";
@@ -36,6 +38,28 @@ export function RoadmapExplorer(props: RoadmapExplorerProps) {
     if (!selectedStep) return;
 
     await roadmap.updateBlockState(toBlockTarget(selectedStep.block), nextState, action);
+  }
+
+  if (roadmap.error) {
+    return (
+      <section className="min-h-[calc(100vh-11rem)] rounded-[2.2rem] border border-surface-stroke bg-surface-panel-strong p-6 shadow-float backdrop-blur-2xl">
+        <ErrorState
+          title="Roadmap failed to load"
+          message={roadmap.error}
+          onRetry={roadmap.clearError}
+        />
+      </section>
+    );
+  }
+
+  if (roadmap.isLoading) {
+    return (
+      <section className="min-h-[calc(100vh-11rem)] rounded-[2.2rem] border border-surface-stroke bg-surface-panel-strong p-6 shadow-float backdrop-blur-2xl">
+        <div className="flex h-full min-h-[24rem] items-center justify-center">
+          <SkeletonGrid count={1} className="w-full" />
+        </div>
+      </section>
+    );
   }
 
   if (steps.length === 0) {

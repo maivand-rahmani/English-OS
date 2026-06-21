@@ -40,6 +40,7 @@ export function useDashboardOverview(content: DashboardContentState) {
   const { drafts, isLoading: draftsLoading, createDraft } = useDrafts();
   const [busyAction, setBusyAction] = useState<string | null>(null);
   const [draftNotice, setDraftNotice] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const collections = buildDashboardCollections(content);
   const blockProgressEntries = entries.filter((entry) => entry.entryType === "block");
@@ -244,6 +245,7 @@ export function useDashboardOverview(content: DashboardContentState) {
   return {
     activeDaysThisWeek,
     allBlocks: collections.allBlocks,
+    error,
     blockProgressCount: blockProgressEntries.length,
     busyAction,
     completedBlocks,

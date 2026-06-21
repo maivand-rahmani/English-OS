@@ -20,6 +20,7 @@ export function useAppearancePreferences() {
     defaultAppearancePreferences
   );
   const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Hydrate from localStorage on mount
   useEffect(() => {
@@ -59,27 +60,45 @@ export function useAppearancePreferences() {
 
   const updatePreferences = useCallback(
     (partial: Partial<AppearancePreferences>) => {
-      setPreferences((prev) => {
-        const next = { ...prev, ...partial };
-        setAppearancePreferences(next);
-        applyAttrs(next);
-        return next;
-      });
+      try {
+        setPreferences((prev) => {
+          const next = { ...prev, ...partial };
+          setAppearancePreferences(next);
+          applyAttrs(next);
+          return next;
+        });
+        setError(null);
+      } catch (e) {
+        const message =
+          e instanceof Error ? e.message : "Failed to save preference";
+        setError(message);
+      }
     },
     []
   );
 
   const resetPreferences = useCallback(() => {
-    resetAppearancePreferences();
-    setPreferences(defaultAppearancePreferences);
-    applyAttrs(defaultAppearancePreferences);
+    try {
+      resetAppearancePreferences();
+      setPreferences(defaultAppearancePreferences);
+      applyAttrs(defaultAppearancePreferences);
+      setError(null);
+    } catch (e) {
+      const message =
+        e instanceof Error ? e.message : "Failed to reset preferences";
+      setError(message);
+    }
   }, []);
+
+  const clearError = useCallback(() => setError(null), []);
 
   return {
     preferences,
     updatePreferences,
     resetPreferences,
     isLoaded,
+    error,
+    clearError,
   } as const;
 }
 

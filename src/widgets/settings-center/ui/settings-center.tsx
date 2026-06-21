@@ -3,7 +3,7 @@
 import { Dialog } from "@base-ui/react/dialog";
 import { Drawer } from "@base-ui/react/drawer";
 import { Popover } from "@base-ui/react/popover";
-import { Check, ChevronDown, X } from "lucide-react";
+import { AlertTriangle, Bell, BookOpen, Check, ChevronDown, X } from "lucide-react";
 import Link from "next/link";
 
 import { useAppearancePreferences, useMediaQuery } from "@/shared/hooks";
@@ -15,6 +15,8 @@ import type {
   ThemeMode,
 } from "@/shared/types";
 import { buttonVariants } from "@/shared/ui/button";
+import { EmptyState } from "@/shared/ui/empty-state";
+import { Spinner } from "@/shared/ui/spinner";
 
 export type SettingsSectionId =
   | "account"
@@ -358,7 +360,7 @@ function AccountSection({ account }: { account: SettingsAccount }) {
 }
 
 function AppearanceSection() {
-  const { preferences, resetPreferences, updatePreferences } =
+  const { preferences, resetPreferences, updatePreferences, isLoaded, error, clearError } =
     useAppearancePreferences();
 
   return (
@@ -367,7 +369,33 @@ function AppearanceSection() {
       <div id="settings-appearance-heading" className="sr-only">
         Appearance settings
       </div>
-      <SettingsRows>
+
+      {error ? (
+        <div
+          className="mb-4 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-950"
+          role="alert"
+        >
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-red-500" />
+          <p className="flex-1 text-sm text-red-700 dark:text-red-300">
+            Failed to save preference. {error}
+          </p>
+          <button
+            type="button"
+            onClick={clearError}
+            className="shrink-0 text-red-500 hover:text-red-700"
+            aria-label="Dismiss error"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+      ) : null}
+
+      {!isLoaded ? (
+        <div className="flex items-center justify-center py-12">
+          <Spinner size="sm" />
+        </div>
+      ) : (
+        <SettingsRows>
         <SettingsRow
           label="Theme"
           action={
@@ -425,6 +453,7 @@ function AppearanceSection() {
           }
         />
       </SettingsRows>
+      )}
     </section>
   );
 }
@@ -436,23 +465,14 @@ function LearningProfileSection() {
       <div id="settings-learning-heading" className="sr-only">
         Learning profile settings
       </div>
-      <SettingsRows>
-        <SettingsRow label="Current level" value="Not configured" />
-        <SettingsRow label="Goal" value="General English" />
-        <SettingsRow label="Study rhythm" value="Flexible" />
-        <SettingsRow label="Daily target" value="15 min" />
-        <SettingsRow
-          label="Profile setup"
-          action={
-            <a
-              className={buttonVariants({ size: "sm", variant: "outline" })}
-              href="/onboarding"
-            >
-              Review
-            </a>
-          }
-        />
-      </SettingsRows>
+      <EmptyState
+        icon={BookOpen}
+        title="Learning profile not set up yet"
+        description="Your learning profile is created during onboarding. Complete the setup to track your progress, set goals, and get personalized recommendations."
+        actions={[
+          { label: "Review onboarding", href: "/onboarding", variant: "outline" },
+        ]}
+      />
     </section>
   );
 }
@@ -460,30 +480,15 @@ function LearningProfileSection() {
 function NotificationsSection() {
   return (
     <section aria-labelledby="settings-notifications-heading">
-      <SectionHeading
-        title="Notifications"
-        description="Notification delivery is not connected in this version."
-      />
+      <SectionHeading title="Notifications" />
       <div id="settings-notifications-heading" className="sr-only">
         Notification settings
       </div>
-      <SettingsRows>
-        <SettingsRow
-          label="Study reminders"
-          description="Preview only"
-          action={<DisabledToggle label="Study reminders" />}
-        />
-        <SettingsRow
-          label="Review reminders"
-          description="Preview only"
-          action={<DisabledToggle label="Review reminders" />}
-        />
-        <SettingsRow
-          label="Weekly summary"
-          description="Preview only"
-          action={<DisabledToggle label="Weekly summary" />}
-        />
-      </SettingsRows>
+      <EmptyState
+        icon={Bell}
+        title="Notifications coming soon"
+        description="Notifications will be available in a future update. You'll be able to manage study reminders, review alerts, and weekly summaries here."
+      />
     </section>
   );
 }
@@ -502,21 +507,6 @@ function PrivacyDataSection() {
         <SettingsRow label="Delete account data" value="Not available yet" />
       </SettingsRows>
     </section>
-  );
-}
-
-function DisabledToggle({ label }: { label: string }) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked="false"
-      aria-label={`${label}, preview only`}
-      disabled
-      className="relative h-6 w-11 cursor-not-allowed rounded-full bg-muted opacity-60"
-    >
-      <span className="absolute left-1 top-1 size-4 rounded-full bg-background shadow-sm" />
-    </button>
   );
 }
 

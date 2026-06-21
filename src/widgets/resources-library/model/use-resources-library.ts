@@ -111,6 +111,7 @@ export function useResourcesLibrary(content: ResourcesPageData) {
   const progress = useLearningContentProgress(
     Math.min(320, Math.max(80, content.resourceCount * 8)),
   );
+  const [actionError, setActionError] = useState<string | null>(null);
   const [query, setQuery] = useState(() => getInitialSearchParam("q"));
   const [skillFilter, setSkillFilter] = useState(() => getInitialSearchParam("skill") || "all");
   const [levelFilter, setLevelFilter] = useState(() => getInitialSearchParam("level") || "all");
@@ -269,43 +270,52 @@ export function useResourcesLibrary(content: ResourcesPageData) {
   }
 
   async function applyResourceAction(resource: LibraryResource, action: ResourcePrimaryAction) {
-    const target = {
-      blockTitle: resource.linkedBlocks[0]?.title ?? "resource",
-      id: resource.id,
-      title: resource.title,
-    };
+    try {
+      const target = {
+        blockTitle: resource.linkedBlocks[0]?.title ?? "resource",
+        id: resource.id,
+        title: resource.title,
+      };
 
-    if (action === "start") {
-      await progress.updateResourceState(target, "in_progress", "start");
-      return;
+      if (action === "start") {
+        await progress.updateResourceState(target, "in_progress", "start");
+        return;
+      }
+
+      if (action === "complete") {
+        await progress.updateResourceState(target, "completed", "complete");
+        return;
+      }
+
+      if (action === "useful") {
+        await progress.markResourceUseful(target);
+        return;
+      }
+
+      if (action === "difficult") {
+        await progress.markResourceDifficult(target);
+        return;
+      }
+
+      if (action === "review") {
+        await progress.updateResourceState(target, "needs_review", "review");
+        return;
+      }
+
+      if (action === "skip") {
+        await progress.updateResourceState(target, "skipped_for_now", "skip");
+        return;
+      }
+
+      await progress.resetResourceState(target);
+    } catch (err) {
+      setActionError(formatActionError(action, err));
+      throw err;
     }
+  }
 
-    if (action === "complete") {
-      await progress.updateResourceState(target, "completed", "complete");
-      return;
-    }
-
-    if (action === "useful") {
-      await progress.markResourceUseful(target);
-      return;
-    }
-
-    if (action === "difficult") {
-      await progress.markResourceDifficult(target);
-      return;
-    }
-
-    if (action === "review") {
-      await progress.updateResourceState(target, "needs_review", "review");
-      return;
-    }
-
-    if (action === "skip") {
-      await progress.updateResourceState(target, "skipped_for_now", "skip");
-      return;
-    }
-
-    await progress.resetResourceState(target);
+  function clearActionError() {
+    setActionError(null);
   }
 
   function applySuggestedFilter(filter: SuggestedLibraryFilter) {
@@ -377,10 +387,12 @@ export function useResourcesLibrary(content: ResourcesPageData) {
   }
 
   return {
+    actionError,
     activeFilters,
     applyResourceAction,
     applySuggestedFilter,
     busyAction: progress.busyAction,
+    clearActionError,
     clearAllFilters,
     clearFilter,
     closeResource,
@@ -1209,6 +1221,33 @@ function formatMinutes(minutes: number | null | undefined) {
 function getLevelRank(level: string | undefined) {
   const order = ["Pre-A1", "A1", "A2", "B1", "B2", "C1", "C2"];
   return Math.max(0, order.indexOf(level ?? "A1"));
+}
+
+function formatActionError(action: ResourcePrimaryAction, err: unknown): string {
+  const actionLabels: Record<ResourcePrimaryAction, string> = {
+    start: "starting",
+    complete: "completing",
+    useful: "marking as useful",
+    difficult: "marking as difficult",
+    review: "adding to review",
+    skip: "skipping",
+    reset: "resetting",
+  };
+  const base = `Something went wrong while ${actionLabels[action]} the resource`;
+
+  if (err instanceof Error) {
+    if (err.name === "AbortError") {
+      return `${base} — the operation was aborted. Try again.`;
+    }
+    if (err.name === "QuotaExceededError") {
+      return `${base} — storage is full. Free up space and try again.`;
+    }
+    if (err.message) {
+      return `${base}: ${err.message}`;
+    }
+  }
+
+  return `${base}. Please try again.`;
 }
 
 function normalizeForSearch(value: string) {

@@ -4,6 +4,7 @@ import { AlertTriangle, BarChart3 } from "lucide-react";
 
 import { useMediaQuery } from "@/shared/hooks";
 import { cn } from "@/shared/lib/utils";
+import { ErrorState, SpinnerPage } from "@/shared/ui";
 
 import type {
   DashboardOverviewProps,
@@ -99,6 +100,21 @@ function WeakAreasCard({
 export function DashboardOverview({ content }: DashboardOverviewProps) {
   const overview = useDashboardOverview(content);
   const isDesktopDashboard = useMediaQuery("(min-width: 1280px)");
+
+  if (overview.localStateLoading) {
+    return <SpinnerPage message="Loading your dashboard..." />;
+  }
+
+  if (overview.error) {
+    return (
+      <ErrorState
+        icon={AlertTriangle}
+        title="Could not load dashboard data"
+        message={overview.error}
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
 
   if (overview.allBlocks.length === 0) {
     return <DashboardEmptyState />;

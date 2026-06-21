@@ -53,7 +53,7 @@ describe("SettingsCenter", () => {
     expect(document.documentElement).toHaveAttribute("data-theme", "dark");
   });
 
-  test("marks notification controls as unavailable previews", async () => {
+  test("shows notifications coming soon with no active controls", async () => {
     installMatchMedia(1280);
 
     render(
@@ -68,12 +68,14 @@ describe("SettingsCenter", () => {
 
     const dialog = await screen.findByRole("dialog");
     expect(
-      within(dialog).getByText(/notification delivery is not connected/i),
+      within(dialog).getByText(/notifications coming soon/i),
+    ).toBeInTheDocument();
+    expect(
+      within(dialog).getByText(/future update/i),
     ).toBeInTheDocument();
 
-    const toggles = within(dialog).getAllByRole("switch");
-    expect(toggles).toHaveLength(3);
-    toggles.forEach((toggle) => expect(toggle).toBeDisabled());
+    const toggles = within(dialog).queryAllByRole("switch");
+    expect(toggles).toHaveLength(0);
   });
 });
 
