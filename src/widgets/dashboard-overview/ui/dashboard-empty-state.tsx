@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, Target } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 import { buttonVariants } from "@/shared/ui/button";
 
@@ -7,8 +7,9 @@ import { DashboardCard, SectionEyebrow } from "@/shared/ui/surfaces";
 
 export function DashboardEmptyState() {
   return (
-    <section className="grid gap-[var(--layout-gap)] xl:grid-cols-[minmax(0,1.2fr)_20rem]">
-      <DashboardCard className="bg-[linear-gradient(180deg,var(--surface-panel-strong),var(--surface-panel))] p-6 sm:p-7">
+    <DashboardCard className="overflow-hidden bg-[linear-gradient(180deg,var(--surface-panel-strong),var(--surface-panel))] p-6 sm:p-7">
+      <div className="absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_left,var(--surface-module-pink),transparent_60%),radial-gradient(circle_at_top_right,var(--surface-module-blue),transparent_55%)]" />
+      <div className="relative">
         <SectionEyebrow icon={Sparkles}>Dashboard reset</SectionEyebrow>
         <h2 className="mt-5 max-w-2xl text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           Curated content is not loaded yet.
@@ -29,26 +30,7 @@ export function DashboardEmptyState() {
             Open resources
           </Link>
         </div>
-      </DashboardCard>
-
-      <DashboardCard className="p-5">
-        <SectionEyebrow icon={Target}>What this page will answer</SectionEyebrow>
-        <ul className="mt-5 grid gap-3">
-          {[
-            "What should I do today?",
-            "What needs review right now?",
-            "Where am I making progress?",
-            "What is the best next resource?",
-          ].map((item) => (
-            <li
-              key={item}
-              className="rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel-muted px-4 py-3 text-sm text-muted-foreground"
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-      </DashboardCard>
-    </section>
+      </div>
+    </DashboardCard>
   );
 }
