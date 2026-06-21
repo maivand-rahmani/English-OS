@@ -39,16 +39,19 @@ export function DashboardResourceSection({
       <SectionEyebrow icon={BookOpenText}>Best next resource</SectionEyebrow>
       {focusResource ? (
         <>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-4 flex flex-wrap items-center gap-2">
             <SmallTag>{focusResource.role}</SmallTag>
             <SmallTag>{focusResource.resourceTypeLabel}</SmallTag>
             <SmallTag>{formatMinutes(focusResource.estimatedMinutes)}</SmallTag>
+            <span className="text-xs text-muted-foreground">
+              {focusResource.sourceName}
+            </span>
           </div>
           <h3 className="mt-4 text-xl font-semibold text-foreground">
             {focusResource.title}
           </h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {focusResource.sourceName} / {focusResource.primaryUseCaseLabel}
+          <p className="mt-1 text-xs text-muted-foreground">
+            {focusResource.primaryUseCaseLabel}
           </p>
           <p className="mt-4 text-sm leading-6 text-muted-foreground">
             {getResourceReason(
@@ -105,7 +108,7 @@ export function DashboardResourceSection({
         </>
       ) : (
         <p className="mt-4 text-sm leading-6 text-muted-foreground">
-          The current block does not have a linked resource yet.
+          The current step does not have a linked resource yet.
         </p>
       )}
     </DashboardCard>
