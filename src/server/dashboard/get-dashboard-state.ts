@@ -43,7 +43,7 @@ export async function getDashboardState(
     return getEmptyDashboardState();
   }
 
-  const [session, template] = await Promise.all([auth(), getTemplateRecord()]);
+  const [session, template] = await Promise.all([auth(), getTemplateRecord(profile)]);
 
   if (!template) {
     return getEmptyDashboardState();
@@ -172,19 +172,32 @@ export async function getDashboardState(
   };
 }
 
-function getTemplateRecord() {
+function getTemplateRecord(profile: LearnerProfile) {
   if (!prisma) {
     return Promise.resolve(null);
   }
 
+  const learnerLevel = profile.currentLevel ?? null;
+
+  const CEFR_ORDER = ["PRE_A1", "A1", "A2", "B1", "B2", "C1", "C2"] as const;
+  const learnerIdx = learnerLevel ? CEFR_ORDER.indexOf(learnerLevel as (typeof CEFR_ORDER)[number]) : -1;
+  const validStart = learnerIdx >= 0 ? CEFR_ORDER[0] : null;
+  const validEnd = learnerIdx >= 0 ? CEFR_ORDER[learnerIdx] : null;
+
   return prisma.roadmapTemplate.findFirst({
     where: {
-      isDefault: true,
       isPublished: true,
+      ...(learnerIdx >= 0 && validStart && validEnd
+        ? {
+            cefrStart: { in: CEFR_ORDER.slice(0, learnerIdx + 1) as unknown as (typeof CEFR_ORDER)[number][] },
+            cefrEnd: { in: CEFR_ORDER.slice(learnerIdx) as unknown as (typeof CEFR_ORDER)[number][] },
+          }
+        : { isDefault: true }),
     },
-    orderBy: {
-      updatedAt: "desc",
-    },
+    orderBy: [
+      { isDefault: "desc" },
+      { updatedAt: "desc" },
+    ],
     include: {
       stages: {
         orderBy: {
