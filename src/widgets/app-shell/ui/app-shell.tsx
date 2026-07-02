@@ -12,7 +12,7 @@ import {
   type AppSection,
 } from "@/shared/config/navigation";
 import { cn } from "@/shared/lib/utils";
-import { SearchInput } from "@/shared/ui/input";
+import {
   SettingsCenter,
   type SettingsAccount,
   type SettingsSectionId,
@@ -179,10 +179,22 @@ function DesktopAppShell({
             </nav>
 
             <div className="flex items-center justify-end gap-2 xl:justify-self-end">
-              <SearchInput
-                placeholder="Search resources..."
+              <form
+                action="/resources"
                 className="hidden w-64 min-[1180px]:block"
-              />
+              >
+                <label htmlFor="header-search" className="sr-only">
+                  Search resources
+                </label>
+                <input
+                  id="header-search"
+                  type="search"
+                  name="q"
+                  placeholder="Search resources, roadmap steps..."
+                  aria-label="Search resources"
+                  className="flex h-10 w-full rounded-[0.875rem] border border-surface-stroke bg-surface-panel px-4 py-2.5 text-sm transition-all duration-[var(--motion-duration-fast)] ease-out placeholder:text-muted-foreground hover:border-surface-stroke-strong focus-visible:outline-none focus-visible:border-surface-stroke-strong focus-visible:ring-2 focus-visible:ring-surface-module-lavender/50"
+                />
+              </form>
               <button
                 type="button"
                 className="inline-flex size-10 items-center justify-center rounded-full border border-white/70 bg-surface-2 text-muted-foreground shadow-soft transition-transform duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:-translate-y-0.5 hover:text-foreground"
@@ -260,6 +272,13 @@ function MobileAppShell({
               </Link>
 
               <div className="flex shrink-0 items-center gap-2">
+                <Link
+                  href="/resources"
+                  aria-label="Search resources"
+                  className="inline-flex size-10 items-center justify-center rounded-full border border-surface-stroke bg-surface-panel text-muted-foreground shadow-soft"
+                >
+                  <Search className="size-4" />
+                </Link>
                 <button
                   type="button"
                   aria-label="Notifications"
