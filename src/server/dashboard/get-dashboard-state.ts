@@ -49,7 +49,13 @@ export async function getDashboardState(
     return getEmptyDashboardState();
   }
 
+  const templateContent = await getTemplateContent(template.id);
+
   const learnerLevel = profile.currentLevel ?? null;
+
+  const contentByBlock = new Map(
+    templateContent.map((c) => [c.id, c] as const),
+  );
 
   const stages = template.stages.map((stage) => ({
     id: stage.id,
@@ -105,7 +111,7 @@ export async function getDashboardState(
             resourceLink.resource.cefrEnd,
           ),
         })),
-        writingTasks: block.writingTasks.map((task) => ({
+        writingTasks: (contentByBlock.get(block.id)?.writingTasks ?? []).map((task) => ({
           id: task.id,
           slug: task.slug,
           title: task.title,
@@ -117,7 +123,7 @@ export async function getDashboardState(
           instructions: task.instructions,
           successCriteria: task.successCriteria,
         })),
-        speakingPrompts: block.speakingPrompts.map((prompt) => ({
+        speakingPrompts: (contentByBlock.get(block.id)?.speakingPrompts ?? []).map((prompt) => ({
           id: prompt.id,
           slug: prompt.slug,
           title: prompt.title,
@@ -211,28 +217,117 @@ function getTemplateRecord() {
                   },
                 },
               },
-              writingTasks: {
-                where: {
-                  isPublished: true,
-                },
-                orderBy: {
-                  createdAt: "asc",
-                },
-              },
-              speakingPrompts: {
-                where: {
-                  isPublished: true,
-                },
-                orderBy: {
-                  createdAt: "asc",
-                },
-              },
             },
           },
         },
       },
     },
   });
+}
+
+function getTemplateContent(templateId: string): Promise<
+  Array<{
+    id: string;
+    writingTasks: Array<{
+      id: string;
+      createdAt: Date;
+      updatedAt: Date;
+      slug: string;
+      title: string;
+      roadmapBlockId: string | null;
+      summary: string | null;
+      instructions: string;
+      taskType: string;
+      cefrStart: string | null;
+      cefrEnd: string | null;
+      estimatedMinutes: number | null;
+      wordCountMin: number | null;
+      wordCountMax: number | null;
+      successCriteria: string | null;
+      isPublished: boolean;
+    }>;
+    speakingPrompts: Array<{
+      id: string;
+      createdAt: Date;
+      updatedAt: Date;
+      slug: string;
+      title: string;
+      roadmapBlockId: string | null;
+      summary: string | null;
+      promptText: string;
+      promptType: string;
+      cefrStart: string | null;
+      cefrEnd: string | null;
+      estimatedMinutes: number | null;
+      targetDurationSeconds: number | null;
+      prepHint: string | null;
+      followUpQuestion: string | null;
+      isPublished: boolean;
+    }>;
+  }>
+> {
+  if (!prisma) {
+    return Promise.resolve([]);
+  }
+
+  return prisma.roadmapBlock.findMany({
+    where: {
+      roadmapStage: {
+        roadmapTemplateId: templateId,
+      },
+    },
+    select: {
+      id: true,
+      writingTasks: {
+        where: { isPublished: true },
+        orderBy: { createdAt: "asc" },
+      },
+      speakingPrompts: {
+        where: { isPublished: true },
+        orderBy: { createdAt: "asc" },
+      },
+    },
+  }) as unknown as Promise<
+    Array<{
+      id: string;
+      writingTasks: Array<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        slug: string;
+        title: string;
+        roadmapBlockId: string | null;
+        summary: string | null;
+        instructions: string;
+        taskType: string;
+        cefrStart: string | null;
+        cefrEnd: string | null;
+        estimatedMinutes: number | null;
+        wordCountMin: number | null;
+        wordCountMax: number | null;
+        successCriteria: string | null;
+        isPublished: boolean;
+      }>;
+      speakingPrompts: Array<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        slug: string;
+        title: string;
+        roadmapBlockId: string | null;
+        summary: string | null;
+        promptText: string;
+        promptType: string;
+        cefrStart: string | null;
+        cefrEnd: string | null;
+        estimatedMinutes: number | null;
+        targetDurationSeconds: number | null;
+        prepHint: string | null;
+        followUpQuestion: string | null;
+        isPublished: boolean;
+      }>;
+    }>
+  >;
 }
 
 function mapBlockSkills(block: BlockWithRelations): DashboardSkill[] {
