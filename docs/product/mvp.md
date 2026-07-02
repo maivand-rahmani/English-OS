@@ -41,7 +41,7 @@ V1 should help the learner:
 - know what to do today and what to do next
 - track progress and learning history in one place
 - review material before it is forgotten
-- practice writing and speaking inside structured workspaces
+- practice writing and speaking inside one structured Practice section
 
 ## Core V1 Product Shape
 
@@ -57,7 +57,7 @@ Personal roadmap and next-step guidance.
 Curated resources with strong recommendation context.
 
 4. Practice layer
-Writing and speaking workspaces connected to the learner's broader system.
+One Practice section with writing and speaking modes connected to the learner's broader system.
 
 ## Must-Have Product Capabilities
 
@@ -69,8 +69,9 @@ V1 must include:
 - a curated resource system
 - a unified progress history
 - a review and repetition system
-- writing as a real practice workspace
-- speaking as a real practice workspace
+- Practice as a real top-level output section
+- writing as a real Practice mode
+- speaking as a real Practice mode
 - basic recommendations for what to do next
 
 ## V1 AI Position

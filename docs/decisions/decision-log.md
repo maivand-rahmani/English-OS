@@ -19,23 +19,104 @@ Related docs:
 - [Product Thesis](../product/thesis.md)
 - [MVP Definition](../product/mvp.md)
 
-### 2026-05-17: V1 Top-Level Product Sections
+### 2026-05-17: V1 Primary Navigation Sections
 
-Status: accepted.
+Status: superseded on 2026-06-09.
 
-V1 should use these top-level sections:
+V1 should use these primary navigation sections:
 
 - Dashboard
 - Roadmap
 - Resources
 - Writing
 - Speaking
-- Settings
+
+Settings should remain a top-level route, but it should be surfaced through the header utility area instead of the main navigation pill.
 
 Related docs:
 
 - [Information Architecture](../ux/information-architecture.md)
 - [Navigation](../ux/navigation.md)
+
+### 2026-06-09: Practice Replaces Writing And Speaking In V1 Top Navigation
+
+Status: accepted.
+
+Practice is the V1 top-level output section.
+
+Writing and speaking remain important product modes, but they now live inside
+Practice rather than existing as separate top-level navigation items.
+
+V1 should therefore expose:
+
+- Dashboard
+- Roadmap
+- Resources
+- Practice
+
+Settings remains available through the header utility area. Its page-based
+interaction model is superseded by the 2026-06-11 Settings decision below.
+
+Legacy `/writing` and `/speaking` paths may remain only as redirects into
+Practice while the old architecture is being retired.
+
+Related docs:
+
+- [Information Architecture](../ux/information-architecture.md)
+- [Navigation](../ux/navigation.md)
+- [Practice](../ux/practice.md)
+
+### 2026-06-11: Settings Becomes A Shell-Level Overlay
+
+Status: accepted.
+
+Settings is a utility modal or mobile sheet opened from the settings control or
+account entry point. It is not a top-level product page. Direct `/settings`
+access renders the same overlay as a compatibility fallback.
+
+Settings content uses compact internal navigation, rows, dividers, and small
+option pickers rather than dashboard cards or decorative panels.
+
+Related docs:
+
+- [Settings](../ux/settings.md)
+- [Navigation](../ux/navigation.md)
+- [Mobile V1 Design](../ux/mobile-v1-design.md)
+
+### 2026-06-09: Shared App Shell Does Not Render Traditional Page Headers
+
+Status: accepted.
+
+The authenticated app shell should provide navigation, branded framing, and
+utility controls only.
+
+It should not automatically render a per-route eyebrow, repeated page title, or
+subtitle block under the global navigation.
+
+Section identity should come from the shell navigation and from the page's real
+workspace surface.
+
+Related docs:
+
+- [Navigation](../ux/navigation.md)
+- [Layout Principles](../ux/layout-principles.md)
+- [Frontend Architecture](../engineering/frontend-architecture.md)
+
+### 2026-06-09: V1 Practice Uses One Studio Surface
+
+Status: accepted.
+
+The V1 Practice page should open directly into one integrated studio surface.
+
+Writing and speaking switch inside that same surface. The page should not use a
+dashboard grid, right-side feedback panel, separate task card, or separate
+editor card as the top-level architecture.
+
+Related docs:
+
+- [Practice](../ux/practice.md)
+- [Layout Principles](../ux/layout-principles.md)
+- [Release Criteria](../roadmap/release-criteria.md)
 
 ### 2026-05-17: V1 Engineering Stack
 
@@ -109,7 +190,7 @@ Related docs:
 
 Status: accepted.
 
-The first supplied visual references should guide product structure and first-glance feel. English OS should borrow the large rounded app canvas, vertical icon sidebar, centered pill navigation, soft panel surfaces, black active states, right-side context panels, and tactile animated behavior.
+The first supplied visual references should guide product structure and first-glance feel. English OS should borrow the large rounded app canvas, shell framing discipline, centered pill navigation, soft panel surfaces, black active states, right-side context panels, and tactile animated behavior.
 
 The references should not be copied literally, and English OS should not drift into course-platform or live-class product behavior.
 
@@ -145,6 +226,102 @@ Related docs:
 - [Visual Direction](../brand/visual-direction.md)
 - [Motion Direction](../brand/motion-direction.md)
 - [Theme System](../brand/theme-system.md)
+
+### 2026-05-19: Dashboard Reference Is The Canonical V1 Desktop Frame
+
+Status: accepted.
+
+The supplied dashboard reference should be treated as the canonical V1 desktop frame for English OS.
+
+The implementation should closely match its structure, spacing logic, app shell silhouette, calm brand framing, centered pill navigation, right utility cluster, soft rounded panels, black active states, and calm two-column dashboard composition.
+
+The product may change colors, content, typography details, and English OS-specific modules, but it should not drift into a generic admin dashboard, default shadcn layout, or overloaded analytics wall.
+
+Minimalism is also accepted as a core visual discipline: the interface should feel edited, calm, and purposeful, with one dominant focus and a small number of supporting modules.
+
+Related docs:
+
+- [Reference Notes](../brand/reference-notes.md)
+- [Style Doctrine](../brand/style-doctrine.md)
+- [Visual Direction](../brand/visual-direction.md)
+- [Dashboard UX](../ux/dashboard.md)
+- [Release Criteria](../roadmap/release-criteria.md)
+
+### 2026-06-06: Dashboard Reference Is Scoped To Shell And Dashboard
+
+Status: accepted.
+
+The supplied dashboard reference remains canonical for the shared shell and the
+Dashboard page.
+
+It does not mean every learner-facing page should copy Dashboard composition.
+
+Resources, Roadmap, Writing, Speaking, review flows, and other learner-facing
+surfaces should inherit the shell, material language, navigation grammar, and
+interaction quality without defaulting to wide-left plus narrow-right dashboard
+layouts.
+
+Related docs:
+
+- [Layout Principles](../ux/layout-principles.md)
+- [Frontend Architecture](../engineering/frontend-architecture.md)
+- [Style Doctrine](../brand/style-doctrine.md)
+- [Visual Direction](../brand/visual-direction.md)
+
+### 2026-06-06: Forbidden Pattern - Stacked Dashboard Block Layout
+
+Status: accepted.
+
+English OS pages must not default to a stacked dashboard-block layout unless
+the page is explicitly an analytics dashboard or an admin-style monitoring
+surface.
+
+Forbidden default pattern:
+
+- header block
+- recommendation block
+- search and filters block
+- results block
+- right sidebar insight block
+- status cards block
+- nested cards inside nested cards
+
+This pattern is especially forbidden for Resources, Roadmap, and learner
+workspaces. Small cards and tiles are still allowed when they support the core
+experience without becoming the page architecture.
+
+Related docs:
+
+- [Layout Principles](../ux/layout-principles.md)
+- [Resources UX](../ux/resources.md)
+- [Roadmap UX](../ux/roadmap.md)
+- [Style Acceptance Checklist](../brand/style-acceptance-checklist.md)
+
+### 2026-06-06: V1 Uses Top-Level Navigation Only
+
+Status: accepted.
+
+English OS V1 must not show per-section sidebars, nested mobile section lanes,
+or fake internal pages for future feature inventory.
+
+The active V1 navigation model is limited to the four primary sections:
+
+- Dashboard
+- Roadmap
+- Resources
+- Practice
+
+Settings remains available as a header utility route.
+
+Internal sidebar ideas are deferred to V2. In V1, actions, filters, states,
+tabs, and inline sections must stay inside the main page experience instead of
+becoming route-backed subpages.
+
+Related docs:
+
+- [Navigation](../ux/navigation.md)
+- [V1 Navigation Simplification Rule](../ux/v1-navigation-simplification-rule.md)
+- [Information Architecture](../ux/information-architecture.md)
 
 ## Status
 

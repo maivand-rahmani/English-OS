@@ -39,6 +39,18 @@ V1 should support:
 - self-reflection view
 - speaking history
 
+## V1 Navigation Model
+
+Speaking is a focused mode inside the top-level Practice page in V1.
+
+Speaking is not a separate top-level navigation section.
+
+`Record` is an action, not a page.
+
+Feedback and reflection belong inside an active speaking session or result state, not as sidebar routes.
+
+Prompts and history may appear as lightweight sections, tabs, or panels inside the workspace, but not as separate V1 navigation pages unless they become real implemented subpages later.
+
 ## Core Speaking Flow
 
 The main speaking flow should be:

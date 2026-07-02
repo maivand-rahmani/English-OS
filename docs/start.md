@@ -28,6 +28,7 @@ Main sections:
 - [Brand](./brand/README.md)
 - [Decisions](./decisions/README.md)
 - [Roadmap](./roadmap/README.md)
+- [Roadmap Futures](./roadmap/futures/README.md)
 
 ## Required Reading Before Work
 
@@ -36,6 +37,11 @@ For any task, read:
 1. [Decision Log](./decisions/decision-log.md)
 2. [V1 MVP Roadmap](./roadmap/v1-mvp-roadmap.md)
 3. the section README that matches the task
+
+For post-V1 planning only, also read:
+
+1. [Roadmap Futures](./roadmap/futures/README.md)
+2. [V2 MVP Roadmap](./roadmap/futures/v2-mvp-roadmap.md)
 
 For product work, read:
 
@@ -47,9 +53,19 @@ For UI work, read:
 
 1. [Information Architecture](./ux/information-architecture.md)
 2. [Navigation](./ux/navigation.md)
-3. [Style Doctrine](./brand/style-doctrine.md)
-4. [Motion Direction](./brand/motion-direction.md)
-5. [Theme System](./brand/theme-system.md)
+3. [V1 Navigation Simplification Rule](./ux/v1-navigation-simplification-rule.md)
+4. [Mobile V1 Design](./ux/mobile-v1-design.md)
+5. [Style Doctrine](./brand/style-doctrine.md)
+6. [Visual Direction](./brand/visual-direction.md)
+7. [Reference Notes](./brand/reference-notes.md)
+8. [Style Acceptance Checklist](./brand/style-acceptance-checklist.md)
+9. [Motion Direction](./brand/motion-direction.md)
+10. [Theme System](./brand/theme-system.md)
+
+For mobile or responsive UI work, also read:
+
+1. the current phase's `Mobile version` block in [V1 MVP Roadmap](./roadmap/v1-mvp-roadmap.md)
+2. [Mobile V1 Design](./ux/mobile-v1-design.md)
 
 For engineering work, read:
 
@@ -69,6 +85,12 @@ Before starting:
 4. Continue from there.
 5. After completing work, update the roadmap checkboxes.
 
+Important:
+
+- [V1 MVP Roadmap](./roadmap/v1-mvp-roadmap.md) remains the active implementation tracker until V1 is fully complete.
+- [V2 MVP Roadmap](./roadmap/futures/v2-mvp-roadmap.md) is a future planning document for post-V1 work and should not replace the active V1 execution path early.
+- V1 phases 1 through 5 may be reopened for mobile design backlog even when earlier desktop or foundation work already exists.
+
 If a task changes architecture, update:
 
 - [Decision Log](./decisions/decision-log.md)
@@ -79,6 +101,7 @@ If a task changes style direction, update:
 - [Visual Direction](./brand/visual-direction.md)
 - [Motion Direction](./brand/motion-direction.md)
 - [Theme System](./brand/theme-system.md)
+- [Mobile V1 Design](./ux/mobile-v1-design.md)
 
 If a task changes product scope, update:
 
@@ -145,4 +168,6 @@ Active.
 
 - [Docs Home](./README.md)
 - [V1 MVP Roadmap](./roadmap/v1-mvp-roadmap.md)
+- [Mobile V1 Design](./ux/mobile-v1-design.md)
 - [Decision Log](./decisions/decision-log.md)
+- [Roadmap Futures](./roadmap/futures/README.md)

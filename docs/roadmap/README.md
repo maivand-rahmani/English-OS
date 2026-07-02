@@ -2,7 +2,7 @@
 
 This section defines how English OS moves from concept to a real MVP that can be launched.
 
-Use this section for execution sequencing, milestones, workstreams, and MVP completion criteria.
+Use this section for execution sequencing, milestones, workstreams, MVP completion criteria, and future post-V1 planning.
 
 This is not a feature wishlist. It is the path to a launchable V1.
 
@@ -12,6 +12,7 @@ This is not a feature wishlist. It is the path to a launchable V1.
 - [Milestones](./milestones.md)
 - [Workstreams](./workstreams.md)
 - [Release Criteria](./release-criteria.md)
+- [Roadmap Futures](./futures/README.md)
 
 ## Reading Order
 
@@ -19,6 +20,11 @@ This is not a feature wishlist. It is the path to a launchable V1.
 2. [Milestones](./milestones.md)
 3. [Workstreams](./workstreams.md)
 4. [Release Criteria](./release-criteria.md)
+
+For post-V1 planning:
+
+1. [Roadmap Futures](./futures/README.md)
+2. [V2 MVP Roadmap](./futures/v2-mvp-roadmap.md)
 
 ## Roadmap Principle
 
@@ -40,9 +46,14 @@ Future agents should:
 - mark completed tasks with `[x]`
 - avoid marking a phase complete until completion criteria are true
 
+[V2 MVP Roadmap](./futures/v2-mvp-roadmap.md) is not an active execution tracker yet.
+
+It exists to define the next major expansion after V1 is fully complete.
+
 ## Related Docs
 
 - [Docs Home](../README.md)
 - [Start Here](../start.md)
 - [Product MVP](../product/mvp.md)
 - [Engineering README](../engineering/README.md)
+- [Roadmap Futures](./futures/README.md)

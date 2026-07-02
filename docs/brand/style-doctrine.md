@@ -12,7 +12,39 @@ Soft Liquid OS.
 
 ## One-Sentence Definition
 
-English OS uses a Soft Liquid OS interface: a motion-led, token-based, glass-tactile productivity dashboard style with calm premium surfaces, strong black active states, customizable themes, and rich but purposeful animation.
+English OS uses a Soft Liquid OS interface: a motion-led, token-based,
+glass-tactile product style with calm premium surfaces, strong black active
+states, customizable themes, and rich but purposeful animation.
+
+## Canonical Reference Rule
+
+The supplied dashboard reference is the canonical V1 desktop shell and
+Dashboard visual frame.
+
+For desktop V1, the shared shell and Dashboard should closely match the
+reference's:
+
+- outer atmospheric background
+- large rounded app canvas
+- calm shell framing and brand anchor
+- centered pill navigation
+- right utility cluster
+- soft rounded panels
+- black active states and primary actions
+- minimal icon-led controls
+
+This does not mean copying literal content, avatars, logo marks, or course-platform meaning.
+
+It does mean the layout grammar, spacing logic, surface treatment, navigation
+shape, and first-glance feeling should be recognizably close to the reference.
+
+If an implementation does not visually feel related to the reference at first glance, it is off-direction.
+
+Dashboard composition is not a universal page recipe.
+
+Resources, Roadmap, Writing, Speaking, and other learner-facing pages should
+inherit the shell and material language without defaulting to stacked
+dashboard-style page blocks.
 
 ## Why This Style Fits English OS
 
@@ -27,7 +59,8 @@ The style must therefore feel:
 - animated enough to become memorable
 - flexible enough to support user appearance settings
 
-Soft Liquid OS supports this better than a plain SaaS dashboard, a childish edtech UI, or a generic course platform aesthetic.
+Soft Liquid OS supports this better than a plain SaaS dashboard, a childish
+edtech UI, or a generic course platform aesthetic.
 
 ## Style Ingredients
 
@@ -65,14 +98,34 @@ The default style can be Soft Liquid OS, but the system must support future them
 ## Core Visual Rules
 
 - Use a large rounded app canvas.
-- Use a vertical icon sidebar.
 - Use centered pill top navigation.
+- Do not rely on an active section sidebar in V1.
 - Use black active states for selected controls and primary actions.
 - Use soft glass-like panels and layered surfaces.
 - Use a calm atmospheric background.
-- Use a dense but breathable dashboard layout.
-- Use right-side contextual panels where useful.
+- Use dense but breathable layout only where the page model needs it.
+- Use right-side contextual panels only when they materially support the page's
+  primary experience.
 - Use charts, progress states, and learning signals as visual content.
+
+## Minimalism And Information Discipline
+
+Soft Liquid OS should be minimal, not empty.
+
+The interface should feel premium because it is edited, calm, and intentional.
+
+Rules:
+
+- show fewer things, but make each thing useful
+- prefer one dominant panel over many equal panels
+- keep secondary cards quiet and compact
+- avoid decorative widgets that do not change learner behavior
+- use whitespace and soft surfaces to reduce anxiety
+- use charts and progress only when they clarify what to do next
+- keep copy short and directive
+- do not overload the dashboard with analytics, badges, streaks, or random stats
+
+The product should never become a noisy widget wall.
 
 ## Responsive Style Requirement
 
@@ -83,7 +136,11 @@ Soft Liquid OS must work as both:
 
 The style should not be designed only as a wide dashboard screenshot.
 
-Desktop should feel like a calm command center with dense information, side navigation, and contextual panels.
+Dashboard should feel like a calm command center with dense information,
+top-level navigation, and contextual panels.
+
+Other learner-facing pages should feel like focused workspaces or discovery
+surfaces rather than mini dashboards.
 
 Mobile should feel like the same operating system compressed into focused, swipe-friendly, single-task views.
 
@@ -155,6 +212,8 @@ Do not use motion as random decoration.
 
 Avoid:
 
+- overbuilt dashboards with too many competing widgets
+- dense information without clear hierarchy
 - pure glassmorphism with poor readability
 - pure neumorphism
 - childish gamified edtech visuals
@@ -189,3 +248,4 @@ Active.
 - [Motion Direction](./motion-direction.md)
 - [Theme System](./theme-system.md)
 - [Reference Notes](./reference-notes.md)
+- [Layout Principles](../ux/layout-principles.md)

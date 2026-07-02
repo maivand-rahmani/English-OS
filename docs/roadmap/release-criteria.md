@@ -15,17 +15,20 @@ V1 is product-ready when:
 - dashboard tells the learner what to do next
 - roadmap gives a structured path
 - resources feel curated and trustworthy
-- writing and speaking are real workspaces
+- Practice is the real top-level output section
+- writing and speaking are real modes inside Practice
 - review and recommendations exist in useful V1 form
 
 ## UX Readiness
 
 V1 is UX-ready when:
 
-- top-level navigation works
-- per-section sidebars work
+- top-level navigation works with Dashboard, Roadmap, Resources, and Practice
+- the shared shell does not repeat section identity through generic page headers
+- no inactive section sidebars or fake subpages appear in the active V1 UI
 - dashboard is the primary daily home
 - main flows are clear without explanation text
+- Practice opens directly into one focused studio surface
 - empty states are intentional
 - loading states are calm
 - errors are understandable
@@ -85,7 +88,10 @@ V1 content is ready when:
 V1 visual polish is ready when:
 
 - app shell feels stable and intentional
+- desktop shell clearly resembles the canonical dashboard reference
+- dashboard uses the reference's app canvas, left rail, pill nav, panel rhythm, and right column structure
 - dashboard has clear hierarchy
+- dashboard feels minimal, edited, and calm
 - animations make the interface feel alive and intelligent
 - motion does not block usability
 - transitions help the user understand state changes
@@ -102,6 +108,9 @@ Do not launch if:
 - AI keys can be exposed
 - app only works on one viewport size
 - mobile feels like an afterthought
+- desktop UI looks like a generic shadcn/admin dashboard
+- dashboard is overloaded with too many competing widgets
+- implementation does not visually relate to the canonical reference
 - core navigation feels confusing
 
 ## Launch Definition
@@ -114,7 +123,7 @@ English OS V1 is launch-ready when a beginner or intermediate self-learner can:
 4. see what to do next
 5. open roadmap and resources
 6. complete actions locally
-7. practice writing or speaking
+7. open Practice and use writing or speaking mode
 8. see progress, review, or recommendations change
 
 ## Status

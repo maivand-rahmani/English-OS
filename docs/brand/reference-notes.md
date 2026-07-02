@@ -4,17 +4,53 @@
 
 This document captures visual and structural notes from style references.
 
-References should guide direction. They should not be copied literally.
+The current dashboard reference is not just loose inspiration.
 
-## Reference Set 1: Dashboard And Speaking Structure
+It is the canonical V1 desktop shell and Dashboard frame for structure,
+spacing, surface style, and first-glance product feeling.
 
-The first references show an English-learning dashboard and speaking interface with a shared app shell.
+Do not copy literal content, avatars, logos, or course-platform meaning.
+
+Do closely match the visual grammar.
+
+## Reference Set 1: Canonical Dashboard Frame
+
+The primary reference shows an English-learning dashboard with a shared app shell.
+
+This reference should define the desktop shell and Dashboard direction for V1.
+
+The product can change colors to become more elegant and more English OS-specific,
+but the shared shell and Dashboard structure should remain recognizably close.
+
+## Reference Anatomy
+
+The reference is successful because it uses:
+
+- a soft atmospheric page background
+- a large centered rounded application canvas
+- generous outer padding around the app canvas
+- a strong left-edge brand anchor and shell rhythm
+- centered segmented top navigation
+- black selected navigation pill
+- right utility group for search, notifications, and profile
+- a large greeting headline
+- a wide main analytics panel
+- a narrower right recommendation column
+- two secondary cards below the main panel
+- soft glass-like white panels
+- pastel cards used sparingly as accents
+- high-radius rounded corners
+- minimal icon buttons
+- strong black primary actions
+- light borders and very soft shadows
+
+The layout feels rich without being noisy because the hierarchy is clear.
 
 ## What To Borrow
 
 - large rounded central app canvas
 - soft pastel atmospheric background
-- left vertical icon sidebar
+- branded shell discipline without fake V1 sub-navigation
 - centered pill-based top navigation
 - black active navigation state
 - black primary action buttons
@@ -24,6 +60,30 @@ The first references show an English-learning dashboard and speaking interface w
 - speaking layout with main active media/work area and right contextual chat panel
 - tactile cards and controls
 - premium soft UI feeling
+
+## What Must Stay Close
+
+For V1 desktop, keep these close to the reference where they belong:
+
+- shell silhouette
+- rounded app canvas proportions
+- top navigation shape and placement
+- clean shell rhythm and brand anchoring
+- black active states
+- main-left and right-column Dashboard composition
+- large hero/greeting spacing
+- card radius and soft border treatment
+- calm white surface base
+- restrained pastel accents
+
+Agents should not reinterpret this into:
+
+- a generic admin dashboard
+- a flat SaaS layout
+- a dark cyber dashboard
+- a childish learning app
+- a dense analytics product
+- a course marketplace UI
 
 ## What To Adapt For English OS
 
@@ -40,6 +100,13 @@ English OS should adapt the structure toward:
 
 Do not let the UI drift into course-platform behavior just because the reference uses course cards.
 
+Do not generalize Dashboard composition into every learner-facing page.
+
+Resources should not default to a right recommendation column plus stacked
+support blocks.
+
+Roadmap should not become a hero plus support-panels page.
+
 ## Structure Implications
 
 Dashboard can use:
@@ -48,7 +115,6 @@ Dashboard can use:
 - right-side recommendation/resource panel
 - lower progress/review/activity cards
 - active top-nav state
-- vertical sidebar utilities
 
 Speaking can use:
 
@@ -82,6 +148,10 @@ Potential motion:
 
 ## What To Avoid
 
+- treating the reference as optional inspiration
+- replacing the reference frame with a generic shadcn dashboard
+- overloading the dashboard with too many cards
+- using bright gradients everywhere
 - copying avatars or people-centric course vibe too literally
 - making English OS feel like a live class platform
 - making the product too pink-only or pastel-only
@@ -101,17 +171,42 @@ These references are strongest for:
 
 They support the selected [Soft Liquid OS](./style-doctrine.md) direction.
 
-They are not final decisions for:
+They are final enough for:
+
+- V1 desktop shell structure
+- V1 dashboard composition
+- navigation placement
+- panel shape language
+- active state style
+- surface softness
+
+They are still flexible for:
 
 - exact color palette
 - exact typography
-- exact component styling
-- final density
+- exact English OS content
 - final icon set
+
+## Minimalism Reading
+
+The reference is not good because it has many things.
+
+It is good because it edits complexity into a clear hierarchy.
+
+English OS should preserve that:
+
+- one strong primary area
+- one clear right-side action/recommendation column
+- a small number of secondary cards
+- short labels
+- calm surfaces
+- plenty of air
+
+If a screen feels busy, remove or merge elements before adding visual decoration.
 
 ## Status
 
-Active, based on first supplied references.
+Active, canonical desktop reference selected.
 
 ## Related Docs
 
@@ -119,3 +214,4 @@ Active, based on first supplied references.
 - [Style Doctrine](./style-doctrine.md)
 - [Motion Direction](./motion-direction.md)
 - [Design Principles](./design-principles.md)
+- [Layout Principles](../ux/layout-principles.md)

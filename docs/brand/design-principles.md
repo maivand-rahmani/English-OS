@@ -12,7 +12,7 @@ English OS should feel like:
 
 - a calm control center
 - a serious personal tool
-- a premium study dashboard
+- a premium study system
 - an intelligent system that understands the learner
 - a place the learner can return to every day
 
@@ -38,13 +38,41 @@ The product should not feel like a noisy edtech app, a playful streak machine, o
 The product should use a strong application-shell structure:
 
 - large rounded app canvas
-- persistent top navigation
-- persistent vertical sidebar
-- dense but breathable dashboard regions
+- persistent top-level navigation
 - large primary work area
 - secondary right-side panels where useful
 
+V1 must not use active per-section sidebars as part of that shell. Local sidebars are future V2 navigation only.
+
 This structure should feel like a serious operating system, not a marketing website.
+
+For V1 desktop, the supplied dashboard reference is the structural baseline for
+the shared shell and Dashboard.
+
+Agents should not invent a different shell unless the decision log is updated first.
+
+The shell baseline does not mean every page should inherit Dashboard
+composition. Learner-facing pages still need their own primary experience model.
+
+## Minimalism Principle
+
+Minimalism is a product requirement, not a decoration style.
+
+English OS should reduce the learner's anxiety by editing the interface down to what matters.
+
+This means:
+
+- fewer visible choices
+- stronger hierarchy
+- less explanatory copy
+- no decorative metrics
+- no crowded widget grids
+- no random feature cards
+- one clear next action whenever possible
+
+Minimalism here does not mean flat, empty, or boring.
+
+It means the product feels calm because everything visible has a job.
 
 ## Motion Principle
 
@@ -137,10 +165,11 @@ This means:
 - restrained but memorable visual language
 - no random decorative noise
 - no childish gamification patterns
+- no overloaded dashboard surfaces
 
 ## Status
 
-Active, first structure references received.
+Active, canonical desktop reference selected.
 
 ## Related Docs
 
@@ -149,6 +178,7 @@ Active, first structure references received.
 - [Motion Direction](./motion-direction.md)
 - [Theme System](./theme-system.md)
 - [Reference Notes](./reference-notes.md)
+- [Layout Principles](../ux/layout-principles.md)
 - [Dashboard](../ux/dashboard.md)
 - [Product Thesis](../product/thesis.md)
 - [Frontend Architecture](../engineering/frontend-architecture.md)

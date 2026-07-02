@@ -4,7 +4,12 @@
 
 This document defines the known visual and motion direction for English OS.
 
-The final style should be refined after visual references are provided.
+The V1 desktop shell and Dashboard frame are anchored to the supplied dashboard
+reference.
+
+Future implementation should refine colors, content, typography, and responsive
+behavior without drifting away from the reference's shell grammar and first-glance
+feeling.
 
 ## Current Direction
 
@@ -20,27 +25,71 @@ The canonical visual style is [Soft Liquid OS](./style-doctrine.md).
 
 ## Reference-Informed Structure
 
-The first structure references suggest this layout direction:
+The supplied dashboard reference defines this desktop shell direction:
 
 - full-page atmospheric pastel background
 - large centered rounded app canvas
-- left vertical icon sidebar
+- calm shell framing with a strong brand anchor
 - top-centered pill navigation
 - right-side utility controls
-- large dashboard/workspace panels
 - card-based content inside a single app canvas
 - black active states for selected controls and primary actions
 
-This should be adapted to English OS sections:
+For desktop V1, this is not optional styling inspiration.
 
-- Dashboard
-- Roadmap
-- Resources
-- Writing
-- Speaking
-- Settings
+It is the expected shell and Dashboard frame.
 
-The final product should borrow the structure and interaction feel, not copy the exact education-course content.
+Other learner-facing pages should borrow the shell, surfaces, navigation, and
+interaction feel without being forced into the same wide-left plus narrow-right
+Dashboard composition.
+
+## Desktop Dashboard Frame
+
+The desktop dashboard should follow this composition:
+
+- atmospheric background outside the product shell
+- large rounded app canvas with generous margin
+- centered pill navigation at the top
+- right utility controls
+- large greeting/title row
+- main content area split into a wide left area and narrower right column
+- wide primary intelligence/progress panel on the left
+- stacked recommendation/resource cards on the right
+- two or three secondary cards below the primary panel
+
+The page should feel like the reference at a glance.
+
+If the screen looks like a normal admin template, generic dashboard, or default shadcn page, it is wrong.
+
+## Minimalist Control Center Rule
+
+Minimalism is required.
+
+English OS should not show every possible metric just because the data exists.
+
+Good screens should have:
+
+- one dominant visual focus
+- two to four supporting modules
+- short text
+- obvious next action
+- calm whitespace
+- strong hierarchy
+
+Bad screens have:
+
+- too many equal cards
+- too many colors
+- too many borders
+- too many competing charts
+- long explanatory text
+- random decorative widgets
+- unclear next action
+
+The product should feel like a premium control center, not an analytics landfill.
+
+Non-dashboard pages should avoid being broken into a stack of separate header,
+recommendation, filter, results, sidebar, and status containers.
 
 ## Motion-Led Interface
 
@@ -59,7 +108,6 @@ Important motion moments:
 - AI feedback appearing
 - review queue reprioritizing
 - top navigation active pill transitions
-- sidebar icon state changes
 - chart and progress value changes
 - right panel content changes
 
@@ -96,17 +144,28 @@ The reference style can become the default theme, but it should not be the only 
 
 ## Layout Density
 
-The dashboard should be dense enough to feel like a control center.
+The Dashboard should be dense enough to feel like a control center.
 
 It should not become a sparse landing page.
 
-Good density:
+It also should not become overloaded.
+
+Good Dashboard density:
 
 - several panels visible at once
 - one dominant workspace area
 - secondary right column for recommendations or context
 - compact navigation controls
 - strong visual hierarchy
+
+Maximum useful Dashboard density:
+
+- one primary panel
+- one right-side column
+- two or three secondary panels
+- one clear primary action path
+
+Anything beyond that should be justified by learner value.
 
 ## Responsive Direction
 
@@ -116,7 +175,7 @@ Desktop direction:
 
 - wide app-canvas experience
 - persistent top navigation
-- persistent or compact vertical sidebar
+- no active per-section sidebar in V1
 - multi-panel dashboard
 - right contextual panels when useful
 - richer charts and progress surfaces
@@ -152,16 +211,21 @@ References should guide style, not override product usability.
 
 Avoid:
 
+- drifting away from the canonical reference frame
+- making desktop V1 look unrelated to the supplied reference
 - default shadcn look
 - generic SaaS dashboard blandness
 - childish edtech styling
 - noisy gamification
 - oversized marketing hero patterns inside the app
 - purely decorative motion with no product meaning
+- overloaded dashboards with no visual discipline
 
-## Open Visual Decisions
+## Remaining Visual Decisions
 
-These should be decided after references are provided:
+The structural frame is decided.
+
+These details can still be refined during implementation:
 
 - color palette
 - typography pairing
@@ -174,7 +238,8 @@ These should be decided after references are provided:
 
 Current leaning:
 
-- soft pastel atmosphere is acceptable
+- canonical desktop frame should closely follow the supplied dashboard reference
+- soft pastel atmosphere is acceptable, but colors may become more elegant
 - black active states are desirable
 - rounded app-shell canvas is desirable
 - animation should be central
@@ -192,5 +257,6 @@ Active, Soft Liquid OS selected.
 - [Motion Direction](./motion-direction.md)
 - [Theme System](./theme-system.md)
 - [Reference Notes](./reference-notes.md)
+- [Layout Principles](../ux/layout-principles.md)
 - [Navigation](../ux/navigation.md)
 - [Frontend Architecture](../engineering/frontend-architecture.md)

@@ -30,6 +30,41 @@ A good working ratio for V1 is:
 - 70 percent action
 - 30 percent insight
 
+## Canonical Desktop Layout
+
+For desktop V1, the dashboard should closely follow the supplied visual reference's frame.
+
+Expected structure:
+
+- outer atmospheric background
+- large rounded app canvas
+- centered top pill navigation
+- right utility controls
+- large greeting/title row
+- wide primary dashboard panel on the left
+- narrower right recommendation/action column
+- two or three secondary cards beneath the primary panel
+
+English OS content should replace the reference content.
+
+The structure should still feel very close.
+
+## V1 Navigation Model
+
+Dashboard is one page in V1.
+
+`Today`, `This Week`, `Review`, `Weak Areas`, and `Recent Activity` belong inside the Dashboard as sections or cards.
+
+They are not active sidebar routes in V1.
+
+Do not turn the dashboard into:
+
+- a generic analytics grid
+- a default admin template
+- a long vertical report page
+- a course marketplace
+- a crowded card wall
+
 ## Core Dashboard Blocks
 
 ### Learner Summary
@@ -55,6 +90,8 @@ It should contain:
 - estimated time
 
 This is the daily execution layer of English OS.
+
+On desktop, this may be the dominant panel or the dominant action area inside the primary panel.
 
 ### Best Next Resource
 
@@ -85,7 +122,7 @@ This should show lightweight but meaningful signals:
 - strongest current area
 - weakest current area
 
-### Writing And Speaking Actions
+### Practice Actions
 
 The dashboard should give direct entry into:
 
@@ -109,6 +146,24 @@ It helps create continuity across sessions.
 2. The dashboard should never feel empty after onboarding.
 3. The dashboard should not require the learner to decide everything alone.
 4. The dashboard should create a daily return habit.
+5. The dashboard should feel minimal and edited even when it contains multiple panels.
+6. The dashboard should have one dominant focus, not ten equal widgets.
+
+## Information Load Rules
+
+The dashboard should show only what helps today's learning decision.
+
+Good V1 dashboard density:
+
+- one primary plan/progress/intelligence panel
+- one right-side next-resource or recommendation column
+- one review/progress support card
+- one Practice action card
+- one recent activity or continuity card
+
+Avoid showing all possible analytics at once.
+
+If a module does not help the learner decide what to do next, it should be moved deeper, hidden, or removed.
 
 ## What The Dashboard Should Not Become
 
@@ -118,6 +173,8 @@ The dashboard should not become:
 - a noisy widget graveyard
 - a gamification surface
 - a replacement for roadmap or resources
+- a dense AI-generated summary board
+- a page where every feature demands attention
 
 Its role is orchestration, not feature duplication.
 

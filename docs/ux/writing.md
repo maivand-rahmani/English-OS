@@ -39,6 +39,18 @@ V1 should support:
 - mistake history
 - writing history
 
+## V1 Navigation Model
+
+Writing is a focused mode inside the top-level Practice page in V1.
+
+Writing is not a separate top-level navigation section.
+
+`New Draft` is an action, not a page.
+
+Feedback belongs inside an active writing session or result state, not as a sidebar route.
+
+Mistakes and history may appear as lightweight sections, tabs, or panels inside the workspace, but not as separate V1 navigation pages unless they become real implemented subpages later.
+
 ## Core Writing Flow
 
 The main writing flow should be:

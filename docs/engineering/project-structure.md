@@ -124,11 +124,19 @@ src/app/
 
 Route files should compose widgets and call server-side loading functions. They should not become the main place where roadmap, review, or recommendation logic is written.
 
+For the current V1 architecture, `/practice` is the active top-level output
+route. `/writing` and `/speaking` may remain in `src/app` only as thin legacy
+redirects while the older top-level split is being retired.
+
 ## `src/widgets`
 
 Widgets are large composed interface blocks.
 
 They are bigger than UI primitives and usually belong to a product surface.
+
+Current V1 practice work should center on a `practice-overview` style widget,
+with writing and speaking widgets treated as mode-level internals rather than
+separate top-level product pages.
 
 Example:
 
@@ -137,7 +145,7 @@ src/widgets/
 ├── app-shell/
 ├── dashboard-today-plan/
 ├── dashboard-progress-snapshot/
-├── roadmap-stage-map/
+├── roadmap-explorer/
 ├── resource-recommendation-panel/
 ├── writing-workspace/
 └── speaking-workspace/
@@ -384,7 +392,8 @@ Use descriptive file names:
 - `get-dashboard-state.ts`
 - `record-learning-event.ts`
 - `complete-resource-action.ts`
-- `roadmap-stage-card.tsx`
+- `roadmap-step-node.tsx`
+- `roadmap-step-modal.tsx`
 
 Avoid vague names like:
 

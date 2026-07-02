@@ -12,7 +12,7 @@ The frontend should:
 
 - implement the app shell cleanly
 - keep navigation stable and predictable
-- make dashboard, roadmap, resources, writing, and speaking feel connected
+- make dashboard, roadmap, resources, and Practice feel connected
 - avoid unnecessary backend requests
 - support local-first progress interactions in V1
 - keep UI composition separate from product logic
@@ -24,11 +24,25 @@ English OS should use a persistent authenticated app shell.
 The shell should include:
 
 - global top bar
-- section-specific sidebar
 - main content area
 - user/account utility area
 
+The shell should not include a generic page-header block for every route. Do
+not automatically render an eyebrow, repeated section title, or subtitle under
+the global navigation.
+
+For V1, the shell must keep navigation limited to the four primary sections. Settings should remain a route, but it should be surfaced through a header utility button rather than the main navigation pill. Local section sidebars are a V2 concern unless a real internal page is implemented and necessary.
+
 The shell should be implemented as a composed widget, not scattered across every page.
+
+The shell should own the main application frame only. The `main` route outlet
+should not add a second generic card surface around every page. Pages may render
+their own workspace surface when that surface is the actual feature, for
+example the Roadmap canvas or a Resources collection card.
+
+Do not treat the shared shell as a reason to recreate Dashboard composition on
+every page. Learner-facing routes should follow the primary experience model
+defined for that page.
 
 Recommended location:
 
@@ -47,14 +61,15 @@ src/app/
 └── (app)/
 ```
 
-The authenticated app routes should map to the UX top-level sections:
+The authenticated app routes should map to the UX primary sections, plus the settings utility route:
 
 - `/dashboard`
 - `/roadmap`
 - `/resources`
-- `/writing`
-- `/speaking`
+- `/practice`
 - `/settings`
+
+Legacy `/writing` and `/speaking` routes may remain as thin redirects into Practice while the old top-level architecture is being retired.
 
 Route files should be thin and mostly compose widgets.
 
@@ -153,8 +168,27 @@ Dashboard pages should compose widgets such as:
 - best next resource
 - review queue preview
 - progress snapshot
-- writing action card
-- speaking action card
+- Practice entry widget
+
+Roadmap should compose data-driven subcomponents rather than one large page
+component. The expected component split is:
+
+- RoadmapExplorer
+- RoadmapCanvas
+- RoadmapStepNode
+- RoadmapStepModal
+- RoadmapStepTaskTable
+- ConnectedResourceMiniCard
+- RoadmapProgressRing
+- RoadmapStateBadge
+- RoadmapStatusControls
+
+Roadmap layout logic should be scalable and data-driven. Do not use manual
+absolute coordinates that assume a fixed number of steps.
+
+Step detail overlays should render through a body-level portal so they are not
+affected by app shell overflow, transform, stacking context, or route outlet
+surface changes.
 
 ## Design System
 
@@ -173,6 +207,39 @@ The product should not visually feel like a default shadcn demo.
 
 The default visual direction should follow the Soft Liquid OS style doctrine.
 
+The supplied dashboard reference is the canonical V1 desktop shell and
+Dashboard frame.
+
+Frontend implementation should start from that frame, not from a generic
+dashboard template.
+
+Shell-level desktop components should preserve:
+
+- large rounded app canvas
+- calm shell framing and strong brand anchoring
+- centered pill navigation
+- right utility cluster
+- black active controls
+- soft panel surfaces
+
+Dashboard-specific composition may preserve:
+
+- a wide primary panel
+- a recommendation or context column
+- lower supporting panels
+
+Do not automatically reuse that Dashboard composition for Resources, Roadmap,
+Practice, review flows, or other learner-facing pages.
+
+Avoid page-level card nesting inside the shell. A page should not look like
+three stacked canvases unless those layers represent real product objects.
+
+Practice specifically should render as one studio surface with an integrated
+mode switch and one active workspace, not as a dashboard grid of equal-weight
+cards.
+
+Mobile can adapt the frame into focused stacked flows, but the product should still feel like the same system.
+
 ## Responsive Architecture
 
 The frontend should be built for desktop browser and mobile web from the first implementation pass.
@@ -183,8 +250,8 @@ Desktop layout should support:
 
 - persistent app shell
 - top navigation
-- section sidebar
-- multi-panel dashboards
+- full-width main content for the active page
+- multi-panel dashboards where the page is actually a dashboard
 - contextual right panels
 
 Mobile layout should support:
@@ -251,6 +318,7 @@ Active.
 ## Related Docs
 
 - [Navigation](../ux/navigation.md)
+- [Layout Principles](../ux/layout-principles.md)
 - [Dashboard](../ux/dashboard.md)
 - [Project Structure](./project-structure.md)
 - [Backend Architecture](./backend-architecture.md)
