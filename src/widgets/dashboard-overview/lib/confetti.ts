@@ -1,18 +1,8 @@
-/**
- * Safely triggers a confetti burst. Dynamically imports canvas-confetti
- * to avoid SSR issues. Respects prefers-reduced-motion.
- */
-export async function triggerConfetti() {
-  if (typeof window === 'undefined') return;
+"use client";
 
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReducedMotion) return;
-
-  const confettiModule = await import('canvas-confetti');
-  const confetti = confettiModule.default ?? confettiModule;
-  confetti({
-    particleCount: 80,
-    spread: 70,
-    origin: { y: 0.6 },
-  });
+// Confetti is disabled for V1 to match the calm-seriousness brand doctrine.
+// See Phase 11 of the V1 MVP Roadmap.
+// Kept as a no-op export for backward compat with existing imports.
+export function triggerConfetti(): void {
+  return;
 }

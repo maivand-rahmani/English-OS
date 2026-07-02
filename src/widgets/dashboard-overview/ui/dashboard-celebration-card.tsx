@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
 import { buttonVariants } from "@/shared/ui/button";
@@ -21,15 +21,9 @@ export function DashboardCelebrationCard({
   return (
     <DashboardCard tone="lavender" className="overflow-hidden p-6 sm:p-7">
       <div className="absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_right,var(--surface-module-pink),transparent_55%)]" />
-      <div className="pointer-events-none absolute right-4 top-4 text-foreground/10 max-sm:hidden">
-        <Sparkles className="size-10 animate-stagger-fade-in stagger-1" />
-      </div>
-      <div className="pointer-events-none absolute right-16 top-10 text-foreground/10 max-sm:hidden">
-        <Sparkles className="size-5 animate-stagger-fade-in stagger-2" />
-      </div>
 
       <div className="relative">
-        <SectionEyebrow icon={Sparkles}>All done</SectionEyebrow>
+        <SectionEyebrow icon={CheckCircle}>All done</SectionEyebrow>
 
         <h3 className="mt-5 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           {title}
