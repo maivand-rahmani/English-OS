@@ -63,7 +63,7 @@ model VerificationToken {
 
 model LearnerProfile {
   id                    String     @id @default(cuid())
-  userId                String     @unique @map("user_id")
+  userId                String?    @unique @map("user_id")
   displayName           String?    @default("Learner") @map("display_name")
   currentLevel          String?    @map("current_level")
   mainGoal              MainGoal?  @map("main_goal")
@@ -76,7 +76,7 @@ model LearnerProfile {
   guestId               String?    @unique @map("guest_id")
   createdAt             DateTime   @default(now()) @map("created_at")
   updatedAt             DateTime   @updatedAt @map("updated_at")
-  user                  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                  User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("learner_profiles")
 }
