@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Bell, Settings2 } from "lucide-react";
+import { Bell, Search, Settings2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { useMediaQuery } from "@/shared/hooks";
@@ -13,13 +13,13 @@ import {
 } from "@/shared/config/navigation";
 import { cn } from "@/shared/lib/utils";
 import { SearchInput } from "@/shared/ui/input";
-import {
   SettingsCenter,
   type SettingsAccount,
   type SettingsSectionId,
 } from "@/widgets/settings-center";
 
 import { MobileBottomNav } from "./mobile-bottom-nav";
+import { RecentActivitySheet } from "./recent-activity-sheet";
 
 type AppShellProps = {
   account: SettingsAccount;
@@ -36,6 +36,7 @@ export function AppShell({ account, children }: AppShellProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsSection, setSettingsSection] =
     useState<SettingsSectionId>("appearance");
+  const [activityOpen, setActivityOpen] = useState(false);
   const activeSettingsSection = isSettingsRoute
     ? "appearance"
     : settingsSection;
@@ -75,6 +76,7 @@ export function AppShell({ account, children }: AppShellProps) {
           account={account}
           currentSection={currentSection}
           onOpenSettings={openSettings}
+          onOpenActivity={() => setActivityOpen(true)}
           pathname={pathname}
           userInitial={userInitial}
         >
@@ -84,6 +86,7 @@ export function AppShell({ account, children }: AppShellProps) {
         <MobileAppShell
           currentSection={currentSection}
           onOpenSettings={openSettings}
+          onOpenActivity={() => setActivityOpen(true)}
           pathname={pathname}
           userInitial={userInitial}
         >
@@ -99,6 +102,10 @@ export function AppShell({ account, children }: AppShellProps) {
         open={settingsOpen || isSettingsRoute}
         routeFallback={isSettingsRoute}
       />
+      <RecentActivitySheet
+        open={activityOpen}
+        onOpenChange={setActivityOpen}
+      />
     </>
   );
 }
@@ -107,6 +114,7 @@ type SharedShellProps = {
   children: React.ReactNode;
   currentSection: AppSection;
   onOpenSettings: (section: SettingsSectionId) => void;
+  onOpenActivity: () => void;
   pathname: string;
 };
 
@@ -120,6 +128,7 @@ function DesktopAppShell({
   children,
   currentSection,
   onOpenSettings,
+  onOpenActivity,
   pathname,
   userInitial,
 }: DesktopAppShellProps) {
@@ -178,6 +187,7 @@ function DesktopAppShell({
                 type="button"
                 className="inline-flex size-10 items-center justify-center rounded-full border border-white/70 bg-surface-2 text-muted-foreground shadow-soft transition-transform duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:-translate-y-0.5 hover:text-foreground"
                 aria-label="Notifications"
+                onClick={onOpenActivity}
               >
                 <Bell className="size-4" />
               </button>
@@ -232,6 +242,7 @@ function MobileAppShell({
   children,
   currentSection,
   onOpenSettings,
+  onOpenActivity,
   pathname,
   userInitial,
 }: MobileAppShellProps) {
@@ -252,6 +263,7 @@ function MobileAppShell({
                 <button
                   type="button"
                   aria-label="Notifications"
+                  onClick={onOpenActivity}
                   className="inline-flex size-10 items-center justify-center rounded-full border border-surface-stroke bg-surface-panel text-muted-foreground shadow-soft"
                 >
                   <Bell className="size-4" />
