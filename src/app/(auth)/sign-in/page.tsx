@@ -25,7 +25,7 @@ export default async function SignInPage() {
           <div className="mb-6 rounded-2xl border border-surface-stroke bg-surface-panel p-5">
             <p className="text-sm font-semibold text-foreground">New to English OS?</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Start with a 60-second setup — tell us your level and goal, and we'll build a calm learning path for you.
+              Start with a 60-second setup — tell us your level and goal, and we&apos;ll build a calm learning path for you.
             </p>
             <div className="mt-3">
               <Link href="/onboarding" className={buttonVariants({ size: "sm" })}>

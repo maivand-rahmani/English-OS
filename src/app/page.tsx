@@ -26,7 +26,7 @@ export default async function HomePage() {
                 all in one place.
               </p>
               <p className="max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
-                Tell us where you are, and we'll build a calm learning path for you.
+                Tell us where you are, and we&apos;ll build a calm learning path for you.
               </p>
             </div>
 
