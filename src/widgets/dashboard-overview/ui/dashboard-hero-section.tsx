@@ -1,4 +1,5 @@
 import type { LearnerProfile } from "@prisma/client";
+import { Settings2 } from "lucide-react";
 import Link from "next/link";
 
 import type { DashboardBlock } from "@/entities/dashboard";
@@ -52,8 +53,8 @@ export function DashboardHeroSection({
   if (!focusBlock) {
     return (
       <DashboardCelebrationCard
-        title="Roadmap complete!"
-        message="You've completed every step in your roadmap."
+        title="You've completed every step"
+        message="Open the roadmap to revisit any block."
         primaryAction={{ label: "View roadmap", href: "/roadmap" }}
       />
     );
@@ -103,8 +104,9 @@ export function DashboardHeroSection({
         <div className="mt-3">
           <Link
             href="/onboarding"
-            className="text-xs text-muted-foreground hover:text-foreground"
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
           >
+            <Settings2 className="size-3" />
             Update your learning profile
           </Link>
         </div>
