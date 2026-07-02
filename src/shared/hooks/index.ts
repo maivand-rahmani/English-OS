@@ -5,4 +5,5 @@ export { useLocalProgress } from "./use-local-progress";
 export { useDrafts } from "./use-drafts";
 export { useMediaQuery } from "./use-media-query";
 export { useReducedMotion } from "./use-reduced-motion";
-export { useLearningContentProgress } from "./use-learning-content-progress"
+export { useLearningContentProgress } from "./use-learning-content-progress";
+export { useLearningProfile, type LearningProfileSnapshot } from "./use-learning-profile";
