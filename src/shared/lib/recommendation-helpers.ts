@@ -9,7 +9,10 @@ export function getLatestEventTimestamp(
   events: LearningEvent[],
   type: LearningEvent["type"],
 ): number | null {
-  return events.find((event) => event.type === type)?.timestamp ?? null;
+  return events.reduce<number | null>((latest, event) => {
+    if (event.type !== type) return latest;
+    return latest === null || event.timestamp > latest ? event.timestamp : latest;
+  }, null);
 }
 
 export function isRecent(timestamp: number, days: number): boolean {
