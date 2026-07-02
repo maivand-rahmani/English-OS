@@ -1,36 +1,24 @@
 import type { DashboardSkill } from "@/entities/dashboard";
 import type { ResourcesPageData } from "@/entities/resources";
-import { auth } from "@/server/auth";
+import type { LearningProfileSnapshot } from "@/server/learners/get-learning-profile";
 import { prisma } from "@/server/db/prisma";
 
 type ResourceTemplate = NonNullable<
   Awaited<ReturnType<typeof getDefaultTemplateRecord>>
 >;
 
-export async function getResourcesPageData(): Promise<ResourcesPageData> {
+export async function getResourcesPageData(
+  profile: LearningProfileSnapshot,
+): Promise<ResourcesPageData> {
   if (!prisma) {
     return getEmptyResourcesPageData();
   }
 
-  const [session, template] = await Promise.all([auth(), getDefaultTemplateRecord()]);
+  const template = await getDefaultTemplateRecord();
 
   if (!template) {
     return getEmptyResourcesPageData();
   }
-
-  const learnerProfile =
-    session?.user?.email != null
-      ? await prisma.learnerProfile.findFirst({
-          where: {
-            user: {
-              email: session.user.email,
-            },
-          },
-          select: {
-            currentLevel: true,
-          },
-        })
-      : null;
 
   const resources = new Map<string, ResourcesPageData["resources"][number]>();
 
@@ -38,6 +26,22 @@ export async function getResourcesPageData(): Promise<ResourcesPageData> {
     for (const block of stage.blocks) {
       for (const resourceLink of block.resourceLinks) {
         if (!resourceLink.resource.isPublished) {
+          continue;
+        }
+
+        // V1: exclude paid resources
+        if (resourceLink.resource.accessType === "PAID") {
+          continue;
+        }
+
+        // CEFR filter — only include resources matching the learner's level
+        if (
+          !matchesCefrRange(
+            resourceLink.resource.cefrStart,
+            resourceLink.resource.cefrEnd,
+            profile.currentLevel,
+          )
+        ) {
           continue;
         }
 
@@ -93,7 +97,7 @@ export async function getResourcesPageData(): Promise<ResourcesPageData> {
     estimatedWeeks: template.estimatedWeeks,
     goalLabel: audienceGoalLabel(template.audience),
     learnerLevelLabel:
-      learnerProfile?.currentLevel ??
+      profile.currentLevel ??
       firstResource?.cefrLabel ??
       formatCefrRange(template.cefrStart, template.cefrEnd) ??
       "Starter path",
@@ -225,6 +229,28 @@ function formatCefrRange(start: string | null, end: string | null) {
 
 function formatCefrValue(value: string) {
   return value === "PRE_A1" ? "Pre-A1" : value;
+}
+
+const CEFR_ORDER = ["PRE_A1", "A1", "A2", "B1", "B2", "C1", "C2"] as const;
+type Cefr = (typeof CEFR_ORDER)[number];
+
+function cefrIndex(level: string | null | undefined): number {
+  if (!level) return -1;
+  return CEFR_ORDER.indexOf(level as Cefr);
+}
+
+function matchesCefrRange(
+  resourceStart: string | null,
+  resourceEnd: string | null,
+  learnerLevel: string | null,
+): boolean {
+  const learnerIdx = cefrIndex(learnerLevel);
+  if (learnerIdx < 0) return true;
+  const startIdx = resourceStart ? cefrIndex(resourceStart) : 0;
+  const endIdx = resourceEnd
+    ? cefrIndex(resourceEnd)
+    : CEFR_ORDER.length - 1;
+  return learnerIdx >= startIdx && learnerIdx <= endIdx;
 }
 
 function getEmptyResourcesPageData(): ResourcesPageData {
