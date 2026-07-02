@@ -53,6 +53,22 @@ describe("useOnboardingState", () => {
     expect(result.current.isLastStep).toBe(true);
   });
 
+  test("canSubmit is true on the summary when prior step data is valid", () => {
+    const { result } = renderHook(() => useOnboardingState());
+    act(() => result.current.setStrongestSkill("vocabulary"));
+    act(() => result.current.setWeakestSkill("speaking"));
+    act(() => result.current.setPainPoint("NO_STRUCTURE"));
+    act(() => result.current.setPreferredFormats(["video"]));
+    act(() => result.current.goToStep(4));
+    expect(result.current.canSubmit).toBe(true);
+  });
+
+  test("canSubmit is false on the summary when prior step data is missing", () => {
+    const { result } = renderHook(() => useOnboardingState());
+    act(() => result.current.goToStep(4));
+    expect(result.current.canSubmit).toBe(false);
+  });
+
   test("HYDRATE prefills existing data", () => {
     const { result } = renderHook(() => useOnboardingState());
     act(() =>

@@ -134,6 +134,7 @@ export function useOnboardingState(initialData?: OnboardingFormDraft) {
   const canGoNext =
     isStepValid(state.step, state.data) && state.step < ONBOARDING_STEPS.length - 1;
   const isLastStep = state.step === ONBOARDING_STEPS.length - 1;
+  const canSubmit = isLastStep && isStepValid(3, state.data);
   const progress = useMemo(
     () => ({ current: state.step + 1, total: ONBOARDING_STEPS.length }),
     [state.step],
@@ -204,6 +205,7 @@ export function useOnboardingState(initialData?: OnboardingFormDraft) {
     dispatch,
     canGoBack,
     canGoNext,
+    canSubmit,
     isLastStep,
     progress,
     currentStep,

@@ -60,6 +60,7 @@ export function OnboardingWizard({
     state,
     canGoBack,
     canGoNext,
+    canSubmit,
     isLastStep,
     progress,
     currentStep,
@@ -268,7 +269,7 @@ export function OnboardingWizard({
               <button
                 type="button"
                 onClick={handleSubmit}
-                disabled={submitting || !canGoNext}
+                disabled={submitting || !canSubmit}
                 className={cn(buttonVariants({ size: "lg" }), "rounded-full")}
               >
                 {submitting ? "Saving..." : "Start my roadmap"}
