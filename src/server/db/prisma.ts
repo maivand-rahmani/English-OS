@@ -7,11 +7,17 @@ const globalForPrisma = globalThis as typeof globalThis & {
   prisma?: PrismaClient;
 };
 
-export const prisma = serverEnv.DATABASE_URL
+// Use DIRECT_URL (port 5432, no pgbouncer) for the runtime client so that deep
+// nested queries — like the roadmap template fetch on the dashboard — don't
+// time out on the Supabase transaction pooler (port 6543). Migrations keep
+// using DIRECT_URL via prisma.config.ts.
+const connectionString = serverEnv.DIRECT_URL ?? serverEnv.DATABASE_URL;
+
+export const prisma = connectionString
   ? globalForPrisma.prisma ??
     new PrismaClient({
       adapter: new PrismaPg({
-        connectionString: serverEnv.DATABASE_URL,
+        connectionString,
       }),
     })
   : null;
