@@ -106,12 +106,26 @@ export function selectBestNextResource(
   progressById: Map<string, ProgressEntry>,
   events: LearningEvent[],
   focusBlockId?: string,
+  focusStageId?: string,
 ): BestNextResource {
   const { resources } = collections;
 
+  // Compute the set of block IDs that belong to the focus stage and the
+  // immediate next stage. When no focus is provided, no constraint is applied
+  // and the function behaves as before.
+  const stageScopedBlockIds = computeStageScopedBlockIds(
+    collections,
+    focusBlockId,
+    focusStageId,
+  );
+
+  const stageResources = stageScopedBlockIds
+    ? resources.filter((r) => stageScopedBlockIds.has(r.blockId))
+    : resources;
+
   const focusResources = focusBlockId
     ? resources.filter((r) => r.blockId === focusBlockId)
-    : resources;
+    : stageResources;
 
   const noResourceResult: BestNextResource = {
     resource: null,
@@ -135,7 +149,7 @@ export function selectBestNextResource(
     };
   }
 
-  // 2. Core resources not completed
+  // 2. Core resources not completed (in focus block)
   const unfinishedCore = focusResources.find(
     (r) => r.role === "core" && getEntryState(progressById.get(r.id)) !== "completed",
   );
@@ -151,7 +165,7 @@ export function selectBestNextResource(
     };
   }
 
-  // 3. Supporting resources
+  // 3. Supporting resources (in focus block)
   const supporting = focusResources.find(
     (r) =>
       r.role === "supporting" && getEntryState(progressById.get(r.id)) !== "completed",
@@ -168,8 +182,8 @@ export function selectBestNextResource(
     };
   }
 
-  // 4. Any unfinished core resource
-  const anyCore = resources.find(
+  // 4. Any unfinished core resource within current + next stage
+  const anyCore = stageResources.find(
     (r) => r.role === "core" && getEntryState(progressById.get(r.id)) !== "completed",
   );
   if (anyCore) {
@@ -184,8 +198,8 @@ export function selectBestNextResource(
     };
   }
 
-  // 5. Fallback to first resource
-  const first = resources[0];
+  // 5. Fallback to first resource within current + next stage
+  const first = stageResources[0];
   if (first) {
     return {
       resource: first,
@@ -195,6 +209,72 @@ export function selectBestNextResource(
   }
 
   return noResourceResult;
+}
+
+/**
+ * Build the set of block IDs that should be considered when recommending a
+ * next resource. When both `focusBlockId` and `focusStageId` are provided,
+ * the result includes all blocks in the focus stage plus all blocks in the
+ * next stage that immediately follows it in the `allBlocks` ordering.
+ *
+ * Returns `null` when no focus is provided, which signals "no constraint".
+ */
+function computeStageScopedBlockIds(
+  collections: RecommendationCollections,
+  focusBlockId: string | undefined,
+  focusStageId: string | undefined,
+): Set<string> | null {
+  if (!focusBlockId && !focusStageId) {
+    return null;
+  }
+
+  const blockIds = new Set<string>();
+  const { allBlocks } = collections;
+
+  // Resolve the focus stage. Prefer the explicit param, otherwise derive it
+  // from the focus block.
+  let resolvedFocusStageId = focusStageId;
+  if (!resolvedFocusStageId && focusBlockId) {
+    const focusBlock = collections.blockById.get(focusBlockId);
+    if (focusBlock) {
+      resolvedFocusStageId = focusBlock.stageId;
+    }
+  }
+
+  if (!resolvedFocusStageId) {
+    return null;
+  }
+
+  // Add every block in the focus stage.
+  for (const block of allBlocks) {
+    if (block.stageId === resolvedFocusStageId) {
+      blockIds.add(block.id);
+    }
+  }
+
+  // Add every block in the very next stage that follows in the array order.
+  const focusStageStartIndex = allBlocks.findIndex(
+    (b) => b.stageId === resolvedFocusStageId,
+  );
+  if (focusStageStartIndex >= 0) {
+    let nextStageId: string | null = null;
+    for (let i = focusStageStartIndex + 1; i < allBlocks.length; i++) {
+      const block = allBlocks[i];
+      if (block.stageId !== resolvedFocusStageId) {
+        nextStageId = block.stageId;
+        break;
+      }
+    }
+    if (nextStageId !== null) {
+      for (const block of allBlocks) {
+        if (block.stageId === nextStageId) {
+          blockIds.add(block.id);
+        }
+      }
+    }
+  }
+
+  return blockIds;
 }
 
 /* ------------------------------------------------------------------ */

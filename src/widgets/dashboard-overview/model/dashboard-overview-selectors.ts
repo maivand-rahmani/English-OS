@@ -319,7 +319,16 @@ export function getBestNextResource(
   events: LearningEvent[],
   focusBlockId?: string,
 ): { resource: ResourceWithContext | null; reason: string; urgency: "now" | "soon" | "optional" } {
-  return selectBestNextResource(collections, progressById, events, focusBlockId);
+  const focusStageId = focusBlockId
+    ? collections.blockById.get(focusBlockId)?.stageId
+    : undefined;
+  return selectBestNextResource(
+    collections,
+    progressById,
+    events,
+    focusBlockId,
+    focusStageId,
+  );
 }
 
 export function getWeakAreas(
