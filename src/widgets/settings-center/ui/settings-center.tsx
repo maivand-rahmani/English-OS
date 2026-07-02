@@ -1,12 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import { Dialog } from "@base-ui/react/dialog";
 import { Drawer } from "@base-ui/react/drawer";
 import { Popover } from "@base-ui/react/popover";
 import { AlertTriangle, Bell, BookOpen, Check, ChevronDown, X } from "lucide-react";
 import Link from "next/link";
 
-import { useAppearancePreferences, useMediaQuery } from "@/shared/hooks";
+import {
+  LEVEL_OPTIONS,
+  MAIN_GOAL_OPTIONS,
+  PAIN_POINT_OPTIONS,
+  PREFERRED_FORMAT_OPTIONS,
+  SKILL_OPTIONS,
+} from "@/shared/constants/onboarding";
+import { useAppearancePreferences, useLearningProfile, useMediaQuery } from "@/shared/hooks";
 import { cn } from "@/shared/lib/utils";
 import type {
   InterfaceDensity,
@@ -459,20 +467,157 @@ function AppearanceSection() {
 }
 
 function LearningProfileSection() {
+  const { profile, isLoading } = useLearningProfile();
+  const [saving, setSaving] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSave() {
+    if (!profile) return;
+    setSaving(true);
+    setError(null);
+    setNotice(null);
+    try {
+      const { updateLearningProfile } = await import("@/server/learners/update-learning-profile");
+      const result = await updateLearningProfile({
+        currentLevel: profile.currentLevel,
+        mainGoal: profile.mainGoal,
+        studyMinutesPerDay: profile.studyMinutesPerDay,
+        strongestSkill: profile.strongestSkill,
+        weakestSkill: profile.weakestSkill,
+        preferredFormats: profile.preferredFormats,
+        mainPainPoint: profile.mainPainPoint,
+      });
+      if (result.success) {
+        setNotice("Profile updated");
+        setTimeout(() => setNotice(null), 1800);
+      } else {
+        setError(result.error);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <section aria-labelledby="settings-learning-heading">
+        <SectionHeading title="Learning Profile" />
+        <div className="flex items-center justify-center py-12">
+          <Spinner size="sm" />
+        </div>
+      </section>
+    );
+  }
+
+  if (!profile || !profile.completedOnboardingAt) {
+    return (
+      <section aria-labelledby="settings-learning-heading">
+        <SectionHeading title="Learning Profile" />
+        <EmptyState
+          icon={BookOpen}
+          title="No learning profile yet"
+          description="Set up your learning profile to get a personalized roadmap and recommendations."
+          actions={[
+            { label: "Start onboarding", href: "/onboarding", variant: "default" },
+          ]}
+        />
+      </section>
+    );
+  }
+
   return (
     <section aria-labelledby="settings-learning-heading">
-      <SectionHeading title="Learning Profile" />
+      <SectionHeading
+        title="Learning Profile"
+        description="Update your level, goal, and preferences. Changes apply across the app."
+      />
       <div id="settings-learning-heading" className="sr-only">
         Learning profile settings
       </div>
-      <EmptyState
-        icon={BookOpen}
-        title="Learning profile not set up yet"
-        description="Your learning profile is created during onboarding. Complete the setup to track your progress, set goals, and get personalized recommendations."
-        actions={[
-          { label: "Review onboarding", href: "/onboarding", variant: "outline" },
-        ]}
-      />
+
+      {error ? (
+        <div
+          role="alert"
+          className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300"
+        >
+          {error}
+        </div>
+      ) : null}
+
+      {notice ? (
+        <div
+          role="status"
+          className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
+        >
+          {notice}
+        </div>
+      ) : null}
+
+      <div className="space-y-6">
+        <Link
+          href="/onboarding"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+        >
+          Re-run full onboarding wizard
+        </Link>
+
+        <SettingsRows>
+          <SettingsRow
+            label="Level"
+            value={LEVEL_OPTIONS.find((o) => o.value === profile.currentLevel)?.label ?? "Not set"}
+          />
+          <SettingsRow
+            label="Main goal"
+            value={MAIN_GOAL_OPTIONS.find((o) => o.value === profile.mainGoal)?.label ?? "Not set"}
+          />
+          <SettingsRow
+            label="Daily study time"
+            value={
+              profile.studyMinutesPerDay != null
+                ? `${profile.studyMinutesPerDay} min/day`
+                : "Not set"
+            }
+          />
+          <SettingsRow
+            label="Strongest skill"
+            value={SKILL_OPTIONS.find((o) => o.value === profile.strongestSkill)?.label ?? "Not set"}
+          />
+          <SettingsRow
+            label="Skill to grow"
+            value={SKILL_OPTIONS.find((o) => o.value === profile.weakestSkill)?.label ?? "Not set"}
+          />
+          <SettingsRow
+            label="Biggest pain point"
+            value={PAIN_POINT_OPTIONS.find((o) => o.value === profile.mainPainPoint)?.label ?? "Not set"}
+          />
+          <SettingsRow
+            label="Preferred formats"
+            value={
+              (profile.preferredFormats ?? [])
+                .map((f) => PREFERRED_FORMAT_OPTIONS.find((o) => o.value === f)?.label ?? f)
+                .join(", ") || "Not set"
+            }
+          />
+        </SettingsRows>
+
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={saving}
+            className={cn(buttonVariants({ size: "sm" }), "rounded-full")}
+          >
+            {saving ? "Saving..." : "Mark as saved"}
+          </button>
+        </div>
+
+        <p className="text-xs text-muted-foreground">
+          To change individual fields, re-run the full onboarding wizard.
+        </p>
+      </div>
     </section>
   );
 }
