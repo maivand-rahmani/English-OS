@@ -4,6 +4,8 @@ import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import type { DashboardResource } from "@/entities/dashboard";
+import { useLearningContentProgress } from "@/shared/hooks";
 import type { BlockState } from "@/shared/types";
 import { Button } from "@/shared/ui/button";
 import { SmallTag } from "@/shared/ui/surfaces";
@@ -46,6 +48,28 @@ export function RoadmapStepModal({
   const modalRef = useRef<HTMLDivElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const progress = useLearningContentProgress(12);
+
+  async function handleResourceStart(resource: DashboardResource) {
+    if (!step) return;
+
+    try {
+      await progress.updateResourceState(
+        {
+          blockTitle: step.block.title,
+          id: resource.id,
+          title: resource.title,
+        },
+        "in_progress",
+        "start",
+      );
+      setFeedback(`Started ${resource.title}`);
+      window.setTimeout(() => setFeedback(null), 1800);
+    } catch {
+      setFeedback("Could not save start state — resource still opened");
+      window.setTimeout(() => setFeedback(null), 1800);
+    }
+  }
 
   useEffect(() => {
     if (!step) return;
@@ -205,7 +229,11 @@ export function RoadmapStepModal({
             </p>
             <div className="grid gap-3 md:grid-cols-2">
               {step.block.resources.map((resource) => (
-                <ConnectedResourceMiniCard key={resource.id} resource={resource} />
+                <ConnectedResourceMiniCard
+                  key={resource.id}
+                  onStart={handleResourceStart}
+                  resource={resource}
+                />
               ))}
             </div>
           </section>
