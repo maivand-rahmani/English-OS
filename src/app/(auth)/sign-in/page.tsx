@@ -37,14 +37,13 @@ export default async function SignInPage() {
         <section className="rounded-lg border border-border bg-card p-6 sm:p-8">
           <p className="text-sm font-medium text-muted-foreground">Sign in</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
-            Sign in to English OS
+            Welcome to English OS
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">
-            Sign in to access your personalized learning dashboard with roadmap,
-            resources, and guided practice.
+            Sign in to sync your progress across devices, or continue as a guest to try it out first.
           </p>
 
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
             {isGithubAuthConfigured ? (
               <form action={signInWithGithub}>
                 <Button size="lg" type="submit">
@@ -61,8 +60,9 @@ export default async function SignInPage() {
               href="/dashboard"
               className={buttonVariants({ size: "lg", variant: "outline" })}
             >
-              Continue in guest mode
+              Continue as guest
             </Link>
+            <p className="text-xs text-muted-foreground">Your data will be saved on this device only.</p>
           </div>
         </section>
 
