@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 import { auth } from "@/server/auth";
 import { appPrimaryNavigation } from "@/shared/config/navigation";
@@ -7,10 +6,6 @@ import { buttonVariants } from "@/shared/ui/button";
 
 export default async function HomePage() {
   const session = await auth();
-
-  if (session) {
-    redirect("/dashboard");
-  }
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
@@ -30,12 +25,21 @@ export default async function HomePage() {
                 Roadmap, resources, and one Practice home for writing and speaking,
                 all in one place.
               </p>
+              <p className="max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
+                Tell us where you are, and we'll build a calm learning path for you.
+              </p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Link href="/dashboard" className={buttonVariants({ size: "lg" })}>
-                Get started
-              </Link>
+              {session ? (
+                <Link href="/dashboard" className={buttonVariants({ size: "lg" })}>
+                  Get started
+                </Link>
+              ) : (
+                <Link href="/onboarding" className={buttonVariants({ size: "lg" })}>
+                  Get started
+                </Link>
+              )}
               <Link
                 href="/sign-in"
                 className={buttonVariants({ size: "lg", variant: "outline" })}
@@ -49,6 +53,7 @@ export default async function HomePage() {
             <p className="text-sm font-semibold text-foreground">
               What&apos;s inside
             </p>
+            <p className="mt-2 text-xs text-muted-foreground">Start with a 60-second setup</p>
             <ul className="mt-4 space-y-3">
               {appPrimaryNavigation.map((item) => (
                 <li
