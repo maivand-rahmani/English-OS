@@ -1,3 +1,5 @@
+import type { LearnerProfile } from "@prisma/client";
+
 import type {
   DashboardBlock,
   DashboardContentState,
@@ -9,6 +11,7 @@ import type {
 
 export type DashboardOverviewProps = {
   content: DashboardContentState;
+  profile: LearnerProfile;
 };
 
 export type ResourceWithContext = DashboardResource & {

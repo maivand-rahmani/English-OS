@@ -97,7 +97,7 @@ function WeakAreasCard({
   );
 }
 
-export function DashboardOverview({ content }: DashboardOverviewProps) {
+export function DashboardOverview({ content, profile }: DashboardOverviewProps) {
   const overview = useDashboardOverview(content);
   const isDesktopDashboard = useMediaQuery("(min-width: 1280px)");
 
@@ -172,6 +172,7 @@ export function DashboardOverview({ content }: DashboardOverviewProps) {
         <div className="grid gap-[var(--layout-gap)] xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
           <div className="animate-stagger-fade-in stagger-1">
             <DashboardHeroSection
+              profile={profile}
               displayName={content.displayName}
               busyAction={overview.busyAction}
               focusBlock={overview.focusBlock}
@@ -213,6 +214,7 @@ export function DashboardOverview({ content }: DashboardOverviewProps) {
     <section className="space-y-[var(--layout-gap)]">
       <div className="animate-stagger-fade-in stagger-1">
         <DashboardHeroSection
+          profile={profile}
           displayName={content.displayName}
           busyAction={overview.busyAction}
           focusBlock={overview.focusBlock}

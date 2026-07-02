@@ -1,3 +1,5 @@
+import type { LearnerProfile } from "@prisma/client";
+
 import type { DashboardContentState, DashboardSkill } from "@/entities/dashboard";
 import { auth } from "@/server/auth";
 import { prisma } from "@/server/db/prisma";
@@ -6,7 +8,37 @@ type BlockWithRelations = NonNullable<
   Awaited<ReturnType<typeof getTemplateRecord>>
 >["stages"][number]["blocks"][number];
 
-export async function getDashboardState(): Promise<DashboardContentState> {
+const CEFR_ORDER = ["PRE_A1", "A1", "A2", "B1", "B2", "C1", "C2"] as const;
+type Cefr = (typeof CEFR_ORDER)[number];
+
+function cefrIndex(level: string | null | undefined): number {
+  if (!level) return -1;
+  return CEFR_ORDER.indexOf(level as Cefr);
+}
+
+/**
+ * Decide whether a resource/block whose CEFR range is [resourceStart, resourceEnd]
+ * is appropriate for a learner at `learnerLevel`.
+ *
+ * - If the learner has no level set, we keep the resource visible (defensive).
+ * - If the resource has no range, it's universal and always passes.
+ * - Otherwise the learner's level must fall inside the inclusive range.
+ */
+function matchesCefrRange(
+  resourceStart: string | null,
+  resourceEnd: string | null,
+  learnerLevel: string | null,
+): boolean {
+  const learnerIdx = cefrIndex(learnerLevel);
+  if (learnerIdx < 0) return true;
+  const startIdx = resourceStart ? cefrIndex(resourceStart) : 0;
+  const endIdx = resourceEnd ? cefrIndex(resourceEnd) : CEFR_ORDER.length - 1;
+  return learnerIdx >= startIdx && learnerIdx <= endIdx;
+}
+
+export async function getDashboardState(
+  profile: LearnerProfile,
+): Promise<DashboardContentState> {
   if (!prisma) {
     return getEmptyDashboardState();
   }
@@ -17,19 +49,7 @@ export async function getDashboardState(): Promise<DashboardContentState> {
     return getEmptyDashboardState();
   }
 
-  const learnerProfile =
-    session?.user?.email != null
-      ? await prisma.learnerProfile.findFirst({
-          where: {
-            user: {
-              email: session.user.email,
-            },
-          },
-          select: {
-            currentLevel: true,
-          },
-        })
-      : null;
+  const learnerLevel = profile.currentLevel ?? null;
 
   const stages = template.stages.map((stage) => ({
     id: stage.id,
@@ -40,74 +60,76 @@ export async function getDashboardState(): Promise<DashboardContentState> {
     stageTypeLabel: humanizeEnum(stage.stageType),
     estimatedWeeks: stage.estimatedWeeks,
     cefrLabel: formatCefrRange(stage.cefrStart, stage.cefrEnd),
-    blocks: stage.blocks.map((block) => ({
-      id: block.id,
-      slug: block.slug,
-      title: block.title,
-      summary: block.summary,
-      purpose: block.purpose,
-      whyNow: block.whyNow,
-      estimatedMinutes: block.estimatedMinutes,
-      recommendedSessionCount: block.recommendedSessionCount,
-      cefrLabel: formatCefrRange(block.cefrStart, block.cefrEnd),
-      stageId: stage.id,
-      stageTitle: stage.title,
-      stageSummary: stage.summary,
-      stageTypeLabel: humanizeEnum(stage.stageType),
-      blockTypeLabel: humanizeEnum(block.blockType),
-      skills: mapBlockSkills(block),
-      resources: block.resourceLinks.map((resourceLink) => ({
-        id: resourceLink.resource.id,
-        slug: resourceLink.resource.slug,
-        title: resourceLink.resource.title,
-        sourceName: resourceLink.resource.sourceName,
-        resourceTypeLabel: humanizeEnum(resourceLink.resource.resourceType),
-        resourceFormatLabel: humanizeEnum(resourceLink.resource.resourceFormat),
-        primaryUseCaseLabel: humanizeEnum(
-          resourceLink.resource.primaryUseCase,
-        ),
-        estimatedMinutes: resourceLink.resource.estimatedMinutes,
-        whyRecommended: resourceLink.resource.whyRecommended,
-        bestUseCase: resourceLink.resource.bestUseCase,
-        followUpHint: resourceLink.resource.followUpHint,
-        note: resourceLink.note,
-        role: resourceRoleLabel(resourceLink.role),
-        skills: mapResourceSkills(resourceLink.resource.skillMaps),
-        isFeatured: resourceLink.resource.isFeatured,
-        url: resourceLink.resource.url,
-        description: resourceLink.resource.description,
-        accessTypeLabel: humanizeEnum(resourceLink.resource.accessType),
-        difficultyLabel: humanizeEnum(resourceLink.resource.difficulty),
-        cefrLabel: formatCefrRange(
-          resourceLink.resource.cefrStart,
-          resourceLink.resource.cefrEnd,
-        ),
+    blocks: stage.blocks
+      .filter((block) => matchesCefrRange(block.cefrStart, block.cefrEnd, learnerLevel))
+      .map((block) => ({
+        id: block.id,
+        slug: block.slug,
+        title: block.title,
+        summary: block.summary,
+        purpose: block.purpose,
+        whyNow: block.whyNow,
+        estimatedMinutes: block.estimatedMinutes,
+        recommendedSessionCount: block.recommendedSessionCount,
+        cefrLabel: formatCefrRange(block.cefrStart, block.cefrEnd),
+        stageId: stage.id,
+        stageTitle: stage.title,
+        stageSummary: stage.summary,
+        stageTypeLabel: humanizeEnum(stage.stageType),
+        blockTypeLabel: humanizeEnum(block.blockType),
+        skills: mapBlockSkills(block),
+        resources: block.resourceLinks.map((resourceLink) => ({
+          id: resourceLink.resource.id,
+          slug: resourceLink.resource.slug,
+          title: resourceLink.resource.title,
+          sourceName: resourceLink.resource.sourceName,
+          resourceTypeLabel: humanizeEnum(resourceLink.resource.resourceType),
+          resourceFormatLabel: humanizeEnum(resourceLink.resource.resourceFormat),
+          primaryUseCaseLabel: humanizeEnum(
+            resourceLink.resource.primaryUseCase,
+          ),
+          estimatedMinutes: resourceLink.resource.estimatedMinutes,
+          whyRecommended: resourceLink.resource.whyRecommended,
+          bestUseCase: resourceLink.resource.bestUseCase,
+          followUpHint: resourceLink.resource.followUpHint,
+          note: resourceLink.note,
+          role: resourceRoleLabel(resourceLink.role),
+          skills: mapResourceSkills(resourceLink.resource.skillMaps),
+          isFeatured: resourceLink.resource.isFeatured,
+          url: resourceLink.resource.url,
+          description: resourceLink.resource.description,
+          accessTypeLabel: humanizeEnum(resourceLink.resource.accessType),
+          difficultyLabel: humanizeEnum(resourceLink.resource.difficulty),
+          cefrLabel: formatCefrRange(
+            resourceLink.resource.cefrStart,
+            resourceLink.resource.cefrEnd,
+          ),
+        })),
+        writingTasks: block.writingTasks.map((task) => ({
+          id: task.id,
+          slug: task.slug,
+          title: task.title,
+          summary: task.summary,
+          estimatedMinutes: task.estimatedMinutes,
+          wordCountMin: task.wordCountMin,
+          wordCountMax: task.wordCountMax,
+          blockTitle: block.title,
+          instructions: task.instructions,
+          successCriteria: task.successCriteria,
+        })),
+        speakingPrompts: block.speakingPrompts.map((prompt) => ({
+          id: prompt.id,
+          slug: prompt.slug,
+          title: prompt.title,
+          summary: prompt.summary,
+          promptText: prompt.promptText,
+          estimatedMinutes: prompt.estimatedMinutes,
+          targetDurationSeconds: prompt.targetDurationSeconds,
+          blockTitle: block.title,
+          prepHint: prompt.prepHint,
+          followUpQuestion: prompt.followUpQuestion,
+        })),
       })),
-      writingTasks: block.writingTasks.map((task) => ({
-        id: task.id,
-        slug: task.slug,
-        title: task.title,
-        summary: task.summary,
-        estimatedMinutes: task.estimatedMinutes,
-        wordCountMin: task.wordCountMin,
-        wordCountMax: task.wordCountMax,
-        blockTitle: block.title,
-        instructions: task.instructions,
-        successCriteria: task.successCriteria,
-      })),
-      speakingPrompts: block.speakingPrompts.map((prompt) => ({
-        id: prompt.id,
-        slug: prompt.slug,
-        title: prompt.title,
-        summary: prompt.summary,
-        promptText: prompt.promptText,
-        estimatedMinutes: prompt.estimatedMinutes,
-        targetDurationSeconds: prompt.targetDurationSeconds,
-        blockTitle: block.title,
-        prepHint: prompt.prepHint,
-        followUpQuestion: prompt.followUpQuestion,
-      })),
-    })),
   }));
 
   const resourceIds = new Set<string>();
@@ -123,11 +145,12 @@ export async function getDashboardState(): Promise<DashboardContentState> {
 
   return {
     displayName:
+      profile.displayName ??
       session?.user?.name ??
       session?.user?.email?.split("@")[0] ??
       "Learner",
     learnerLevelLabel:
-      learnerProfile?.currentLevel ??
+      profile.currentLevel ??
       firstBlock?.cefrLabel ??
       formatCefrRange(template.cefrStart, template.cefrEnd) ??
       "Starter path",

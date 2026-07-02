@@ -11,9 +11,7 @@ const connectionString =
   "postgresql://postgres:postgres@localhost:5432/english_os?schema=public";
 
 const prisma = new PrismaClient({
-  adapter: new PrismaPg({
-    connectionString,
-  }),
+  adapter: new PrismaPg({ connectionString, max: 1, idleTimeoutMillis: 60000 }),
 });
 
 async function main() {

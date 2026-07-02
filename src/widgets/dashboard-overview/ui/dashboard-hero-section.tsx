@@ -1,3 +1,6 @@
+import type { LearnerProfile } from "@prisma/client";
+import Link from "next/link";
+
 import type { DashboardBlock } from "@/entities/dashboard";
 
 import { cn } from "@/shared/lib/utils";
@@ -14,8 +17,14 @@ function getGreeting(hour: number): string {
   return "Good evening";
 }
 
+function formatLevel(level: string | null): string {
+  if (!level) return "Pre-A1";
+  return level === "PRE_A1" ? "Pre-A1" : level;
+}
+
 type DashboardHeroSectionProps = {
   displayName: string;
+  profile: LearnerProfile;
   focusBlock: DashboardBlock | null;
   focusBlockState: BlockState;
   totalPlanMinutes: number;
@@ -27,6 +36,7 @@ type DashboardHeroSectionProps = {
 
 export function DashboardHeroSection({
   displayName,
+  profile,
   focusBlock,
   focusBlockState,
   totalPlanMinutes,
@@ -37,6 +47,7 @@ export function DashboardHeroSection({
 }: DashboardHeroSectionProps) {
   const hour = new Date().getHours();
   const greeting = getGreeting(hour);
+  const levelLabel = formatLevel(profile.currentLevel);
 
   if (!focusBlock) {
     return (
@@ -53,7 +64,7 @@ export function DashboardHeroSection({
       <div className="absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_left,var(--surface-module-pink),transparent_60%),radial-gradient(circle_at_top_right,var(--surface-module-blue),transparent_55%)]" />
       <div className="relative">
         <p className="text-sm font-medium text-muted-foreground">
-          {greeting}, {displayName}
+          {greeting}, {displayName} · {levelLabel}
         </p>
 
         <div className="mt-2 flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
@@ -87,6 +98,15 @@ export function DashboardHeroSection({
           >
             {focusBlockState === "in_progress" ? "Resume step" : "Start step"}
           </button>
+        </div>
+
+        <div className="mt-3">
+          <Link
+            href="/onboarding"
+            className="text-xs text-muted-foreground hover:text-foreground"
+          >
+            Update your learning profile
+          </Link>
         </div>
       </div>
     </DashboardCard>
