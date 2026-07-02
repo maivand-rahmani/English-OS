@@ -76,22 +76,6 @@ describe("AppShell", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("treats legacy writing routes as the practice section", async () => {
-    usePathnameMock.mockReturnValue("/writing");
-    installMatchMedia(1280);
-
-    render(
-      <AppShell account={account}>
-        <div>Shell content</div>
-      </AppShell>,
-    );
-
-    const practiceLink = await screen.findByRole("link", { name: /practice/i });
-
-    expect(practiceLink).toHaveAttribute("aria-current", "page");
-    expect(screen.queryByRole("heading", { name: /practice/i })).not.toBeInTheDocument();
-  });
-
   test("opens appearance from the settings utility and account from the avatar", async () => {
     usePathnameMock.mockReturnValue("/dashboard");
     installMatchMedia(1280);

@@ -77,10 +77,6 @@ export function getAppSection(sectionKey: AppSectionKey) {
 }
 
 export function getAppSectionByPathname(pathname: string) {
-  if (pathname.startsWith("/writing") || pathname.startsWith("/speaking")) {
-    return appSections.practice;
-  }
-
   const matched = appNavigation.find((item) => pathname.startsWith(item.href));
 
   return matched ? appSections[matched.key] : appSections.dashboard;
