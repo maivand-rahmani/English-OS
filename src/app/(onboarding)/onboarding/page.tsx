@@ -1,49 +1,34 @@
-import Link from "next/link";
+import { Suspense } from "react";
 
-import { buttonVariants } from "@/shared/ui/button";
+import { getLearningProfile } from "@/server/learners/get-learning-profile";
+import { OnboardingWizard } from "@/widgets/onboarding-wizard";
 
-export default function OnboardingPage() {
+export const dynamic = "force-dynamic";
+
+export default async function OnboardingPage() {
+  const profile = await getLearningProfile();
+  const isReRun = profile?.completedOnboardingAt != null;
+
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="rounded-[2rem] border border-white/60 bg-surface-1 p-6 shadow-[var(--shell-shadow)] backdrop-blur-xl sm:p-8">
-        <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
-          Onboarding placeholder
-        </p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight text-balance">
-          The onboarding route is reserved and ready for the next phase.
-        </h1>
-        <p className="mt-4 max-w-3xl text-base leading-7 text-muted-foreground">
-          This route exists so profile setup, goal capture, and first-roadmap
-          generation can be added without reshaping the app structure later.
-        </p>
-
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {[
-            "Capture learner level, goals, and study rhythm.",
-            "Generate the first roadmap and recommended resources.",
-            "Send the learner into Dashboard as the daily home base.",
-          ].map((item) => (
-            <div
-              key={item}
-              className="rounded-[1.4rem] border border-border/70 bg-background/70 p-4 text-sm text-muted-foreground"
-            >
-              {item}
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Link href="/sign-in" className={buttonVariants({ size: "lg" })}>
-            Review auth setup
-          </Link>
-          <Link
-            href="/dashboard"
-            className={buttonVariants({ size: "lg", variant: "outline" })}
-          >
-            Preview the app shell
-          </Link>
-        </div>
-      </div>
+    <main className="mx-auto w-full max-w-2xl px-4 py-10 sm:px-6 sm:py-12">
+      <Suspense fallback={<div className="h-96" />}>
+        <OnboardingWizard
+          isReRun={isReRun}
+          initialData={
+            profile
+              ? {
+                  currentLevel: profile.currentLevel,
+                  mainGoal: profile.mainGoal,
+                  studyMinutesPerDay: profile.studyMinutesPerDay,
+                  strongestSkill: profile.strongestSkill,
+                  weakestSkill: profile.weakestSkill,
+                  preferredFormats: profile.preferredFormats,
+                  mainPainPoint: profile.mainPainPoint,
+                }
+              : undefined
+          }
+        />
+      </Suspense>
     </main>
   );
 }
