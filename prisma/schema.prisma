@@ -62,15 +62,23 @@ model VerificationToken {
 }
 
 model LearnerProfile {
-  id           String   @id @default(cuid())
-  userId       String   @unique @map("user_id")
-  displayName  String?  @map("display_name")
-  currentLevel String?  @map("current_level")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                    String     @id @default(cuid())
+  userId                String     @unique @map("user_id")
+  displayName           String?    @default("Learner") @map("display_name")
+  currentLevel          String?    @map("current_level")
+  mainGoal              MainGoal?  @map("main_goal")
+  studyMinutesPerDay    Int?       @map("study_minutes_per_day")
+  strongestSkill        String?    @map("strongest_skill")
+  weakestSkill          String?    @map("weakest_skill")
+  preferredFormats      String[]   @default([]) @map("preferred_formats")
+  mainPainPoint         PainPoint? @map("main_pain_point")
+  completedOnboardingAt DateTime?  @map("completed_onboarding_at")
+  guestId               String?    @unique @map("guest_id")
+  createdAt             DateTime   @default(now()) @map("created_at")
+  updatedAt             DateTime   @updatedAt @map("updated_at")
+  user                  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("learner_profiles")     
+  @@map("learner_profiles")
 }
 
 enum CefrLevel {
@@ -100,6 +108,23 @@ enum RoadmapBlockType {
   PRACTICE
   APPLY
   CHECKPOINT
+}
+
+enum MainGoal {
+  BUILD_FOUNDATION
+  SPEAK_MORE_CONFIDENTLY
+  STUDY_MORE_CONSISTENTLY
+  IMPROVE_COMPREHENSION
+  IMPROVE_WRITING_EXPRESSION
+}
+
+enum PainPoint {
+  TOO_MANY_RESOURCES
+  NO_STRUCTURE
+  FORGETS_WHAT_LEARNED
+  LOW_CONFIDENCE_SPEAKING
+  NO_PROGRESS_VISIBILITY
+  OTHER
 }
 
 enum MapStrength {
@@ -168,16 +193,16 @@ enum SpeakingPromptType {
 }
 
 model Skill {
-  id               String             @id @default(cuid())
-  slug             String             @unique
-  title            String
-  description      String?            @db.Text
-  sortOrder        Int                @default(0) @map("sort_order")
-  isActive         Boolean            @default(true) @map("is_active")
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime           @updatedAt @map("updated_at")
-  subskills        Subskill[]
-  blockSkillMaps   BlockSkillMap[]
+  id                String             @id @default(cuid())
+  slug              String             @unique
+  title             String
+  description       String?            @db.Text
+  sortOrder         Int                @default(0) @map("sort_order")
+  isActive          Boolean            @default(true) @map("is_active")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+  subskills         Subskill[]
+  blockSkillMaps    BlockSkillMap[]
   resourceSkillMaps ResourceSkillMap[]
 
   @@index([sortOrder])
@@ -185,19 +210,19 @@ model Skill {
 }
 
 model Subskill {
-  id               String             @id @default(cuid())
-  skillId          String             @map("skill_id")
-  slug             String             @unique
-  title            String
-  description      String?            @db.Text
-  cefrMin          CefrLevel?         @map("cefr_min")
-  cefrMax          CefrLevel?         @map("cefr_max")
-  sortOrder        Int                @default(0) @map("sort_order")
-  isActive         Boolean            @default(true) @map("is_active")
-  createdAt        DateTime           @default(now()) @map("created_at")
-  updatedAt        DateTime           @updatedAt @map("updated_at")
-  skill            Skill              @relation(fields: [skillId], references: [id], onDelete: Cascade)
-  blockSkillMaps   BlockSkillMap[]
+  id                String             @id @default(cuid())
+  skillId           String             @map("skill_id")
+  slug              String             @unique
+  title             String
+  description       String?            @db.Text
+  cefrMin           CefrLevel?         @map("cefr_min")
+  cefrMax           CefrLevel?         @map("cefr_max")
+  sortOrder         Int                @default(0) @map("sort_order")
+  isActive          Boolean            @default(true) @map("is_active")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+  skill             Skill              @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  blockSkillMaps    BlockSkillMap[]
   resourceSkillMaps ResourceSkillMap[]
 
   @@index([skillId, sortOrder])
@@ -205,40 +230,40 @@ model Subskill {
 }
 
 model RoadmapTemplate {
-  id            String                  @id @default(cuid())
-  slug          String                  @unique
-  title         String
-  description   String?                 @db.Text
-  audience      RoadmapTemplateAudience
-  cefrStart     CefrLevel?              @map("cefr_start")
-  cefrEnd       CefrLevel?              @map("cefr_end")
-  estimatedWeeks Int?                   @map("estimated_weeks")
-  isDefault     Boolean                 @default(false) @map("is_default")
-  isPublished   Boolean                 @default(true) @map("is_published")
-  createdAt     DateTime                @default(now()) @map("created_at")
-  updatedAt     DateTime                @updatedAt @map("updated_at")
-  stages        RoadmapStage[]
+  id             String                  @id @default(cuid())
+  slug           String                  @unique
+  title          String
+  description    String?                 @db.Text
+  audience       RoadmapTemplateAudience
+  cefrStart      CefrLevel?              @map("cefr_start")
+  cefrEnd        CefrLevel?              @map("cefr_end")
+  estimatedWeeks Int?                    @map("estimated_weeks")
+  isDefault      Boolean                 @default(false) @map("is_default")
+  isPublished    Boolean                 @default(true) @map("is_published")
+  createdAt      DateTime                @default(now()) @map("created_at")
+  updatedAt      DateTime                @updatedAt @map("updated_at")
+  stages         RoadmapStage[]
 
   @@index([audience, isPublished])
   @@map("roadmap_templates")
 }
 
 model RoadmapStage {
-  id               String           @id @default(cuid())
-  roadmapTemplateId String          @map("roadmap_template_id")
-  slug             String
-  title            String
-  summary          String?          @db.Text
-  purpose          String?          @db.Text
-  stageType        RoadmapStageType @map("stage_type")
-  sortOrder        Int              @default(0) @map("sort_order")
-  cefrStart        CefrLevel?       @map("cefr_start")
-  cefrEnd          CefrLevel?       @map("cefr_end")
-  estimatedWeeks   Int?             @map("estimated_weeks")
-  createdAt        DateTime         @default(now()) @map("created_at")
-  updatedAt        DateTime         @updatedAt @map("updated_at")
-  roadmapTemplate  RoadmapTemplate  @relation(fields: [roadmapTemplateId], references: [id], onDelete: Cascade)
-  blocks           RoadmapBlock[]
+  id                String           @id @default(cuid())
+  roadmapTemplateId String           @map("roadmap_template_id")
+  slug              String
+  title             String
+  summary           String?          @db.Text
+  purpose           String?          @db.Text
+  stageType         RoadmapStageType @map("stage_type")
+  sortOrder         Int              @default(0) @map("sort_order")
+  cefrStart         CefrLevel?       @map("cefr_start")
+  cefrEnd           CefrLevel?       @map("cefr_end")
+  estimatedWeeks    Int?             @map("estimated_weeks")
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+  roadmapTemplate   RoadmapTemplate  @relation(fields: [roadmapTemplateId], references: [id], onDelete: Cascade)
+  blocks            RoadmapBlock[]
 
   @@unique([roadmapTemplateId, slug])
   @@index([roadmapTemplateId, sortOrder])
@@ -246,22 +271,22 @@ model RoadmapStage {
 }
 
 model RoadmapBlock {
-  id                      String               @id @default(cuid())
-  roadmapStageId          String               @map("roadmap_stage_id")
+  id                      String                 @id @default(cuid())
+  roadmapStageId          String                 @map("roadmap_stage_id")
   slug                    String
   title                   String
-  summary                 String?              @db.Text
-  purpose                 String?              @db.Text
-  whyNow                  String?              @db.Text @map("why_now")
-  blockType               RoadmapBlockType     @map("block_type")
-  sortOrder               Int                  @default(0) @map("sort_order")
-  cefrStart               CefrLevel?           @map("cefr_start")
-  cefrEnd                 CefrLevel?           @map("cefr_end")
-  estimatedMinutes        Int?                 @map("estimated_minutes")
-  recommendedSessionCount Int?                 @map("recommended_session_count")
-  createdAt               DateTime             @default(now()) @map("created_at")
-  updatedAt               DateTime             @updatedAt @map("updated_at")
-  roadmapStage            RoadmapStage         @relation(fields: [roadmapStageId], references: [id], onDelete: Cascade)
+  summary                 String?                @db.Text
+  purpose                 String?                @db.Text
+  whyNow                  String?                @map("why_now") @db.Text
+  blockType               RoadmapBlockType       @map("block_type")
+  sortOrder               Int                    @default(0) @map("sort_order")
+  cefrStart               CefrLevel?             @map("cefr_start")
+  cefrEnd                 CefrLevel?             @map("cefr_end")
+  estimatedMinutes        Int?                   @map("estimated_minutes")
+  recommendedSessionCount Int?                   @map("recommended_session_count")
+  createdAt               DateTime               @default(now()) @map("created_at")
+  updatedAt               DateTime               @updatedAt @map("updated_at")
+  roadmapStage            RoadmapStage           @relation(fields: [roadmapStageId], references: [id], onDelete: Cascade)
   skillMaps               BlockSkillMap[]
   resourceLinks           RoadmapBlockResource[]
   writingTasks            WritingTask[]
@@ -273,14 +298,14 @@ model RoadmapBlock {
 }
 
 model BlockSkillMap {
-  id            String       @id @default(cuid())
-  roadmapBlockId String      @map("roadmap_block_id")
-  skillId       String       @map("skill_id")
-  subskillId    String?      @map("subskill_id")
-  emphasis      MapStrength  @default(PRIMARY)
-  roadmapBlock  RoadmapBlock @relation(fields: [roadmapBlockId], references: [id], onDelete: Cascade)
-  skill         Skill        @relation(fields: [skillId], references: [id], onDelete: Cascade)
-  subskill      Subskill?    @relation(fields: [subskillId], references: [id], onDelete: SetNull)
+  id             String       @id @default(cuid())
+  roadmapBlockId String       @map("roadmap_block_id")
+  skillId        String       @map("skill_id")
+  subskillId     String?      @map("subskill_id")
+  emphasis       MapStrength  @default(PRIMARY)
+  roadmapBlock   RoadmapBlock @relation(fields: [roadmapBlockId], references: [id], onDelete: Cascade)
+  skill          Skill        @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  subskill       Subskill?    @relation(fields: [subskillId], references: [id], onDelete: SetNull)
 
   @@index([roadmapBlockId])
   @@index([skillId])
@@ -289,28 +314,28 @@ model BlockSkillMap {
 }
 
 model Resource {
-  id               String                  @id @default(cuid())
-  slug             String                  @unique
+  id               String                   @id @default(cuid())
+  slug             String                   @unique
   title            String
-  sourceName       String                  @map("source_name")
-  url              String                  @db.Text
-  description      String?                 @db.Text
-  resourceType     ResourceType            @map("resource_type")
-  resourceFormat   ResourceFormat          @map("resource_format")
-  primaryUseCase   ResourceUseCase         @map("primary_use_case")
-  accessType       ResourceAccessType      @map("access_type")
+  sourceName       String                   @map("source_name")
+  url              String                   @db.Text
+  description      String?                  @db.Text
+  resourceType     ResourceType             @map("resource_type")
+  resourceFormat   ResourceFormat           @map("resource_format")
+  primaryUseCase   ResourceUseCase          @map("primary_use_case")
+  accessType       ResourceAccessType       @map("access_type")
   difficulty       ResourceDifficulty
-  cefrStart        CefrLevel?              @map("cefr_start")
-  cefrEnd          CefrLevel?              @map("cefr_end")
-  estimatedMinutes Int?                    @map("estimated_minutes")
-  whyRecommended   String                  @db.Text @map("why_recommended")
-  bestUseCase      String                  @db.Text @map("best_use_case")
-  followUpHint     String?                 @db.Text @map("follow_up_hint")
+  cefrStart        CefrLevel?               @map("cefr_start")
+  cefrEnd          CefrLevel?               @map("cefr_end")
+  estimatedMinutes Int?                     @map("estimated_minutes")
+  whyRecommended   String                   @map("why_recommended") @db.Text
+  bestUseCase      String                   @map("best_use_case") @db.Text
+  followUpHint     String?                  @map("follow_up_hint") @db.Text
   targetAudience   RoadmapTemplateAudience? @map("target_audience")
-  isFeatured       Boolean                 @default(false) @map("is_featured")
-  isPublished      Boolean                 @default(true) @map("is_published")
-  createdAt        DateTime                @default(now()) @map("created_at")
-  updatedAt        DateTime                @updatedAt @map("updated_at")
+  isFeatured       Boolean                  @default(false) @map("is_featured")
+  isPublished      Boolean                  @default(true) @map("is_published")
+  createdAt        DateTime                 @default(now()) @map("created_at")
+  updatedAt        DateTime                 @updatedAt @map("updated_at")
   skillMaps        ResourceSkillMap[]
   roadmapBlocks    RoadmapBlockResource[]
 
@@ -337,14 +362,14 @@ model ResourceSkillMap {
 }
 
 model RoadmapBlockResource {
-  id            String                   @id @default(cuid())
-  roadmapBlockId String                  @map("roadmap_block_id")
-  resourceId    String                   @map("resource_id")
-  role          RoadmapBlockResourceRole @default(CORE)
-  sortOrder     Int                      @default(0) @map("sort_order")
-  note          String?                  @db.Text
-  roadmapBlock  RoadmapBlock             @relation(fields: [roadmapBlockId], references: [id], onDelete: Cascade)
-  resource      Resource                 @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  id             String                   @id @default(cuid())
+  roadmapBlockId String                   @map("roadmap_block_id")
+  resourceId     String                   @map("resource_id")
+  role           RoadmapBlockResourceRole @default(CORE)
+  sortOrder      Int                      @default(0) @map("sort_order")
+  note           String?                  @db.Text
+  roadmapBlock   RoadmapBlock             @relation(fields: [roadmapBlockId], references: [id], onDelete: Cascade)
+  resource       Resource                 @relation(fields: [resourceId], references: [id], onDelete: Cascade)
 
   @@unique([roadmapBlockId, resourceId])
   @@index([resourceId])
@@ -353,23 +378,23 @@ model RoadmapBlockResource {
 }
 
 model WritingTask {
-  id               String           @id @default(cuid())
-  slug             String           @unique
-  roadmapBlockId   String?          @map("roadmap_block_id")
+  id               String          @id @default(cuid())
+  slug             String          @unique
+  roadmapBlockId   String?         @map("roadmap_block_id")
   title            String
-  summary          String?          @db.Text
-  instructions     String           @db.Text
-  taskType         WritingTaskType  @map("task_type")
-  cefrStart        CefrLevel?       @map("cefr_start")
-  cefrEnd          CefrLevel?       @map("cefr_end")
-  estimatedMinutes Int?             @map("estimated_minutes")
-  wordCountMin     Int?             @map("word_count_min")
-  wordCountMax     Int?             @map("word_count_max")
-  successCriteria  String?          @db.Text @map("success_criteria")
-  isPublished      Boolean          @default(true) @map("is_published")
-  createdAt        DateTime         @default(now()) @map("created_at")
-  updatedAt        DateTime         @updatedAt @map("updated_at")
-  roadmapBlock     RoadmapBlock?    @relation(fields: [roadmapBlockId], references: [id], onDelete: SetNull)
+  summary          String?         @db.Text
+  instructions     String          @db.Text
+  taskType         WritingTaskType @map("task_type")
+  cefrStart        CefrLevel?      @map("cefr_start")
+  cefrEnd          CefrLevel?      @map("cefr_end")
+  estimatedMinutes Int?            @map("estimated_minutes")
+  wordCountMin     Int?            @map("word_count_min")
+  wordCountMax     Int?            @map("word_count_max")
+  successCriteria  String?         @map("success_criteria") @db.Text
+  isPublished      Boolean         @default(true) @map("is_published")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  roadmapBlock     RoadmapBlock?   @relation(fields: [roadmapBlockId], references: [id], onDelete: SetNull)
 
   @@index([roadmapBlockId])
   @@index([taskType, cefrStart, cefrEnd])
@@ -382,14 +407,14 @@ model SpeakingPrompt {
   roadmapBlockId        String?            @map("roadmap_block_id")
   title                 String
   summary               String?            @db.Text
-  promptText            String             @db.Text @map("prompt_text")
+  promptText            String             @map("prompt_text") @db.Text
   promptType            SpeakingPromptType @map("prompt_type")
   cefrStart             CefrLevel?         @map("cefr_start")
   cefrEnd               CefrLevel?         @map("cefr_end")
   estimatedMinutes      Int?               @map("estimated_minutes")
   targetDurationSeconds Int?               @map("target_duration_seconds")
-  prepHint              String?            @db.Text @map("prep_hint")
-  followUpQuestion      String?            @db.Text @map("follow_up_question")
+  prepHint              String?            @map("prep_hint") @db.Text
+  followUpQuestion      String?            @map("follow_up_question") @db.Text
   isPublished           Boolean            @default(true) @map("is_published")
   createdAt             DateTime           @default(now()) @map("created_at")
   updatedAt             DateTime           @updatedAt @map("updated_at")
