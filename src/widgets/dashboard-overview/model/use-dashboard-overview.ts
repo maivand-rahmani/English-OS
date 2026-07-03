@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { DashboardBlock, DashboardContentState } from "@/entities/dashboard";
-import { useDrafts } from "@/shared/hooks/use-drafts";
-import { useLearningEvents } from "@/shared/hooks/use-learning-events";
-import { useLocalProgress } from "@/shared/hooks/use-local-progress";
+import { useDraftsStore } from "@/features/learners/model/drafts-store";
+import { useEventsStore } from "@/features/learners/model/events-store";
+import { useProgressStore } from "@/features/learners/model/progress-store";
 import { LearningEventType, type BlockState } from "@/shared/types";
 
 import type {
@@ -33,12 +33,32 @@ import {
 } from "./dashboard-overview-selectors";
 
 export function useDashboardOverview(content: DashboardContentState) {
-  const { entries, isLoading: progressLoading, updateEntry } = useLocalProgress();
-  const { events, isLoading: eventsLoading, recordEvent } = useLearningEvents(8);
-  const { drafts, isLoading: draftsLoading, createDraft } = useDrafts();
+  const entries = useProgressStore((s) => s.entries);
+  const progressLoading = useProgressStore((s) => s.isLoading);
+  const updateEntry = useProgressStore((s) => s.updateEntry);
+  const events = useEventsStore((s) => s.events);
+  const eventsLoading = useEventsStore((s) => s.isLoading);
+  const recordEvent = useEventsStore((s) => s.recordEvent);
+  const loadEvents = useEventsStore((s) => s.loadEvents);
+  const drafts = useDraftsStore((s) => s.drafts);
+  const draftsLoading = useDraftsStore((s) => s.isLoading);
+  const createDraft = useDraftsStore((s) => s.createDraft);
+  const loadDrafts = useDraftsStore((s) => s.loadDrafts);
   const [busyAction, setBusyAction] = useState<string | null>(null);
   const [draftNotice, setDraftNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (events.length === 0) {
+      void loadEvents(8);
+    }
+  }, [events.length, loadEvents]);
+
+  useEffect(() => {
+    if (drafts.length === 0) {
+      void loadDrafts();
+    }
+  }, [drafts.length, loadDrafts]);
 
   const collections = buildDashboardCollections(content);
   const blockProgressEntries = entries.filter((entry) => entry.entryType === "block");

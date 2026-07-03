@@ -2,15 +2,33 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { useLearningContentProgress } from "@/shared/hooks";
+import { useEventsStore } from "@/features/learners/model/events-store";
+import { useProgressStore } from "@/features/learners/model/progress-store";
 import type { DashboardBlock } from "@/entities/dashboard";
-import type { ProgressEntry } from "@/shared/types";
+import {
+  LearningEventType,
+  type BlockState,
+  type ProgressEntry,
+} from "@/shared/types";
 
 import type { RoadmapExplorerProps } from "./roadmap-explorer-types";
 
+type BlockProgressTarget = {
+  id: string;
+  title: string;
+  stageId: string;
+  stageTitle: string;
+};
+
+type BlockAction = "start" | "complete" | "review" | "difficult" | "skip" | "reset";
+
 export function useRoadmapExplorer({ content }: RoadmapExplorerProps) {
   const [error, setError] = useState<string | null>(null);
-  const progress = useLearningContentProgress(12);
+  const entries = useProgressStore((s) => s.entries);
+  const progressLoading = useProgressStore((s) => s.isLoading);
+  const updateEntry = useProgressStore((s) => s.updateEntry);
+  const recordEvent = useEventsStore((s) => s.recordEvent);
+  const [busyAction, setBusyAction] = useState<string | null>(null);
 
   const clearError = useCallback(() => setError(null), []);
 
@@ -20,7 +38,7 @@ export function useRoadmapExplorer({ content }: RoadmapExplorerProps) {
   } catch {
     allBlocks = [];
   }
-  const progressById = new Map(progress.entries.map((entry) => [entry.id, entry]));
+  const progressById = new Map(entries.map((entry) => [entry.id, entry]));
   const completedBlocks = allBlocks.filter(
     (block) => getEntryState(progressById.get(block.id)) === "completed",
   ).length;
@@ -54,19 +72,82 @@ export function useRoadmapExplorer({ content }: RoadmapExplorerProps) {
     }
   }, [content, allBlocks.length]);
 
+  async function updateBlockState(
+    block: BlockProgressTarget,
+    nextState: BlockState,
+    action: BlockAction,
+  ) {
+    setBusyAction(`block:${block.id}:${action}`);
+
+    try {
+      await updateEntry(
+        block.id,
+        nextState,
+        { label: block.title, stageTitle: block.stageTitle },
+        "block",
+      );
+
+      if (action === "start") {
+        await recordEvent({
+          type: LearningEventType.BlockStarted,
+          payload: {
+            blockId: block.id,
+            blockLabel: block.title,
+            stageId: block.stageId,
+          },
+        });
+      }
+
+      if (action === "complete") {
+        await recordEvent({
+          type: LearningEventType.BlockCompleted,
+          payload: {
+            blockId: block.id,
+            blockLabel: block.title,
+            stageId: block.stageId,
+          },
+        });
+      }
+
+      if (action === "skip") {
+        await recordEvent({
+          type: LearningEventType.ItemSkipped,
+          payload: {
+            itemId: block.id,
+            itemType: "block",
+            reason: `Skipped for now inside ${block.stageTitle.toLowerCase()}.`,
+          },
+        });
+      }
+
+      if (action === "difficult") {
+        await recordEvent({
+          type: LearningEventType.ReviewDone,
+          payload: {
+            reviewItemId: block.id,
+            sourceType: "block",
+            outcome: "still_difficult",
+          },
+        });
+      }
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
   return {
     activeStage,
     allBlocks,
-    busyAction: progress.busyAction,
+    busyAction,
     clearError,
     completedBlocks,
     error,
-    isLoading: progress.isLoading,
+    isLoading: progressLoading,
     nextBlock,
     progressById,
     roadmapCompletion,
     stages: content.stages,
-    updateBlockState: progress.updateBlockState,
+    updateBlockState,
   } as const;
 }
 

@@ -5,8 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import type { DashboardResource } from "@/entities/dashboard";
-import { useLearningContentProgress } from "@/shared/hooks";
-import type { BlockState } from "@/shared/types";
+import { useEventsStore } from "@/features/learners/model/events-store";
+import { useProgressStore } from "@/features/learners/model/progress-store";
+import {
+  LearningEventType,
+  type BlockState,
+} from "@/shared/types";
 import { Button } from "@/shared/ui/button";
 import { SmallTag } from "@/shared/ui/surfaces";
 import { ConnectedResourceMiniCard } from "./connected-resource-mini-card";
@@ -48,21 +52,23 @@ export function RoadmapStepModal({
   const modalRef = useRef<HTMLDivElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const progress = useLearningContentProgress(12);
+  const updateEntry = useProgressStore((s) => s.updateEntry);
+  const recordEvent = useEventsStore((s) => s.recordEvent);
 
   async function handleResourceStart(resource: DashboardResource) {
     if (!step) return;
 
     try {
-      await progress.updateResourceState(
-        {
-          blockTitle: step.block.title,
-          id: resource.id,
-          title: resource.title,
-        },
+      await updateEntry(
+        resource.id,
         "in_progress",
-        "start",
+        { label: resource.title, blockTitle: step.block.title },
+        "resource",
       );
+      await recordEvent({
+        type: LearningEventType.ResourceStarted,
+        payload: { resourceId: resource.id, resourceTitle: resource.title },
+      });
       setFeedback(`Started ${resource.title}`);
       window.setTimeout(() => setFeedback(null), 1800);
     } catch {
