@@ -5,6 +5,8 @@ import { z } from "zod";
 /* ------------------------------------------------------------------ */
 
 export const writingFeedbackSchema = z.object({
+  verdict: z.enum(["pass", "retry", "needs_work"]),
+  feedbackSummary: z.string(),
   overallSummary: z.string(),
   correctedVersion: z.string().nullable(),
   keyIssues: z
@@ -26,6 +28,8 @@ export type WritingFeedbackResult = z.infer<typeof writingFeedbackSchema>;
 /* ------------------------------------------------------------------ */
 
 export const speakingFeedbackSchema = z.object({
+  verdict: z.enum(["pass", "retry", "needs_work"]),
+  feedbackSummary: z.string(),
   overallSummary: z.string(),
   clarityFeedback: z.string(),
   grammarFeedback: z.string(),

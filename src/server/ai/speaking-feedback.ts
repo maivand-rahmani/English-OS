@@ -22,8 +22,15 @@ function buildSystemPrompt(): string {
     "You MUST respond with ONLY a valid JSON object \u2014 no greetings, no markdown, no code fences, no surrounding text.",
     "The first character of your response must be {. The last character must be }.",
     "",
+    "Verdict guidelines:",
+    "- \"pass\" \u2014 The transcript fully addresses the prompt with only minor slips. The learner is ready to move on.",
+    "- \"retry\" \u2014 The transcript attempts the prompt but has significant issues (off-prompt, hard to follow, repeated breakdowns). The learner should try again on the same prompt.",
+    "- \"needs_work\" \u2014 The transcript is between pass and retry. The learner could move on but would benefit from another attempt first.",
+    "",
     "Example response format:",
     "{",
+    '  "verdict": "pass",',
+    '  "feedbackSummary": "You stayed on topic and answered with a clear structure. Ready for the next prompt.",',
     '  "overallSummary": "The response answered the prompt but pauses before key words suggest vocabulary hesitation.",',
     '  "clarityFeedback": "The main idea was clear, but the second sentence felt rushed and lost focus.",',
     '  "grammarFeedback": "Subject-verb agreement was mostly correct. One tense slip in the third sentence.",',
@@ -39,6 +46,7 @@ function buildSystemPrompt(): string {
     "",
     "Be encouraging and specific. Identify 1-2 concrete improvements.",
     "Make the next session feel possible. Do not make the learner feel punished.",
+    "feedbackSummary must be one or two short sentences summarizing the verdict for the learner.",
   ].join("\n");
 }
 
