@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import { Activity } from "lucide-react";
 
-import { useLearningEvents } from "@/shared/hooks/use-learning-events";
+import { useEventsStore } from "@/features/learners/model/events-store";
 import { MobileSheet } from "@/shared/ui/mobile-sheet";
 
 type RecentActivitySheetProps = {
@@ -65,7 +66,15 @@ function describeEvent(event: EventLike): string {
 }
 
 export function RecentActivitySheet({ open, onOpenChange }: RecentActivitySheetProps) {
-  const { events, isLoading } = useLearningEvents(5);
+  const events = useEventsStore((s) => s.events);
+  const isLoading = useEventsStore((s) => s.isLoading);
+  const loadEvents = useEventsStore((s) => s.loadEvents);
+
+  useEffect(() => {
+    if (open && events.length === 0) {
+      void loadEvents(5);
+    }
+  }, [open, events.length, loadEvents]);
 
   return (
     <MobileSheet

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Dialog } from "@base-ui/react/dialog";
 import { Drawer } from "@base-ui/react/drawer";
 import { Popover } from "@base-ui/react/popover";
-import { AlertTriangle, Bell, BookOpen, Check, ChevronDown, X } from "lucide-react";
+import { Bell, BookOpen, Check, ChevronDown, X } from "lucide-react";
 import Link from "next/link";
 
 import {
@@ -14,7 +14,10 @@ import {
   PREFERRED_FORMAT_OPTIONS,
   SKILL_OPTIONS,
 } from "@/shared/constants/onboarding";
-import { useAppearancePreferences, useLearningProfile, useMediaQuery } from "@/shared/hooks";
+import { useAppearanceStore } from "@/features/settings/model/appearance-store";
+import { useLearningProfileQuery } from "@/features/learners/api/learning-profile.queries";
+import { useMediaQuery } from "@/shared/hooks";
+import { useShallow } from "zustand/shallow";
 import { cn } from "@/shared/lib/utils";
 import type {
   InterfaceDensity,
@@ -368,8 +371,13 @@ function AccountSection({ account }: { account: SettingsAccount }) {
 }
 
 function AppearanceSection() {
-  const { preferences, resetPreferences, updatePreferences, isLoaded, error, clearError } =
-    useAppearancePreferences();
+  const { preferences, updatePreferences } = useAppearanceStore(
+    useShallow((s) => ({
+      preferences: s.preferences,
+      updatePreferences: s.updatePreferences,
+    })),
+  );
+  const resetPreferences = useAppearanceStore((s) => s.resetPreferences);
 
   return (
     <section aria-labelledby="settings-appearance-heading">
@@ -378,32 +386,7 @@ function AppearanceSection() {
         Appearance settings
       </div>
 
-      {error ? (
-        <div
-          className="mb-4 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-950"
-          role="alert"
-        >
-          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-red-500" />
-          <p className="flex-1 text-sm text-red-700 dark:text-red-300">
-            Failed to save preference. {error}
-          </p>
-          <button
-            type="button"
-            onClick={clearError}
-            className="shrink-0 text-red-500 hover:text-red-700"
-            aria-label="Dismiss error"
-          >
-            <X className="size-4" />
-          </button>
-        </div>
-      ) : null}
-
-      {!isLoaded ? (
-        <div className="flex items-center justify-center py-12">
-          <Spinner size="sm" />
-        </div>
-      ) : (
-        <SettingsRows>
+      <SettingsRows>
         <SettingsRow
           label="Theme"
           action={
@@ -461,13 +444,12 @@ function AppearanceSection() {
           }
         />
       </SettingsRows>
-      )}
     </section>
   );
 }
 
 function LearningProfileSection() {
-  const { profile, isLoading } = useLearningProfile();
+  const { data: profile, isLoading } = useLearningProfileQuery();
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
