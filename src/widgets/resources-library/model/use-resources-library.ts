@@ -7,8 +7,15 @@ import type {
   ResourcesPageData,
   ResourcesPageResource,
 } from "@/entities/resources";
-import { useLearningContentProgress } from "@/shared/hooks";
-import { LearningEventType, type LearningEvent, type ProgressEntry } from "@/shared/types";
+import { useEventsStore } from "@/features/learners/model/events-store";
+import { useProgressStore } from "@/features/learners/model/progress-store";
+import {
+  LearningEventType,
+  type BlockState,
+  type LearningEvent,
+  type ProgressEntry,
+} from "@/shared/types";
+import { useFiltersStore } from "@/widgets/resources-library/model/filters-store";
 
 export const RESOURCE_ROLE_OPTIONS = ["core", "supporting", "optional"] as const;
 
@@ -33,6 +40,21 @@ export type ResourcePrimaryAction =
   | "reset";
 
 type FilterKey = "query" | "skill" | "level" | "format" | "use_case" | "state" | "role";
+
+/**
+ * Convert `null` (no filter in store) to `"all"` for the legacy hook contract.
+ * Components still expect `string` with `"all"` as the "no filter" sentinel.
+ */
+function storeValueToAll(value: string | null): string {
+  return value ?? "all";
+}
+
+/**
+ * Convert `"all"` (legacy sentinel) to `null` before writing to the store.
+ */
+function allToStoreValue(value: string): string | null {
+  return value === "all" ? null : value;
+}
 type NormalizedProgressState =
   | "not_started"
   | "in_progress"
@@ -99,28 +121,162 @@ export type SuggestedLibraryFilter = {
   value: string;
 };
 
-function getInitialSearchParam(key: string) {
-  if (typeof window === "undefined") {
-    return "";
+type ResourceProgressTarget = {
+  id: string;
+  title: string;
+  blockTitle: string;
+};
+
+/**
+ * Local replacement for the deleted `useLearningContentProgress` hook.
+ *
+ * Exposes the resource-focused subset (`entries`, `events`, `busyAction`,
+ * `isLoading`, and resource action callbacks) that the resources library
+ * needs by composing the new `useProgressStore` and `useEventsStore`.
+ */
+function useResourceContentProgress(limit: number) {
+  const entries = useProgressStore((s) => s.entries);
+  const progressLoading = useProgressStore((s) => s.isLoading);
+  const updateEntry = useProgressStore((s) => s.updateEntry);
+  const removeEntry = useProgressStore((s) => s.removeEntry);
+  const events = useEventsStore((s) => s.events);
+  const eventsLoading = useEventsStore((s) => s.isLoading);
+  const recordEvent = useEventsStore((s) => s.recordEvent);
+  const [busyAction, setBusyAction] = useState<string | null>(null);
+  void limit;
+
+  async function updateResourceState(
+    resource: ResourceProgressTarget,
+    nextState: BlockState,
+    action: "start" | "complete" | "review" | "skip" | "reset",
+    reflection?: "easy" | "hard" | "useful" | "confusing",
+  ) {
+    setBusyAction(`resource:${resource.id}:${action}`);
+
+    try {
+      await updateEntry(
+        resource.id,
+        nextState,
+        { label: resource.title, blockTitle: resource.blockTitle },
+        "resource",
+      );
+
+      if (action === "start") {
+        await recordEvent({
+          type: LearningEventType.ResourceStarted,
+          payload: { resourceId: resource.id, resourceTitle: resource.title },
+        });
+      }
+
+      if (action === "complete") {
+        await recordEvent({
+          type: LearningEventType.ResourceCompleted,
+          payload: {
+            resourceId: resource.id,
+            resourceTitle: resource.title,
+            ...(reflection ? { reflection } : {}),
+          },
+        });
+      }
+
+      if (action === "skip") {
+        await recordEvent({
+          type: LearningEventType.ItemSkipped,
+          payload: {
+            itemId: resource.id,
+            itemType: "resource",
+            reason: `Skipped for now while working on ${resource.blockTitle.toLowerCase()}.`,
+          },
+        });
+      }
+    } finally {
+      setBusyAction(null);
+    }
   }
 
-  return new URLSearchParams(window.location.search).get(key) ?? "";
+  async function markResourceUseful(resource: ResourceProgressTarget) {
+    setBusyAction(`resource:${resource.id}:useful`);
+
+    try {
+      await recordEvent({
+        type: LearningEventType.ResourceMarkedUseful,
+        payload: { resourceId: resource.id, resourceTitle: resource.title },
+      });
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
+  async function markResourceDifficult(resource: ResourceProgressTarget) {
+    setBusyAction(`resource:${resource.id}:difficult`);
+
+    try {
+      await recordEvent({
+        type: LearningEventType.ResourceMarkedDifficult,
+        payload: {
+          resourceId: resource.id,
+          resourceTitle: resource.title,
+          reason: `Needs another pass for ${resource.blockTitle.toLowerCase()}.`,
+        },
+      });
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
+  async function resetResourceState(resource: ResourceProgressTarget) {
+    setBusyAction(`resource:${resource.id}:reset`);
+
+    try {
+      await removeEntry(resource.id);
+      await recordEvent({
+        type: LearningEventType.ResourceReset,
+        payload: { resourceId: resource.id, resourceTitle: resource.title },
+      });
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
+  return {
+    busyAction,
+    entries,
+    events,
+    isLoading: progressLoading || eventsLoading,
+    markResourceDifficult,
+    markResourceUseful,
+    resetResourceState,
+    updateResourceState,
+  } as const;
 }
 
 export function useResourcesLibrary(content: ResourcesPageData) {
-  const progress = useLearningContentProgress(
+  const progress = useResourceContentProgress(
     Math.min(320, Math.max(80, content.resourceCount * 8)),
   );
   const [actionError, setActionError] = useState<string | null>(null);
-  const [query, setQuery] = useState(() => getInitialSearchParam("q"));
-  const [skillFilter, setSkillFilter] = useState(() => getInitialSearchParam("skill") || "all");
-  const [levelFilter, setLevelFilter] = useState(() => getInitialSearchParam("level") || "all");
-  const [formatFilter, setFormatFilter] = useState(() => getInitialSearchParam("format") || "all");
-  const [useCaseFilter, setUseCaseFilter] = useState(() => getInitialSearchParam("use") || "all");
-  const [stateFilter, setStateFilter] = useState<ResourceStateFilter>(
-    () => (getInitialSearchParam("state") as ResourceStateFilter) || "all",
-  );
-  const [roleFilter, setRoleFilter] = useState(() => getInitialSearchParam("role") || "all");
+  const query = useFiltersStore((s) => s.query);
+  const skill = useFiltersStore((s) => s.skill);
+  const level = useFiltersStore((s) => s.level);
+  const format = useFiltersStore((s) => s.format);
+  const useCase = useFiltersStore((s) => s.use);
+  const state = useFiltersStore((s) => s.state);
+  const role = useFiltersStore((s) => s.role);
+  const setFilter = useFiltersStore((s) => s.setFilter);
+  const skillFilter = storeValueToAll(skill);
+  const levelFilter = storeValueToAll(level);
+  const formatFilter = storeValueToAll(format);
+  const useCaseFilter = storeValueToAll(useCase);
+  const stateFilter = (state ?? "all") as ResourceStateFilter;
+  const roleFilter = storeValueToAll(role);
+  const setQuery = (value: string) => setFilter("query", value);
+  const setSkillFilter = (value: string) => setFilter("skill", allToStoreValue(value));
+  const setLevelFilter = (value: string) => setFilter("level", allToStoreValue(value));
+  const setFormatFilter = (value: string) => setFilter("format", allToStoreValue(value));
+  const setUseCaseFilter = (value: string) => setFilter("use", allToStoreValue(value));
+  const setStateFilter = (value: ResourceStateFilter) =>
+    setFilter("state", value === "all" ? null : value);
+  const setRoleFilter = (value: string) => setFilter("role", allToStoreValue(value));
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(null);
   const deferredQuery = useDeferredValue(query);
 
@@ -131,20 +287,8 @@ export function useResourcesLibrary(content: ResourcesPageData) {
       return;
     }
 
-    const url = new URL(window.location.href);
-    syncSearchParam(url.searchParams, "q", query);
-    syncSearchParam(url.searchParams, "skill", skillFilter);
-    syncSearchParam(url.searchParams, "level", levelFilter);
-    syncSearchParam(url.searchParams, "format", formatFilter);
-    syncSearchParam(url.searchParams, "use", useCaseFilter);
-    syncSearchParam(url.searchParams, "state", stateFilter);
-    syncSearchParam(url.searchParams, "role", roleFilter);
-    window.history.replaceState(
-      window.history.state,
-      "",
-      `${url.pathname}${url.search}${url.hash}`,
-    );
-  }, [formatFilter, levelFilter, query, roleFilter, skillFilter, stateFilter, useCaseFilter]);
+    useFiltersStore.getState().hydrateFromUrl(new URLSearchParams(window.location.search));
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") {
