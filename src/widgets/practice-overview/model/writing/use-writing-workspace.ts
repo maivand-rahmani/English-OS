@@ -2,10 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import {
+  useWritingFeedbackMutation,
+  type WritingFeedbackRequest,
+} from "@/features/ai/api/writing-feedback.mutations";
+import { useDraftsStore } from "@/features/learners/model/drafts-store";
+import { useEventsStore } from "@/features/learners/model/events-store";
+import { useProgressStore } from "@/features/learners/model/progress-store";
 import type { DashboardContentState } from "@/entities/dashboard";
-import { useDrafts } from "@/shared/hooks/use-drafts";
-import { useLearningEvents } from "@/shared/hooks/use-learning-events";
-import { useLocalProgress } from "@/shared/hooks/use-local-progress";
 import { LearningEventType, type Draft } from "@/shared/types";
 import type { WritingTaskWithContext } from "@/widgets/dashboard-overview/model/dashboard-overview-types";
 
@@ -14,25 +18,17 @@ import { getWritingWorkspaceState } from "./writing-workspace-state";
 
 type SaveState = "idle" | "dirty" | "saved" | "saving" | "submitting";
 
-type WritingVerdict = "pass" | "retry" | "needs_work";
-
-type AiWritingFeedbackResult = {
-  verdict: WritingVerdict;
-  feedbackSummary: string;
-  overallSummary: string;
-  correctedVersion: string | null;
-  keyIssues: Array<{ title: string; detail: string }>;
-  naturalnessSuggestions: string[];
-  grammarNotes: string[];
-  vocabularySuggestions: string[];
-  nextPracticeFocus: string;
-  detectedPatterns: Array<{ label: string; detail: string }>;
-};
-
 export function useWritingWorkspace(content: DashboardContentState) {
-  const { entries } = useLocalProgress();
-  const { drafts, createDraft, getDraft, saveDraft } = useDrafts();
-  const { events, isLoading: eventsLoading, recordEvent } = useLearningEvents(20);
+  const entries = useProgressStore((s) => s.entries);
+  const drafts = useDraftsStore((s) => s.drafts);
+  const createDraft = useDraftsStore((s) => s.createDraft);
+  const saveDraft = useDraftsStore((s) => s.saveDraft);
+  const getDraft = useDraftsStore((s) => s.getDraft);
+  const events = useEventsStore((s) => s.events);
+  const recordEvent = useEventsStore((s) => s.recordEvent);
+
+  const feedbackMutation = useWritingFeedbackMutation();
+  const feedbackAbortRef = useRef<AbortController | null>(null);
 
   const [activeDraft, setActiveDraft] = useState<Draft | null>(null);
   const [editorContent, setEditorContent] = useState("");
@@ -41,12 +37,6 @@ export function useWritingWorkspace(content: DashboardContentState) {
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [workspaceError, setWorkspaceError] = useState<string | null>(null);
-
-  const [aiFeedback, setAiFeedback] = useState<AiWritingFeedbackResult | null>(
-    null,
-  );
-  const [aiFeedbackLoading, setAiFeedbackLoading] = useState(false);
-  const [aiFeedbackError, setAiFeedbackError] = useState<string | null>(null);
 
   const autosaveTimeoutRef = useRef<number | null>(null);
   const workspace = getWritingWorkspaceState(content, entries, drafts, selectedTaskId);
@@ -76,20 +66,22 @@ export function useWritingWorkspace(content: DashboardContentState) {
       nextState: Exclude<SaveState, "dirty" | "idle"> = "saving",
     ) => {
       setSaveState(nextState);
-      const savedDraft = await saveDraft(nextDraft);
-
-      if (!savedDraft) {
+      const currentDraft = getDraft(nextDraft.id);
+      const merged: Draft = { ...currentDraft, ...nextDraft };
+      try {
+        await saveDraft(merged);
+      } catch {
         setWorkspaceError("Local draft save failed. Try again in a moment.");
         setSaveState("dirty");
         return undefined;
       }
 
-      setActiveDraft(savedDraft);
+      setActiveDraft(merged);
       setSaveState("saved");
       setWorkspaceError(null);
-      return savedDraft;
+      return merged;
     },
-    [saveDraft],
+    [getDraft, saveDraft],
   );
 
   useEffect(() => {
@@ -108,7 +100,7 @@ export function useWritingWorkspace(content: DashboardContentState) {
       setIsLoadingDraft(true);
 
       try {
-        const draft = await getDraft(activeDraftId);
+        const draft = getDraft(activeDraftId);
 
         if (!cancelled) {
           setActiveDraft(draft ?? null);
@@ -194,10 +186,9 @@ export function useWritingWorkspace(content: DashboardContentState) {
     setNotice(null);
     setWorkspaceError(null);
     setSelectedTaskId(taskId);
-    setAiFeedback(null);
-    setAiFeedbackError(null);
-    setAiFeedbackLoading(false);
-  }, []);
+    feedbackAbortRef.current?.abort();
+    feedbackMutation.reset();
+  }, [feedbackMutation]);
 
   const handleEditorChange = useCallback((nextContent: string) => {
     setNotice(null);
@@ -269,53 +260,34 @@ export function useWritingWorkspace(content: DashboardContentState) {
     setNotice("Submission recorded locally. AI feedback is loading...");
   }, [activeDraft, clearAutosave, editorContent, persistDraft, recordEvent]);
 
-  const requestAiFeedback = useCallback(async () => {
+  const requestAiFeedback = useCallback(() => {
     if (!activeDraft || !activeTask) {
       return;
     }
 
-    setAiFeedbackLoading(true);
-    setAiFeedbackError(null);
+    feedbackAbortRef.current?.abort();
+    const controller = new AbortController();
+    feedbackAbortRef.current = controller;
 
-    try {
-      const response = await fetch("/api/ai/writing-feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          learnerLevel: content.learnerLevelLabel ?? "Beginner",
-          taskPrompt: activeTask.instructions || activeTask.title,
-          learnerResponse: editorContent,
-          roadmapContext: activeTask.blockTitle ?? undefined,
-        }),
-      });
+    const payload: WritingFeedbackRequest = {
+      learnerLevel: content.learnerLevelLabel ?? "Beginner",
+      taskPrompt: activeTask.instructions || activeTask.title,
+      learnerResponse: editorContent,
+      roadmapContext: activeTask.blockTitle ?? undefined,
+    };
 
-      const json = await response.json();
-
-      if (json.ok && json.data) {
-        setAiFeedback(json.data);
-        setAiFeedbackError(null);
-      } else {
-        setAiFeedbackError(
-          json.error?.message ?? "AI feedback unavailable right now.",
-        );
-      }
-    } catch {
-      setAiFeedbackError("Could not reach the AI feedback service.");
-    } finally {
-      setAiFeedbackLoading(false);
-    }
-  }, [activeDraft, activeTask, editorContent, content.learnerLevelLabel]);
+    feedbackMutation.mutate({ payload, signal: controller.signal });
+  }, [activeDraft, activeTask, content.learnerLevelLabel, editorContent, feedbackMutation]);
 
   const handleSubmitAndRequestFeedback = useCallback(async () => {
     if (!activeDraft || !activeTask) {
       return;
     }
 
-    setAiFeedback(null);
-    setAiFeedbackError(null);
+    feedbackMutation.reset();
     await handleSubmitDraft();
-    await requestAiFeedback();
-  }, [activeDraft, activeTask, handleSubmitDraft, requestAiFeedback]);
+    requestAiFeedback();
+  }, [activeDraft, activeTask, feedbackMutation, handleSubmitDraft, requestAiFeedback]);
 
   const handleTryAgain = useCallback(async () => {
     if (!activeDraft) {
@@ -323,36 +295,36 @@ export function useWritingWorkspace(content: DashboardContentState) {
     }
 
     clearAutosave();
-    setAiFeedback(null);
-    setAiFeedbackError(null);
-    setAiFeedbackLoading(false);
+    feedbackAbortRef.current?.abort();
+    feedbackMutation.reset();
     setNotice(null);
     setWorkspaceError(null);
 
-    const fullDraft = await getDraft(activeDraft.id);
+    const fullDraft = getDraft(activeDraft.id);
 
     if (!fullDraft) {
       setWorkspaceError("Could not reopen this draft for another attempt.");
       return;
     }
 
-    const resetDraft = await saveDraft({
+    const merged: Draft = {
       ...fullDraft,
       lastSubmittedAt: undefined,
       lastWordCount: undefined,
       updatedAt: Date.now(),
-    });
-
-    if (!resetDraft) {
+    };
+    try {
+      await saveDraft(merged);
+    } catch {
       setWorkspaceError("Could not reopen this draft for another attempt.");
       return;
     }
 
-    setActiveDraft(resetDraft);
-    setEditorContent(resetDraft.content);
+    setActiveDraft(merged);
+    setEditorContent(merged.content);
     setSaveState("saved");
     setNotice("Ready for another attempt on this task.");
-  }, [activeDraft, clearAutosave, getDraft, saveDraft]);
+  }, [activeDraft, clearAutosave, feedbackMutation, getDraft, saveDraft]);
 
   const handleNextTask = useCallback(() => {
     if (workspace.tasks.length === 0) {
@@ -377,13 +349,18 @@ export function useWritingWorkspace(content: DashboardContentState) {
     );
   }, [workspace.tasks, activeTask, handleSelectTask]);
 
+  useEffect(() => {
+    return () => {
+      feedbackAbortRef.current?.abort();
+    };
+  }, []);
+
   return {
     activeDraft,
     activeTask,
     drafts,
     editorContent,
     events,
-    eventsLoading,
     focusBlock: workspace.focusBlock,
     handleCreateDraft,
     handleEditorChange,
@@ -399,9 +376,9 @@ export function useWritingWorkspace(content: DashboardContentState) {
     tasks: workspace.tasks,
     wordCount,
     workspaceError,
-    aiFeedback,
-    aiFeedbackLoading,
-    aiFeedbackError,
+    aiFeedback: feedbackMutation.data ?? null,
+    aiFeedbackLoading: feedbackMutation.isPending,
+    aiFeedbackError: feedbackMutation.error?.message ?? null,
     requestAiFeedback,
   } as const;
 }

@@ -1,35 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { DashboardContentState } from "@/entities/dashboard";
-import { useLearningEvents } from "@/shared/hooks/use-learning-events";
-import { useLocalProgress } from "@/shared/hooks/use-local-progress";
-import {
-  clearActiveSpeakingSession,
-  getActiveSpeakingSession,
-  setActiveSpeakingSession,
-} from "@/shared/persistence";
+import { useSpeakingFeedbackMutation } from "@/features/ai/api/speaking-feedback.mutations";
+import { useEventsStore } from "@/features/learners/model/events-store";
+import { useProgressStore } from "@/features/learners/model/progress-store";
 import {
   LearningEventType,
   type ActiveSpeakingSession,
   type SpeakingReflection,
 } from "@/shared/types";
 
-type AiSpeakingFeedbackResult = {
-  verdict: "pass" | "retry" | "needs_work";
-  feedbackSummary: string;
-  overallSummary: string;
-  clarityFeedback: string;
-  grammarFeedback: string;
-  vocabularyFeedback: string;
-  fluencyFeedback: string;
-  strongerResponseExample: string;
-  nextPracticeFocus: string;
-  detectedPatterns: Array<{ label: string; detail: string }>;
-  confidenceNote: string;
-};
-
+import { useActiveSessionStore } from "./active-session-store";
 import {
   getReflectionLabel,
   getSpeakingSessionElapsed,
@@ -40,24 +23,25 @@ import {
 import { getSpeakingWorkspaceState } from "./speaking-workspace-state";
 
 export function useSpeakingWorkspace(content: DashboardContentState) {
-  const { entries } = useLocalProgress();
-  const { events, isLoading: eventsLoading, recordEvent } = useLearningEvents(20);
+  const entries = useProgressStore((s) => s.entries);
+  const events = useEventsStore((s) => s.events);
+  const eventsLoading = useEventsStore((s) => s.isLoading);
+  const recordEvent = useEventsStore((s) => s.recordEvent);
+
+  const persistedSession = useActiveSessionStore((s) => s.activeSession);
+  const setPersistedSession = useActiveSessionStore((s) => s.setActiveSession);
+  const clearPersistedSession = useActiveSessionStore((s) => s.clearActiveSession);
 
   const [selectedPromptId, setSelectedPromptId] = useState<string | null>(
-    () => getActiveSpeakingSession()?.promptId ?? null,
+    () => persistedSession?.promptId ?? null,
   );
-  const [activeSession, setSession] = useState<ActiveSpeakingSession | null>(() =>
-    getActiveSpeakingSession(),
-  );
+  const [activeSession, setSession] = useState(persistedSession);
   const [notice, setNotice] = useState<string | null>(null);
   const [workspaceError, setWorkspaceError] = useState<string | null>(null);
   const [timerNow, setTimerNow] = useState(0);
 
-  const [aiFeedback, setAiFeedback] = useState<AiSpeakingFeedbackResult | null>(
-    null,
-  );
-  const [aiFeedbackLoading, setAiFeedbackLoading] = useState(false);
-  const [aiFeedbackError, setAiFeedbackError] = useState<string | null>(null);
+  const feedbackMutation = useSpeakingFeedbackMutation();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const rawWorkspace = getSpeakingWorkspaceState(
     content,
@@ -98,12 +82,12 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
 
   useEffect(() => {
     if (hasOrphanedSession) {
-      clearActiveSpeakingSession();
+      clearPersistedSession();
     }
-  }, [hasOrphanedSession]);
+  }, [hasOrphanedSession, clearPersistedSession]);
 
   function persistSession(nextSession: ActiveSpeakingSession) {
-    setActiveSpeakingSession(nextSession);
+    setPersistedSession(nextSession);
     setSession(nextSession);
     setSelectedPromptId(nextSession.promptId);
     setTimerNow(Date.now());
@@ -248,7 +232,7 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
       },
     });
 
-    clearActiveSpeakingSession();
+    clearPersistedSession();
     setSession(null);
     setSelectedPromptId(session.promptId);
     setTimerNow(Date.now());
@@ -288,41 +272,32 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
       },
     });
 
-    setAiFeedback(null);
-    setAiFeedbackError(null);
+    feedbackMutation.reset();
     setNotice("Session saved. AI feedback is loading...");
     setWorkspaceError(null);
 
-    setAiFeedbackLoading(true);
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
-    try {
-      const response = await fetch("/api/ai/speaking-feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          learnerLevel: content.learnerLevelLabel ?? "Beginner",
-          promptText: activePrompt.promptText,
+    feedbackMutation.mutate(
+      {
+        payload: {
+          type: "initial",
+          prompt: activePrompt.promptText,
           transcript: capturedTranscript,
-          learnerReflection:
-            (capturedReflection ? getReflectionLabel(capturedReflection) : undefined) ?? undefined,
-          roadmapContext: activePrompt.blockTitle ?? undefined,
-        }),
-      });
-
-      const json = await response.json();
-
-      if (json.ok && json.data) {
-        setAiFeedback(json.data);
-      } else {
-        setAiFeedbackError(
-          json.error?.message ?? "AI feedback unavailable right now.",
-        );
-      }
-    } catch {
-      setAiFeedbackError("Could not reach the AI feedback service.");
-    } finally {
-      setAiFeedbackLoading(false);
-    }
+          learnerLevel: content.learnerLevelLabel ?? "Beginner",
+        },
+        signal: controller.signal,
+      },
+      {
+        onSettled: () => {
+          if (abortControllerRef.current === controller) {
+            abortControllerRef.current = null;
+          }
+        },
+      },
+    );
 
     setNotice(
       `Session for "${capturedTitle}" saved. AI feedback is ready.`,
@@ -334,12 +309,12 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
       return;
     }
 
-    clearActiveSpeakingSession();
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
+    feedbackMutation.reset();
+    clearPersistedSession();
     setSession(null);
     setTimerNow(Date.now());
-    setAiFeedback(null);
-    setAiFeedbackError(null);
-    setAiFeedbackLoading(false);
     setNotice(null);
     setWorkspaceError(null);
   }
@@ -359,13 +334,13 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
       return;
     }
 
-    clearActiveSpeakingSession();
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
+    feedbackMutation.reset();
+    clearPersistedSession();
     setSession(null);
     setTimerNow(Date.now());
     setSelectedPromptId(nextPrompt.id);
-    setAiFeedback(null);
-    setAiFeedbackError(null);
-    setAiFeedbackLoading(false);
     setNotice(
       currentIndex === rawWorkspace.prompts.length - 1
         ? "All speaking prompts wrapped. Starting the queue over."
@@ -379,7 +354,7 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
       return;
     }
 
-    clearActiveSpeakingSession();
+    clearPersistedSession();
     setSession(null);
     setTimerNow(Date.now());
     setWorkspaceError(null);
@@ -391,43 +366,43 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
       return;
     }
 
-    setAiFeedbackLoading(true);
-    setAiFeedbackError(null);
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
-    try {
-      const response = await fetch("/api/ai/speaking-feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+    feedbackMutation.mutate(
+      {
+        payload: {
+          type: "reflection",
+          prompt: activePrompt.promptText,
+          learnerReflection: reflectionLabel ?? "",
+          originalTranscript: transcriptDraft,
           learnerLevel: content.learnerLevelLabel ?? "Beginner",
-          promptText: activePrompt.promptText,
-          transcript: transcriptDraft,
-          learnerReflection: reflectionLabel ?? undefined,
-          roadmapContext: activePrompt.blockTitle ?? undefined,
-        }),
-      });
-
-      const json = await response.json();
-
-      if (json.ok && json.data) {
-        setAiFeedback(json.data);
-        setAiFeedbackError(null);
-      } else {
-        setAiFeedbackError(
-          json.error?.message ?? "AI feedback unavailable right now.",
-        );
-      }
-    } catch {
-      setAiFeedbackError("Could not reach the AI feedback service.");
-    } finally {
-      setAiFeedbackLoading(false);
-    }
+        },
+        signal: controller.signal,
+      },
+      {
+        onSettled: () => {
+          if (abortControllerRef.current === controller) {
+            abortControllerRef.current = null;
+          }
+        },
+      },
+    );
   }, [
     activePrompt,
     transcriptDraft,
     reflectionLabel,
     content.learnerLevelLabel,
+    feedbackMutation,
   ]);
+
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = null;
+    };
+  }, []);
 
   return {
     activePrompt,
@@ -456,9 +431,9 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
     transcriptDraft,
     transcriptSummary,
     workspaceError: resolvedWorkspaceError,
-    aiFeedback,
-    aiFeedbackLoading,
-    aiFeedbackError,
+    aiFeedback: feedbackMutation.data ?? null,
+    isFetchingFeedback: feedbackMutation.isPending,
+    feedbackError: feedbackMutation.error?.message ?? null,
     requestAiFeedback,
   } as const;
 }

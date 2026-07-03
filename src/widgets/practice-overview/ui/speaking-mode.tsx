@@ -168,7 +168,7 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
                     type="button"
                     onClick={() => workspace.handleClearSession()}
                     className={buttonVariants({ variant: "outline" })}
-                    disabled={workspace.aiFeedbackLoading}
+                    disabled={workspace.isFetchingFeedback}
                   >
                     Clear session
                   </button>
@@ -176,9 +176,9 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
                     type="button"
                     onClick={() => void workspace.handleSaveAndRequestFeedback()}
                     className={buttonVariants({ size: "lg" })}
-                    disabled={workspace.aiFeedbackLoading}
+                    disabled={workspace.isFetchingFeedback}
                   >
-                    {workspace.aiFeedbackLoading ? "Saving..." : "Save speaking attempt"}
+                    {workspace.isFetchingFeedback ? "Saving..." : "Save speaking attempt"}
                   </button>
                 </div>
               </div>
@@ -296,15 +296,15 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
           {workspace.reflectionLabel ? ` · ${workspace.reflectionLabel}` : ""}
         </p>
 
-        {workspace.aiFeedbackLoading ? (
+        {workspace.isFetchingFeedback ? (
           <div className="flex items-center gap-3 rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel p-4">
             <LoaderCircle className="size-4 animate-spin text-muted-foreground" />
             <p className="text-sm text-muted-foreground">Analyzing your speaking...</p>
           </div>
         ) : null}
 
-        {workspace.aiFeedbackError && !workspace.aiFeedbackLoading ? (
-          <InlineMessage tone="error">{workspace.aiFeedbackError}</InlineMessage>
+        {workspace.feedbackError && !workspace.isFetchingFeedback ? (
+          <InlineMessage tone="error">{workspace.feedbackError}</InlineMessage>
         ) : null}
 
         {workspace.aiFeedback ? (
@@ -423,7 +423,7 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
     }
 
     const hasFeedback = Boolean(workspace.aiFeedback);
-    const hasError = Boolean(workspace.aiFeedbackError);
+    const hasError = Boolean(workspace.feedbackError);
     const showActions = hasFeedback || hasError;
     if (!showActions) {
       return null;
@@ -435,7 +435,7 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
           type="button"
           onClick={() => workspace.handleTryAgain()}
           className={buttonVariants({ variant: "outline" })}
-          disabled={workspace.aiFeedbackLoading}
+          disabled={workspace.isFetchingFeedback}
         >
           <RotateCcw className="mr-2 size-4" />
           Try again
@@ -444,7 +444,7 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
           type="button"
           onClick={() => workspace.handleNextTask()}
           className={buttonVariants({ size: "lg" })}
-          disabled={workspace.aiFeedbackLoading}
+          disabled={workspace.isFetchingFeedback}
         >
           {isLastPrompt ? "Start over" : "Next"}
           <ArrowRight className="ml-2 size-4" />
