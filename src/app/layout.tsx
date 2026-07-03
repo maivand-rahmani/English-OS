@@ -3,6 +3,8 @@ import { JetBrains_Mono, Manrope } from "next/font/google";
 
 import { siteConfig } from "@/shared/config/site";
 
+import QueryProvider from "@/app/providers/QueryProvider";
+
 import "./globals.css";
 
 const manrope = Manrope({
@@ -76,7 +78,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>{children}</body>
+      <body><QueryProvider>{children}</QueryProvider></body>
     </html>
   );
 }
