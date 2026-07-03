@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, Edit3, Sparkles } from "lucide-react";
@@ -14,7 +14,6 @@ import {
   STUDY_TIME_OPTIONS,
   type OnboardingFormData,
 } from "@/shared/constants/onboarding";
-import { useLearningProfile } from "@/shared/hooks/use-learning-profile";
 import { useReducedMotion } from "@/shared/hooks/use-reduced-motion";
 import { useOnboardingState } from "@/widgets/onboarding-wizard/model/use-onboarding-state";
 import { CheckboxGroup } from "@/shared/ui/checkbox-group";
@@ -26,7 +25,6 @@ import {
   InsetPanel,
   SectionEyebrow,
 } from "@/shared/ui/surfaces";
-import { completeOnboarding } from "@/server/learners/complete-onboarding";
 import { cn } from "@/shared/lib/utils";
 
 type OnboardingWizardProps = {
@@ -74,13 +72,11 @@ export function OnboardingWizard({
     goNext,
     goBack,
     goToStep,
-    submitStart,
-    submitError,
-    setFieldErrors,
+    submit,
+    isSubmitting,
+    completeMutation,
     hydrate,
   } = useOnboardingState(initialData as never);
-  const { updateLocal } = useLearningProfile();
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
@@ -89,40 +85,14 @@ export function OnboardingWizard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function handleSubmit() {
-    submitStart();
-    setSubmitting(true);
-    try {
-      const result = await completeOnboarding(state.data);
-      if (result.success) {
-        if (typeof window !== "undefined" && result.profileId) {
-          const snapshot = {
-            id: result.profileId,
-            userId: null,
-            guestId: null,
-            displayName: state.data.displayName ?? "Learner",
-            currentLevel: state.data.currentLevel ?? null,
-            mainGoal: state.data.mainGoal ?? null,
-            studyMinutesPerDay: state.data.studyMinutesPerDay ?? null,
-            strongestSkill: state.data.strongestSkill ?? null,
-            weakestSkill: state.data.weakestSkill ?? null,
-            preferredFormats: state.data.preferredFormats ?? [],
-            mainPainPoint: state.data.mainPainPoint ?? null,
-            completedOnboardingAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          };
-          updateLocal(snapshot as never);
-        }
-        router.push("/dashboard");
-      } else {
-        if (result.fieldErrors) setFieldErrors(result.fieldErrors);
-        submitError(result.error || "Could not save your profile");
-      }
-    } catch (err) {
-      submitError(err instanceof Error ? err.message : "Network error");
-    } finally {
-      setSubmitting(false);
+  useEffect(() => {
+    if (completeMutation.isSuccess) {
+      router.push("/dashboard");
     }
+  }, [completeMutation.isSuccess, router]);
+
+  function handleSubmit() {
+    submit();
   }
 
   return (
@@ -246,11 +216,11 @@ export function OnboardingWizard({
           <button
             type="button"
             onClick={goBack}
-            disabled={!canGoBack || submitting}
+            disabled={!canGoBack || isSubmitting}
             className={cn(
               buttonVariants({ variant: "ghost" }),
               "rounded-full",
-              (!canGoBack || submitting) && "invisible",
+              (!canGoBack || isSubmitting) && "invisible",
             )}
           >
             <ArrowLeft className="mr-1.5 size-4" />
@@ -269,10 +239,10 @@ export function OnboardingWizard({
               <button
                 type="button"
                 onClick={handleSubmit}
-                disabled={submitting || !canSubmit}
+                disabled={isSubmitting || !canSubmit}
                 className={cn(buttonVariants({ size: "lg" }), "rounded-full")}
               >
-                {submitting ? "Saving..." : "Start my roadmap"}
+                {isSubmitting ? "Saving..." : "Start my roadmap"}
                 <Check className="ml-1.5 size-4" />
               </button>
             ) : (

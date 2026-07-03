@@ -1,7 +1,12 @@
 "use client";
 
-import { useCallback, useMemo, useReducer } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
 
+import {
+  useCompleteOnboardingMutation,
+  useUpdateLearningProfileMutation,
+} from "@/features/learners/api/learning-profile.mutations";
+import { useLearningProfileQuery } from "@/features/learners/api/learning-profile.queries";
 import {
   ONBOARDING_STEPS,
   type OnboardingFormData,
@@ -44,6 +49,9 @@ const INITIAL_STATE: OnboardingState = {
   error: null,
   fieldErrors: {},
 };
+
+const FORM_DRAFT_STORAGE_KEY = "english-os:onboarding-form-draft";
+const AUTOSAVE_DEBOUNCE_MS = 800;
 
 function reducer(state: OnboardingState, action: Action): OnboardingState {
   switch (action.type) {
@@ -124,11 +132,85 @@ function isStepValid(step: number, data: OnboardingFormDraft): boolean {
   }
 }
 
+function readFormDraft(): OnboardingFormDraft | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(FORM_DRAFT_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    if (parsed && typeof parsed === "object") {
+      return parsed as OnboardingFormDraft;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function writeFormDraft(data: OnboardingFormDraft): void {
+  if (typeof window === "undefined") return;
+  try {
+    if (Object.keys(data).length === 0) {
+      window.localStorage.removeItem(FORM_DRAFT_STORAGE_KEY);
+      return;
+    }
+    window.localStorage.setItem(FORM_DRAFT_STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    // localStorage may be unavailable (quota, private mode) — fail silently.
+  }
+}
+
 export function useOnboardingState(initialData?: OnboardingFormDraft) {
+  const profileQuery = useLearningProfileQuery();
+  const updateProfileMutation = useUpdateLearningProfileMutation();
+  const completeMutation = useCompleteOnboardingMutation();
+
   const [state, dispatch] = useReducer(
     reducer,
     initialData ? { ...INITIAL_STATE, data: initialData } : INITIAL_STATE,
   );
+
+  // Hydrate form data from localStorage on mount (form-state autosave).
+  // Runs exactly once. RSC-provided `initialData` wins if it has any keys.
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0) return;
+    const draft = readFormDraft();
+    if (draft) {
+      dispatch({ type: "HYDRATE", payload: draft });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persist form data to localStorage (NOT server data) whenever it changes.
+  useEffect(() => {
+    writeFormDraft(state.data);
+  }, [state.data]);
+
+  // Debounced server-side autosave via TanStack Query mutation.
+  // Skips the empty initial state and skips while the user is actively submitting.
+  const autosaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const firstRunRef = useRef(true);
+  useEffect(() => {
+    if (firstRunRef.current) {
+      firstRunRef.current = false;
+      return;
+    }
+    if (state.isSubmitting) return;
+    if (Object.keys(state.data).length === 0) return;
+
+    if (autosaveTimerRef.current) {
+      clearTimeout(autosaveTimerRef.current);
+    }
+    autosaveTimerRef.current = setTimeout(() => {
+      updateProfileMutation.mutate(state.data as OnboardingFormData);
+    }, AUTOSAVE_DEBOUNCE_MS);
+
+    return () => {
+      if (autosaveTimerRef.current) {
+        clearTimeout(autosaveTimerRef.current);
+      }
+    };
+  }, [state.data, state.isSubmitting, updateProfileMutation]);
 
   const canGoBack = state.step > 0;
   const canGoNext =
@@ -143,6 +225,9 @@ export function useOnboardingState(initialData?: OnboardingFormDraft) {
     () => ONBOARDING_STEPS[state.step],
     [state.step],
   );
+
+  // isSubmitting is driven by the TanStack Query mutation, not local state.
+  const isSubmitting = completeMutation.isPending;
 
   const setLevel = useCallback(
     (level: OnboardingFormData["currentLevel"]) =>
@@ -194,11 +279,52 @@ export function useOnboardingState(initialData?: OnboardingFormDraft) {
     (errs: Record<string, string>) => dispatch({ type: "SET_FIELD_ERRORS", payload: errs }),
     [],
   );
-  const reset = useCallback(() => dispatch({ type: "RESET" }), []);
+  const reset = useCallback(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(FORM_DRAFT_STORAGE_KEY);
+    }
+    dispatch({ type: "RESET" });
+  }, []);
   const hydrate = useCallback(
     (data: OnboardingFormDraft) => dispatch({ type: "HYDRATE", payload: data }),
     [],
   );
+
+  /**
+   * Submit handler. Wraps the TanStack Query mutation:
+   *   - On success: dispatches SUBMIT_SUCCESS and clears the form draft.
+   *   - On server-side validation failure: maps fieldErrors into state and
+   *     surfaces the error message.
+   *   - On unexpected error: surfaces the error message.
+   */
+  const submit = useCallback(() => {
+    submitStart();
+    completeMutation.mutate(state.data as OnboardingFormData, {
+      onSuccess: (result) => {
+        if (result.success) {
+          if (typeof window !== "undefined") {
+            window.localStorage.removeItem(FORM_DRAFT_STORAGE_KEY);
+          }
+          submitSuccess();
+        } else {
+          if (result.fieldErrors) {
+            setFieldErrors(result.fieldErrors as Record<string, string>);
+          }
+          submitError(result.error || "Could not save your profile");
+        }
+      },
+      onError: (err) => {
+        submitError(err instanceof Error ? err.message : "Network error");
+      },
+    });
+  }, [
+    completeMutation,
+    setFieldErrors,
+    state.data,
+    submitError,
+    submitStart,
+    submitSuccess,
+  ]);
 
   return {
     state,
@@ -207,6 +333,7 @@ export function useOnboardingState(initialData?: OnboardingFormDraft) {
     canGoNext,
     canSubmit,
     isLastStep,
+    isSubmitting,
     progress,
     currentStep,
     setLevel,
@@ -225,5 +352,10 @@ export function useOnboardingState(initialData?: OnboardingFormDraft) {
     setFieldErrors,
     reset,
     hydrate,
+    submit,
+    // TanStack Query surface (re-exported for consumer convenience)
+    profileQuery,
+    updateProfileMutation,
+    completeMutation,
   } as const;
 }
