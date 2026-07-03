@@ -1,7 +1,7 @@
 "use client";
 
 import type { ElementType, ReactNode } from "react";
-import { LoaderCircle, PenSquare, Sparkles } from "lucide-react";
+import { ArrowRight, Check, LoaderCircle, PenSquare, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
 
 import type { DashboardContentState } from "@/entities/dashboard";
@@ -9,7 +9,7 @@ import { useReducedMotion } from "@/shared/hooks/use-reduced-motion";
 import { cn } from "@/shared/lib/utils";
 import { getWorkspaceSwapMotion } from "@/shared/lib/workspace-motion";
 import { buttonVariants } from "@/shared/ui/button";
-import { InsetPanel, SmallTag } from "@/shared/ui/surfaces";
+import { InsetPanel, SmallTag, type SurfaceTone } from "@/shared/ui/surfaces";
 import { formatRelativeTimestamp } from "@/widgets/dashboard-overview/model/dashboard-overview-formatters";
 
 import {
@@ -23,12 +23,63 @@ type WritingModeProps = {
 };
 
 type WritingWorkspaceApi = ReturnType<typeof useWritingWorkspace>;
+type WritingVerdict = "pass" | "retry" | "needs_work";
+
+type VerdictCopy = {
+  label: string;
+  icon: ElementType;
+  tone: SurfaceTone;
+  eyebrow: string;
+};
+
+const VERDICT_COPY: Record<WritingVerdict, VerdictCopy> = {
+  pass: {
+    label: "Pass",
+    icon: Check,
+    tone: "green",
+    eyebrow: "Ready to move on",
+  },
+  retry: {
+    label: "Try again",
+    icon: RotateCcw,
+    tone: "lavender",
+    eyebrow: "Another attempt will help",
+  },
+  needs_work: {
+    label: "Needs work",
+    icon: ArrowRight,
+    tone: "cream",
+    eyebrow: "Close, but one more pass is worth it",
+  },
+};
+
+function VerdictBadge({
+  feedbackSummary,
+  verdict,
+}: {
+  feedbackSummary: string;
+  verdict: WritingVerdict;
+}) {
+  const copy = VERDICT_COPY[verdict];
+  const Icon = copy.icon;
+  return (
+    <InsetPanel tone={copy.tone} className="p-5">
+      <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        <Icon className="size-3.5" />
+        <span>{copy.eyebrow}</span>
+        <SmallTag>{copy.label}</SmallTag>
+      </div>
+      <p className="mt-3 text-sm leading-6 text-foreground">{feedbackSummary}</p>
+    </InsetPanel>
+  );
+}
 
 export function WritingMode({ content }: WritingModeProps) {
   const reduced = useReducedMotion();
   const workspace = useWritingWorkspace(content);
   const activeTask = workspace.activeTask;
   const activeDraft = workspace.activeDraft;
+  const AiFeedbackLoading = workspace.aiFeedbackLoading;
   const submissionSummary = activeDraft
     ? getSubmissionSummary(activeDraft)
     : {
@@ -41,35 +92,37 @@ export function WritingMode({ content }: WritingModeProps) {
     activeTask?.wordCountMax,
   );
   const hasSubmission = activeDraft?.lastSubmittedAt != null;
-
-  async function handleRequestAiFeedback() {
-    if (!activeDraft || !activeTask) return;
-    await workspace.requestAiFeedback();
-  }
+  const isLastTask =
+    workspace.tasks.length > 0 &&
+    workspace.tasks.findIndex((task) => task.id === activeTask?.id) ===
+      workspace.tasks.length - 1;
+  const motionProps = getWorkspaceSwapMotion(reduced);
 
   return (
-    <div className="space-y-5">
-      <StudioPromptStrip
-        icon={PenSquare}
-        label="Writing prompt"
-        meta={formatWritingMeta(activeTask)}
-        control={
-          workspace.tasks.length > 1 ? (
-            <StudioSelect
-              ariaLabel="Choose writing task"
-              onChange={workspace.handleSelectTask}
-              options={workspace.tasks.map((task) => ({
-                label: task.title,
-                value: task.id,
-              }))}
-              value={activeTask?.id ?? workspace.tasks[0]?.id ?? ""}
-            />
-          ) : null
-        }
-      >
-        {activeTask?.instructions ??
-          "Writing work appears here when the current roadmap block includes output practice."}
-      </StudioPromptStrip>
+    <motion.div className="space-y-5" {...motionProps}>
+      {activeTask && !AiFeedbackLoading ? (
+        <StudioPromptStrip
+          icon={PenSquare}
+          label="Writing prompt"
+          meta={formatWritingMeta(activeTask)}
+          control={
+            workspace.tasks.length > 1 ? (
+              <StudioSelect
+                ariaLabel="Choose writing task"
+                onChange={workspace.handleSelectTask}
+                options={workspace.tasks.map((task) => ({
+                  label: task.title,
+                  value: task.id,
+                }))}
+                value={activeTask?.id ?? workspace.tasks[0]?.id ?? ""}
+              />
+            ) : null
+          }
+        >
+          {activeTask?.instructions ??
+            "Writing work appears here when the current roadmap block includes output practice."}
+        </StudioPromptStrip>
+      ) : null}
 
       <StudioNoticeStack notice={workspace.notice} error={workspace.workspaceError} />
 
@@ -83,7 +136,7 @@ export function WritingMode({ content }: WritingModeProps) {
           </div>
         </StudioActiveArea>
       ) : activeTask ? (
-        activeDraft ? (
+        activeDraft && !hasSubmission ? (
           <StudioActiveArea>
             <textarea
               id="practice-writing-editor"
@@ -103,12 +156,179 @@ export function WritingMode({ content }: WritingModeProps) {
 
               <button
                 type="button"
-                onClick={() => void workspace.handleSubmitDraft()}
+                onClick={() => void workspace.handleSubmitAndRequestFeedback()}
                 className={buttonVariants({ size: "lg" })}
                 disabled={workspace.saveState === "submitting"}
               >
-                Submit writing
+                {workspace.saveState === "submitting" ? "Saving..." : "Save writing"}
               </button>
+            </div>
+          </StudioActiveArea>
+        ) : activeDraft && hasSubmission ? (
+          <StudioActiveArea>
+            <div className="space-y-5">
+              <div>
+                <p className="text-sm font-medium text-foreground">{submissionSummary.label}</p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  {submissionSummary.detail}
+                </p>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                  Saved {formatRelativeTimestamp(activeDraft.lastSubmittedAt ?? Date.now())}
+                </p>
+              </div>
+
+              {workspace.aiFeedbackLoading ? (
+                <div className="flex items-center gap-3 rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel p-4">
+                  <LoaderCircle className="size-4 animate-spin text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">
+                    Analyzing your writing...
+                  </p>
+                </div>
+              ) : null}
+
+              {workspace.aiFeedbackError && !workspace.aiFeedbackLoading ? (
+                <InlineMessage tone="error">
+                  {workspace.aiFeedbackError}
+                </InlineMessage>
+              ) : null}
+
+              {workspace.aiFeedback ? (
+                <div className="space-y-4">
+                  <VerdictBadge
+                    verdict={workspace.aiFeedback.verdict}
+                    feedbackSummary={workspace.aiFeedback.feedbackSummary}
+                  />
+
+                  <InsetPanel className="p-4">
+                    <p className="text-sm leading-6 text-foreground">
+                      {workspace.aiFeedback.overallSummary}
+                    </p>
+                  </InsetPanel>
+
+                  {workspace.aiFeedback.keyIssues?.length > 0 ? (
+                    <div className="grid gap-3">
+                      {workspace.aiFeedback.keyIssues.map((issue) => (
+                        <InsetPanel key={issue.title} className="p-4">
+                          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                            {issue.title}
+                          </p>
+                          <p className="mt-2 text-sm leading-6 text-foreground">
+                            {issue.detail}
+                          </p>
+                        </InsetPanel>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {workspace.aiFeedback.correctedVersion ? (
+                    <InsetPanel className="p-4">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                        AI-suggested correction
+                      </p>
+                      <p className="mt-3 rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel px-4 py-3 text-sm leading-7 text-foreground">
+                        {workspace.aiFeedback.correctedVersion}
+                      </p>
+                    </InsetPanel>
+                  ) : null}
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {workspace.aiFeedback.grammarNotes?.length > 0 ? (
+                      <InsetPanel className="p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                          Grammar notes
+                        </p>
+                        <div className="mt-3 space-y-2">
+                          {workspace.aiFeedback.grammarNotes.map((note) => (
+                            <p key={note} className="text-sm leading-6 text-foreground">
+                              {note}
+                            </p>
+                          ))}
+                        </div>
+                      </InsetPanel>
+                    ) : null}
+
+                    {workspace.aiFeedback.naturalnessSuggestions?.length > 0 ? (
+                      <InsetPanel tone="lavender" className="p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                          Naturalness
+                        </p>
+                        <div className="mt-3 space-y-2">
+                          {workspace.aiFeedback.naturalnessSuggestions.map((note) => (
+                            <p key={note} className="text-sm leading-6 text-foreground">
+                              {note}
+                            </p>
+                          ))}
+                        </div>
+                      </InsetPanel>
+                    ) : null}
+
+                    {workspace.aiFeedback.vocabularySuggestions?.length > 0 ? (
+                      <InsetPanel tone="blue" className="p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                          Vocabulary
+                        </p>
+                        <div className="mt-3 space-y-2">
+                          {workspace.aiFeedback.vocabularySuggestions.map((note) => (
+                            <p key={note} className="text-sm leading-6 text-foreground">
+                              {note}
+                            </p>
+                          ))}
+                        </div>
+                      </InsetPanel>
+                    ) : null}
+
+                    {workspace.aiFeedback.detectedPatterns?.length > 0 ? (
+                      <InsetPanel className="p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                          Patterns
+                        </p>
+                        <div className="mt-3 space-y-3">
+                          {workspace.aiFeedback.detectedPatterns.map((pattern) => (
+                            <div key={pattern.label}>
+                              <SmallTag>{pattern.label}</SmallTag>
+                              <p className="mt-2 text-sm leading-6 text-foreground">
+                                {pattern.detail}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </InsetPanel>
+                    ) : null}
+                  </div>
+
+                  {workspace.aiFeedback.nextPracticeFocus ? (
+                    <InsetPanel tone="green" className="p-4">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                        Next practice focus
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-foreground">
+                        {workspace.aiFeedback.nextPracticeFocus}
+                      </p>
+                    </InsetPanel>
+                  ) : null}
+                </div>
+              ) : null}
+
+              <div className="flex flex-col gap-3 border-t border-surface-stroke pt-5 sm:flex-row sm:items-center sm:justify-end">
+                <button
+                  type="button"
+                  onClick={() => void workspace.handleTryAgain()}
+                  className={buttonVariants({ variant: "outline" })}
+                  disabled={workspace.aiFeedbackLoading}
+                >
+                  <RotateCcw className="mr-2 size-4" />
+                  Try again
+                </button>
+                <button
+                  type="button"
+                  onClick={() => workspace.handleNextTask()}
+                  className={buttonVariants({ size: "lg" })}
+                  disabled={workspace.aiFeedbackLoading}
+                >
+                  {isLastTask ? "Start over" : "Next"}
+                  <ArrowRight className="ml-2 size-4" />
+                </button>
+              </div>
             </div>
           </StudioActiveArea>
         ) : (
@@ -142,169 +362,7 @@ export function WritingMode({ content }: WritingModeProps) {
           </p>
         </StudioActiveArea>
       )}
-
-      {/* FEEDBACK REGION — with AI feedback integration */}
-      {hasSubmission ? (
-        <div className="border-t border-surface-stroke pt-5 space-y-4">
-          <p className="text-sm font-medium text-foreground">{submissionSummary.label}</p>
-          <p className="text-sm leading-6 text-muted-foreground">{submissionSummary.detail}</p>
-          <p className="text-xs leading-5 text-muted-foreground">
-            Latest local submission{" "}
-            {activeDraft?.lastSubmittedAt
-              ? formatRelativeTimestamp(activeDraft.lastSubmittedAt)
-              : ""}
-            .
-          </p>
-
-          {/* AI Feedback Button — shown when no feedback loaded yet */}
-          {!workspace.aiFeedback && !workspace.aiFeedbackLoading ? (
-            <button
-              type="button"
-              onClick={() => void handleRequestAiFeedback()}
-              className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-            >
-              <Sparkles className="mr-2 size-4" />
-              Get AI feedback
-            </button>
-          ) : null}
-
-          {/* AI Loading */}
-          {workspace.aiFeedbackLoading ? (
-            <div className="flex items-center gap-3 rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel p-4">
-              <LoaderCircle className="size-4 animate-spin text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Analyzing your writing...</p>
-            </div>
-          ) : null}
-
-          {/* AI Error */}
-          {workspace.aiFeedbackError && !workspace.aiFeedbackLoading ? (
-            <p className="text-sm text-muted-foreground">{workspace.aiFeedbackError}</p>
-          ) : null}
-
-          {/* AI Feedback Content */}
-          {workspace.aiFeedback ? (
-            <div className="space-y-4">
-              <InsetPanel className="p-4">
-                <p className="text-sm leading-6 text-foreground">
-                  {workspace.aiFeedback.overallSummary}
-                </p>
-              </InsetPanel>
-
-              {workspace.aiFeedback.keyIssues?.length > 0 ? (
-                <div className="grid gap-3">
-                  {workspace.aiFeedback.keyIssues.map((issue) => (
-                    <InsetPanel key={issue.title} className="p-4">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                        {issue.title}
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-foreground">
-                        {issue.detail}
-                      </p>
-                    </InsetPanel>
-                  ))}
-                </div>
-              ) : null}
-
-              {workspace.aiFeedback.correctedVersion ? (
-                <InsetPanel className="p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                    AI-suggested correction
-                  </p>
-                  <p className="mt-3 rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel px-4 py-3 text-sm leading-7 text-foreground">
-                    {workspace.aiFeedback.correctedVersion}
-                  </p>
-                </InsetPanel>
-              ) : null}
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                {workspace.aiFeedback.grammarNotes?.length > 0 ? (
-                  <InsetPanel className="p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                      Grammar notes
-                    </p>
-                    <div className="mt-3 space-y-2">
-                      {workspace.aiFeedback.grammarNotes.map((note) => (
-                        <p key={note} className="text-sm leading-6 text-foreground">
-                          {note}
-                        </p>
-                      ))}
-                    </div>
-                  </InsetPanel>
-                ) : null}
-
-                {workspace.aiFeedback.naturalnessSuggestions?.length > 0 ? (
-                  <InsetPanel tone="lavender" className="p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                      Naturalness
-                    </p>
-                    <div className="mt-3 space-y-2">
-                      {workspace.aiFeedback.naturalnessSuggestions.map((note) => (
-                        <p key={note} className="text-sm leading-6 text-foreground">
-                          {note}
-                        </p>
-                      ))}
-                    </div>
-                  </InsetPanel>
-                ) : null}
-
-                {workspace.aiFeedback.vocabularySuggestions?.length > 0 ? (
-                  <InsetPanel tone="blue" className="p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                      Vocabulary
-                    </p>
-                    <div className="mt-3 space-y-2">
-                      {workspace.aiFeedback.vocabularySuggestions.map((note) => (
-                        <p key={note} className="text-sm leading-6 text-foreground">
-                          {note}
-                        </p>
-                      ))}
-                    </div>
-                  </InsetPanel>
-                ) : null}
-
-                {workspace.aiFeedback.detectedPatterns?.length > 0 ? (
-                  <InsetPanel className="p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                      Patterns
-                    </p>
-                    <div className="mt-3 space-y-3">
-                      {workspace.aiFeedback.detectedPatterns.map((pattern) => (
-                        <div key={pattern.label}>
-                          <SmallTag>{pattern.label}</SmallTag>
-                          <p className="mt-2 text-sm leading-6 text-foreground">
-                            {pattern.detail}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </InsetPanel>
-                ) : null}
-              </div>
-
-              {workspace.aiFeedback.nextPracticeFocus ? (
-                <InsetPanel tone="green" className="p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                    Next practice focus
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-foreground">
-                    {workspace.aiFeedback.nextPracticeFocus}
-                  </p>
-                </InsetPanel>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
-      ) : (
-        <div className="border-t border-surface-stroke pt-5">
-          <p className="text-sm font-medium text-foreground">
-            Feedback will appear here after your first submission.
-          </p>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            Submit your writing draft to unlock AI-powered feedback and structured review notes.
-          </p>
-        </div>
-      )}
-    </div>
+    </motion.div>
   );
 }
 

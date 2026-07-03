@@ -1,12 +1,22 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { LoaderCircle, Mic, Sparkles, Waves } from "lucide-react";
+import type { ElementType, ReactNode } from "react";
+import {
+  ArrowRight,
+  Check,
+  LoaderCircle,
+  Mic,
+  RotateCcw,
+  Waves,
+} from "lucide-react";
+import { motion } from "framer-motion";
 
 import type { DashboardContentState } from "@/entities/dashboard";
+import { useReducedMotion } from "@/shared/hooks/use-reduced-motion";
 import { cn } from "@/shared/lib/utils";
+import { getWorkspaceSwapMotion } from "@/shared/lib/workspace-motion";
 import { buttonVariants } from "@/shared/ui/button";
-import { InsetPanel, SmallTag } from "@/shared/ui/surfaces";
+import { InsetPanel, SmallTag, type SurfaceTone } from "@/shared/ui/surfaces";
 
 import { formatSpeakingDuration } from "../model/speaking/speaking-session-helpers";
 import { useSpeakingWorkspace } from "../model/speaking/use-speaking-workspace";
@@ -15,19 +25,71 @@ type SpeakingModeProps = {
   content: DashboardContentState;
 };
 
+type SpeakingVerdict = "pass" | "retry" | "needs_work";
+
+type VerdictCopy = {
+  label: string;
+  icon: ElementType;
+  tone: SurfaceTone;
+  eyebrow: string;
+};
+
+const VERDICT_COPY: Record<SpeakingVerdict, VerdictCopy> = {
+  pass: {
+    label: "Pass",
+    icon: Check,
+    tone: "green",
+    eyebrow: "Ready to move on",
+  },
+  retry: {
+    label: "Try again",
+    icon: RotateCcw,
+    tone: "lavender",
+    eyebrow: "Another take will help",
+  },
+  needs_work: {
+    label: "Needs work",
+    icon: ArrowRight,
+    tone: "cream",
+    eyebrow: "Close, one more pass is worth it",
+  },
+};
+
+function VerdictBadge({
+  feedbackSummary,
+  verdict,
+}: {
+  feedbackSummary: string;
+  verdict: SpeakingVerdict;
+}) {
+  const copy = VERDICT_COPY[verdict];
+  const Icon = copy.icon;
+  return (
+    <InsetPanel tone={copy.tone} className="p-5">
+      <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        <Icon className="size-3.5" />
+        <span>{copy.eyebrow}</span>
+        <SmallTag>{copy.label}</SmallTag>
+      </div>
+      <p className="mt-3 text-sm leading-6 text-foreground">{feedbackSummary}</p>
+    </InsetPanel>
+  );
+}
+
 export function SpeakingMode({ content }: SpeakingModeProps) {
+  const reduced = useReducedMotion();
   const workspace = useSpeakingWorkspace(content);
   const activePrompt = workspace.activePrompt;
   const activeSession = workspace.activeSession;
   const transcriptDraft = activeSession?.transcriptDraft ?? "";
-
-  async function handleRequestAiFeedback() {
-    if (!activePrompt || !transcriptDraft.trim()) return;
-    await workspace.requestAiFeedback();
-  }
+  const isLastPrompt =
+    workspace.prompts.length > 0 &&
+    workspace.prompts.findIndex((prompt) => prompt.id === activePrompt?.id) ===
+      workspace.prompts.length - 1;
+  const motionProps = getWorkspaceSwapMotion(reduced);
 
   return (
-    <div className="space-y-5">
+    <motion.div className="space-y-5" {...motionProps}>
       <StudioPromptStrip
         icon={Mic}
         label="Speaking prompt"
@@ -106,20 +168,21 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
                     type="button"
                     onClick={() => workspace.handleClearSession()}
                     className={buttonVariants({ variant: "outline" })}
+                    disabled={workspace.aiFeedbackLoading}
                   >
                     Clear session
                   </button>
                   <button
                     type="button"
-                    onClick={() => void workspace.handleSaveSession()}
+                    onClick={() => void workspace.handleSaveAndRequestFeedback()}
                     className={buttonVariants({ size: "lg" })}
+                    disabled={workspace.aiFeedbackLoading}
                   >
-                    Save speaking attempt
+                    {workspace.aiFeedbackLoading ? "Saving..." : "Save speaking attempt"}
                   </button>
                 </div>
               </div>
 
-              {/* AI feedback for reflecting sessions */}
               {renderAiFeedbackSection()}
             </StudioActiveArea>
           ) : (
@@ -197,50 +260,42 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
           </p>
         </StudioActiveArea>
       )}
-    </div>
+
+      {renderNavigationActions()}
+    </motion.div>
   );
 
   function renderAiFeedbackSection() {
-    const hasTranscript = transcriptDraft.trim().length > 0;
+    if (activeSession?.status !== "reflecting") {
+      return null;
+    }
 
-    if (!hasTranscript) {
+    const transcriptWords = transcriptDraft.trim().split(/\s+/).filter(Boolean).length;
+
+    if (!transcriptWords && !workspace.aiFeedback) {
       return (
         <div className="mt-6 border-t border-surface-stroke pt-5">
           <p className="text-sm font-medium text-foreground">
             Add a transcript to unlock AI-powered feedback.
           </p>
           <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            Type or paste a rough transcript above, then request AI feedback for clarity, grammar, and delivery notes.
+            Type or paste a rough transcript above, then save the attempt to load
+            feedback.
           </p>
         </div>
       );
     }
 
     return (
-      <div className="mt-6 border-t border-surface-stroke pt-5 space-y-4">
+      <div className="mt-6 space-y-4 border-t border-surface-stroke pt-5">
         <p className="text-sm font-medium text-foreground">
           Transcript ready for AI review
         </p>
         <p className="text-xs leading-5 text-muted-foreground">
-          {getTranscriptWordCount()} words{" "}
-          {workspace.reflectionLabel
-            ? `· ${workspace.reflectionLabel}`
-            : ""}
+          {transcriptWords} words
+          {workspace.reflectionLabel ? ` · ${workspace.reflectionLabel}` : ""}
         </p>
 
-        {/* AI Feedback Button */}
-        {!workspace.aiFeedback && !workspace.aiFeedbackLoading ? (
-          <button
-            type="button"
-            onClick={() => void handleRequestAiFeedback()}
-            className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-          >
-            <Sparkles className="mr-2 size-4" />
-            Get AI feedback
-          </button>
-        ) : null}
-
-        {/* AI Loading */}
         {workspace.aiFeedbackLoading ? (
           <div className="flex items-center gap-3 rounded-[1.2rem] border border-surface-stroke-strong bg-surface-panel p-4">
             <LoaderCircle className="size-4 animate-spin text-muted-foreground" />
@@ -248,14 +303,17 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
           </div>
         ) : null}
 
-        {/* AI Error */}
         {workspace.aiFeedbackError && !workspace.aiFeedbackLoading ? (
-          <p className="text-sm text-muted-foreground">{workspace.aiFeedbackError}</p>
+          <InlineMessage tone="error">{workspace.aiFeedbackError}</InlineMessage>
         ) : null}
 
-        {/* AI Feedback Content */}
         {workspace.aiFeedback ? (
           <div className="space-y-4">
+            <VerdictBadge
+              verdict={workspace.aiFeedback.verdict}
+              feedbackSummary={workspace.aiFeedback.feedbackSummary}
+            />
+
             <InsetPanel className="p-4">
               <p className="text-sm leading-6 text-foreground">
                 {workspace.aiFeedback.overallSummary}
@@ -359,8 +417,40 @@ export function SpeakingMode({ content }: SpeakingModeProps) {
     );
   }
 
-  function getTranscriptWordCount() {
-    return transcriptDraft.trim().split(/\s+/).filter(Boolean).length;
+  function renderNavigationActions() {
+    if (activeSession?.status !== "reflecting") {
+      return null;
+    }
+
+    const hasFeedback = Boolean(workspace.aiFeedback);
+    const hasError = Boolean(workspace.aiFeedbackError);
+    const showActions = hasFeedback || hasError;
+    if (!showActions) {
+      return null;
+    }
+
+    return (
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+        <button
+          type="button"
+          onClick={() => workspace.handleTryAgain()}
+          className={buttonVariants({ variant: "outline" })}
+          disabled={workspace.aiFeedbackLoading}
+        >
+          <RotateCcw className="mr-2 size-4" />
+          Try again
+        </button>
+        <button
+          type="button"
+          onClick={() => workspace.handleNextTask()}
+          className={buttonVariants({ size: "lg" })}
+          disabled={workspace.aiFeedbackLoading}
+        >
+          {isLastPrompt ? "Start over" : "Next"}
+          <ArrowRight className="ml-2 size-4" />
+        </button>
+      </div>
+    );
   }
 }
 
@@ -541,5 +631,3 @@ function formatTargetDuration(seconds: number | null | undefined) {
 
   return `${minutes} min ${remainingSeconds}s target`;
 }
-
-

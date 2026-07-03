@@ -17,6 +17,8 @@ import {
 } from "@/shared/types";
 
 type AiSpeakingFeedbackResult = {
+  verdict: "pass" | "retry" | "needs_work";
+  feedbackSummary: string;
   overallSummary: string;
   clarityFeedback: string;
   grammarFeedback: string;
@@ -254,6 +256,124 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
     setNotice("Speaking session saved locally.");
   }
 
+  async function handleSaveAndRequestFeedback() {
+    if (!session || !activePrompt) {
+      return;
+    }
+
+    if (session.status !== "reflecting") {
+      setWorkspaceError("Finish the session before trying to save it.");
+      return;
+    }
+
+    const durationSeconds = getSpeakingSessionElapsed(session, Date.now());
+
+    if (durationSeconds === 0) {
+      setWorkspaceError("The session is still empty. Speak first, then save it.");
+      return;
+    }
+
+    const capturedTranscript = session.transcriptDraft;
+    const capturedReflection = session.reflection;
+    const capturedTitle = session.promptTitle;
+
+    await recordEvent({
+      type: LearningEventType.SpeakingRecorded,
+      payload: {
+        durationSeconds,
+        promptId: session.promptId,
+        reflection: capturedReflection ?? undefined,
+        sessionId: session.id,
+        transcript: capturedTranscript.trim() || undefined,
+      },
+    });
+
+    setAiFeedback(null);
+    setAiFeedbackError(null);
+    setNotice("Session saved. AI feedback is loading...");
+    setWorkspaceError(null);
+
+    setAiFeedbackLoading(true);
+
+    try {
+      const response = await fetch("/api/ai/speaking-feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          learnerLevel: content.learnerLevelLabel ?? "Beginner",
+          promptText: activePrompt.promptText,
+          transcript: capturedTranscript,
+          learnerReflection:
+            (capturedReflection ? getReflectionLabel(capturedReflection) : undefined) ?? undefined,
+          roadmapContext: activePrompt.blockTitle ?? undefined,
+        }),
+      });
+
+      const json = await response.json();
+
+      if (json.ok && json.data) {
+        setAiFeedback(json.data);
+      } else {
+        setAiFeedbackError(
+          json.error?.message ?? "AI feedback unavailable right now.",
+        );
+      }
+    } catch {
+      setAiFeedbackError("Could not reach the AI feedback service.");
+    } finally {
+      setAiFeedbackLoading(false);
+    }
+
+    setNotice(
+      `Session for "${capturedTitle}" saved. AI feedback is ready.`,
+    );
+  }
+
+  function handleTryAgain() {
+    if (!activePrompt) {
+      return;
+    }
+
+    clearActiveSpeakingSession();
+    setSession(null);
+    setTimerNow(Date.now());
+    setAiFeedback(null);
+    setAiFeedbackError(null);
+    setAiFeedbackLoading(false);
+    setNotice(null);
+    setWorkspaceError(null);
+  }
+
+  function handleNextTask() {
+    if (!rawWorkspace.prompts.length) {
+      return;
+    }
+
+    const currentIndex = rawWorkspace.prompts.findIndex(
+      (prompt) => prompt.id === activePrompt?.id,
+    );
+    const nextPrompt =
+      rawWorkspace.prompts[currentIndex + 1] ?? rawWorkspace.prompts[0] ?? null;
+
+    if (!nextPrompt) {
+      return;
+    }
+
+    clearActiveSpeakingSession();
+    setSession(null);
+    setTimerNow(Date.now());
+    setSelectedPromptId(nextPrompt.id);
+    setAiFeedback(null);
+    setAiFeedbackError(null);
+    setAiFeedbackLoading(false);
+    setNotice(
+      currentIndex === rawWorkspace.prompts.length - 1
+        ? "All speaking prompts wrapped. Starting the queue over."
+        : `Moved to "${nextPrompt.title}".`,
+    );
+    setWorkspaceError(null);
+  }
+
   function handleClearSession() {
     if (!session) {
       return;
@@ -322,9 +442,12 @@ export function useSpeakingWorkspace(content: DashboardContentState) {
     handlePauseSession,
     handleResumeSession,
     handleSaveSession,
+    handleSaveAndRequestFeedback,
     handleSelectPrompt,
     handleStartSession,
     handleTranscriptChange,
+    handleTryAgain,
+    handleNextTask,
     notice,
     prompts: workspace.prompts,
     reflectionLabel,

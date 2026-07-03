@@ -14,7 +14,11 @@ import { getWritingWorkspaceState } from "./writing-workspace-state";
 
 type SaveState = "idle" | "dirty" | "saved" | "saving" | "submitting";
 
+type WritingVerdict = "pass" | "retry" | "needs_work";
+
 type AiWritingFeedbackResult = {
+  verdict: WritingVerdict;
+  feedbackSummary: string;
   overallSummary: string;
   correctedVersion: string | null;
   keyIssues: Array<{ title: string; detail: string }>;
@@ -190,6 +194,9 @@ export function useWritingWorkspace(content: DashboardContentState) {
     setNotice(null);
     setWorkspaceError(null);
     setSelectedTaskId(taskId);
+    setAiFeedback(null);
+    setAiFeedbackError(null);
+    setAiFeedbackLoading(false);
   }, []);
 
   const handleEditorChange = useCallback((nextContent: string) => {
@@ -259,7 +266,7 @@ export function useWritingWorkspace(content: DashboardContentState) {
       },
     });
 
-    setNotice("Submission recorded locally. Feedback can build from this attempt next.");
+    setNotice("Submission recorded locally. AI feedback is loading...");
   }, [activeDraft, clearAutosave, editorContent, persistDraft, recordEvent]);
 
   const requestAiFeedback = useCallback(async () => {
@@ -299,6 +306,77 @@ export function useWritingWorkspace(content: DashboardContentState) {
     }
   }, [activeDraft, activeTask, editorContent, content.learnerLevelLabel]);
 
+  const handleSubmitAndRequestFeedback = useCallback(async () => {
+    if (!activeDraft || !activeTask) {
+      return;
+    }
+
+    setAiFeedback(null);
+    setAiFeedbackError(null);
+    await handleSubmitDraft();
+    await requestAiFeedback();
+  }, [activeDraft, activeTask, handleSubmitDraft, requestAiFeedback]);
+
+  const handleTryAgain = useCallback(async () => {
+    if (!activeDraft) {
+      return;
+    }
+
+    clearAutosave();
+    setAiFeedback(null);
+    setAiFeedbackError(null);
+    setAiFeedbackLoading(false);
+    setNotice(null);
+    setWorkspaceError(null);
+
+    const fullDraft = await getDraft(activeDraft.id);
+
+    if (!fullDraft) {
+      setWorkspaceError("Could not reopen this draft for another attempt.");
+      return;
+    }
+
+    const resetDraft = await saveDraft({
+      ...fullDraft,
+      lastSubmittedAt: undefined,
+      lastWordCount: undefined,
+      updatedAt: Date.now(),
+    });
+
+    if (!resetDraft) {
+      setWorkspaceError("Could not reopen this draft for another attempt.");
+      return;
+    }
+
+    setActiveDraft(resetDraft);
+    setEditorContent(resetDraft.content);
+    setSaveState("saved");
+    setNotice("Ready for another attempt on this task.");
+  }, [activeDraft, clearAutosave, getDraft, saveDraft]);
+
+  const handleNextTask = useCallback(() => {
+    if (workspace.tasks.length === 0) {
+      return;
+    }
+
+    const currentIndex = workspace.tasks.findIndex(
+      (task) => task.id === activeTask?.id,
+    );
+    const nextTask =
+      workspace.tasks[currentIndex + 1] ?? workspace.tasks[0] ?? null;
+
+    if (!nextTask) {
+      return;
+    }
+
+    handleSelectTask(nextTask.id);
+    setNotice(
+      currentIndex === workspace.tasks.length - 1
+        ? "All writing tasks wrapped. Starting the queue over."
+        : `Moved to "${nextTask.title}".`,
+    );
+  }, [workspace.tasks, activeTask, handleSelectTask]);
+
   return {
     activeDraft,
     activeTask,
@@ -312,6 +390,9 @@ export function useWritingWorkspace(content: DashboardContentState) {
     handleSaveNow,
     handleSelectTask,
     handleSubmitDraft,
+    handleSubmitAndRequestFeedback,
+    handleTryAgain,
+    handleNextTask,
     isLoadingDraft,
     notice,
     saveState: resolvedSaveState,

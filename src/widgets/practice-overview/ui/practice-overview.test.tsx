@@ -80,6 +80,10 @@ describe("PracticeOverview", () => {
   });
 
   test("renders a single writing studio without any page header copy above it", () => {
+    useWritingWorkspaceMock.mockReturnValue(
+      buildWritingWorkspaceMock({ liveDraft: true }),
+    );
+
     render(<PracticeOverview content={buildContentStub()} mode="writing" />);
 
     const modeTablist = screen.getByRole("tablist", { name: /practice mode/i });
@@ -92,14 +96,31 @@ describe("PracticeOverview", () => {
       screen.getByRole("tabpanel", { name: /writing workspace/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /submit writing/i }),
+      screen.getByRole("button", { name: /save writing/i }),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /get ai feedback/i }),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("heading", { name: /practice/i }),
     ).not.toBeInTheDocument();
     expect(screen.queryByText(/ACTIVE OUTPUT PRACTICE/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/One V1 practice home/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/^feedback$/i)).not.toBeInTheDocument();
+  });
+
+  test("renders verdict badge and navigation actions after AI feedback arrives", () => {
+    useWritingWorkspaceMock.mockReturnValue(
+      buildWritingWorkspaceMock({ submitted: true, withFeedback: true }),
+    );
+
+    render(<PracticeOverview content={buildContentStub()} mode="writing" />);
+
+    const panel = screen.getByRole("tabpanel", { name: /writing workspace/i });
+
+    expect(within(panel).getByText(/ready to move on/i)).toBeInTheDocument();
+    expect(within(panel).getByRole("button", { name: /try again/i })).toBeInTheDocument();
+    expect(within(panel).getByRole("button", { name: /^next$/i })).toBeInTheDocument();
   });
 
   test("switches to the speaking workspace inside the same studio and updates the mode query", () => {
@@ -145,13 +166,22 @@ function buildContentStub(): DashboardContentState {
   };
 }
 
-function buildWritingWorkspaceMock() {
+function buildWritingWorkspaceMock({
+  liveDraft = false,
+  submitted = false,
+  withFeedback = false,
+}: {
+  liveDraft?: boolean;
+  submitted?: boolean;
+  withFeedback?: boolean;
+} = {}) {
+  const submittedAt = submitted || withFeedback ? 1710000000000 : undefined;
   return {
     activeDraft: {
       id: "draft-1",
-      lastSubmittedAt: 1710000000000,
-      lastWordCount: 132,
-      submissionCount: 1,
+      lastSubmittedAt: submittedAt,
+      lastWordCount: submitted || withFeedback ? 132 : undefined,
+      submissionCount: submitted || withFeedback ? 1 : undefined,
       taskId: "task-1",
       title: "Travel email",
       updatedAt: 1710000000000,
@@ -171,7 +201,7 @@ function buildWritingWorkspaceMock() {
       wordCountMin: 110,
     },
     drafts: [],
-    editorContent: "I went to Ankara last weekend.",
+    editorContent: liveDraft ? "I went to Ankara last weekend." : "",
     events: [],
     eventsLoading: false,
     focusBlock: null,
@@ -180,9 +210,12 @@ function buildWritingWorkspaceMock() {
     handleSaveNow: vi.fn(),
     handleSelectTask: vi.fn(),
     handleSubmitDraft: vi.fn(),
+    handleSubmitAndRequestFeedback: vi.fn(),
+    handleTryAgain: vi.fn(),
+    handleNextTask: vi.fn(),
     isLoadingDraft: false,
     notice: null,
-    saveState: "saved",
+    saveState: liveDraft ? "saved" : "idle",
     tasks: [
       {
         blockId: "block-1",
@@ -219,9 +252,22 @@ function buildWritingWorkspaceMock() {
         wordCountMin: 90,
       },
     ],
-    wordCount: 6,
+    wordCount: liveDraft ? 6 : 0,
     workspaceError: null,
-    aiFeedback: null,
+    aiFeedback: withFeedback
+      ? {
+          correctedVersion: null,
+          detectedPatterns: [],
+          feedbackSummary: "You addressed the prompt clearly.",
+          grammarNotes: [],
+          keyIssues: [],
+          naturalnessSuggestions: [],
+          nextPracticeFocus: "Move on to the next task.",
+          overallSummary: "Strong response.",
+          verdict: "pass",
+          vocabularySuggestions: [],
+        }
+      : null,
     aiFeedbackLoading: false,
     aiFeedbackError: null,
     requestAiFeedback: vi.fn(),
@@ -272,9 +318,12 @@ function buildSpeakingWorkspaceMock({
     handlePauseSession: vi.fn(),
     handleResumeSession: vi.fn(),
     handleSaveSession: vi.fn(),
+    handleSaveAndRequestFeedback: vi.fn(),
     handleSelectPrompt: vi.fn(),
     handleStartSession: vi.fn(),
     handleTranscriptChange: vi.fn(),
+    handleTryAgain: vi.fn(),
+    handleNextTask: vi.fn(),
     notice: null,
     prompts: [
       {
