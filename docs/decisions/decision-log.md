@@ -323,6 +323,22 @@ Related docs:
 - [V1 Navigation Simplification Rule](../ux/v1-navigation-simplification-rule.md)
 - [Information Architecture](../ux/information-architecture.md)
 
+### 2026-07-03: Practice AI Feedback - Auto-Trigger On Save With Verdict Routing
+
+Status: accepted.
+
+The original V1 Practice flow required two separate user actions to get AI feedback on a writing or speaking attempt: save the attempt, then click a "Get AI feedback" button. This split the practice loop across two interactions, made it ambiguous whether the learner had actually completed a task, and left no clear product affordance for "try again" or "next" after feedback landed. The AI itself was capable of judging whether an attempt met the task bar, but the verdict was never surfaced to the user.
+
+The Practice page now auto-triggers AI feedback the moment the learner saves a writing or speaking attempt. The "Get AI feedback" button is removed. The AI response includes a new structured `verdict` field (`pass` / `retry` / `needs_work`) and a short `feedbackSummary`. After feedback lands, the UI shows two action buttons: "Try again" (reset the draft or start a new session on the same task) and "Next" (advance to the next task in the queue, wrapping to the first task when the queue ends). The last-task state is shown as "Start over" instead of "Next". If the AI call fails, the error is surfaced inline and the learner can still move on.
+
+Practice becomes a single-action loop (save → feedback → next action), which matches the V1 single-studio-surface rule. The AI now has a small additional responsibility (verdict judgment), but the prompt guidelines are clear. The Try-again/Next contract is the same for writing and speaking, so the rule is one place in code rather than scattered across both modes.
+
+Related docs:
+
+- [Practice](../ux/practice.md)
+- [AI Role In V1](../ai/ai-role-in-v1.md)
+- [Release Criteria](../roadmap/release-criteria.md)
+
 ## Status
 
 Active.

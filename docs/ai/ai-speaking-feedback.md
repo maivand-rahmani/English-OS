@@ -37,6 +37,8 @@ AI speaking feedback should be structured.
 
 Recommended output fields:
 
+- verdict (`pass` | `retry` | `needs_work`)
+- feedbackSummary (short one-or-two-sentence summary of the verdict for the learner)
 - overall_summary
 - clarity_feedback
 - grammar_feedback
@@ -46,6 +48,12 @@ Recommended output fields:
 - next_practice_focus
 - detected_patterns
 - confidence_note
+
+`verdict` is the routing signal that drives the Try again / Next actions in the UI:
+
+- `pass` — fully addresses the task with only minor errors that don't impede meaning; the learner is ready to move on.
+- `retry` — attempts the task but has significant issues (incomplete, off-prompt, major grammar breakdown); the learner should try again on the same task.
+- `needs_work` — between pass and retry; the learner could move on but would benefit from another attempt.
 
 ## Feedback Dimensions
 
@@ -82,6 +90,19 @@ Speaking feedback should encourage repeat practice.
 The product should avoid feedback that makes the learner feel punished for trying to speak.
 
 Good feedback should identify one or two concrete next improvements and make the next session feel possible.
+
+The `verdict` is the decision signal for whether the learner should Try again or move to the Next prompt. `pass` and `needs_work` should both feel encouraging, while `retry` should still point the learner toward a clear next attempt rather than a dead end.
+
+## Speaking Flow
+
+The speaking workspace should support a verdict-driven flow:
+
+1. learner saves an attempt (with transcript or self-reflection)
+2. AI speaking feedback is auto-triggered on save and returns a `verdict` plus structured `feedbackSummary` and dimensions
+3. learner picks Try again or Next based on the verdict
+4. on retry, the system stores the revised attempt for comparison
+
+In V1, there is no separate "Get AI feedback" button. Feedback is auto-triggered when the learner saves or submits. If the AI call fails (network, timeout, validation), the UI still surfaces the error and allows the user to retry the request or move to the next task.
 
 ## V1 Limits
 

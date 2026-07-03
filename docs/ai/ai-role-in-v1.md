@@ -55,11 +55,11 @@ These should remain deterministic product/system logic.
 
 ### Writing Feedback
 
-AI reviews a learner's writing attempt and returns structured feedback.
+AI is auto-triggered on save when a learner submits a writing attempt and returns a `verdict` (`pass` | `retry` | `needs_work`) plus structured `feedbackSummary` and feedback dimensions. The verdict drives the Try again / Next navigation in the UI.
 
 ### Speaking Feedback
 
-AI reviews a transcript or speaking session metadata and returns useful speaking feedback.
+AI is auto-triggered on save when a learner submits a speaking attempt and reviews the transcript or session metadata. It returns a `verdict` (`pass` | `retry` | `needs_work`) plus structured `feedbackSummary` and speaking feedback dimensions. The verdict drives the Try again / Next navigation in the UI.
 
 ### Recommendation Explanation
 

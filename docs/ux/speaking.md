@@ -35,7 +35,8 @@ V1 should support:
 - prompt list
 - active recording flow
 - transcript view
-- feedback view
+- verdict + feedback view
+- post-feedback navigation (Try again, Next)
 - self-reflection view
 - speaking history
 
@@ -56,10 +57,12 @@ Prompts and history may appear as lightweight sections, tabs, or panels inside t
 The main speaking flow should be:
 
 1. Learner opens a prompt
-2. Learner records a response
-3. System creates transcript or session record
-4. Learner reviews reflection and feedback
-5. System stores history and patterns
+2. Learner records a response (timer runs)
+3. Learner picks a reflection and types a rough transcript
+4. Learner saves the attempt
+5. System auto-loads AI feedback with a verdict (pass / retry / needs_work) and a short summary
+6. Learner picks Try again (starts a fresh session on the same prompt) or Next (advances to the next prompt, wrapping to first if on the last)
+7. System stores history and patterns
 
 ## V1 Feedback Direction
 

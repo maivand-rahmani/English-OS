@@ -22,7 +22,7 @@ V1 Practice should use:
 - one large central workspace surface as the page's center of gravity
 - one writing and speaking mode switch inside that surface
 - one active writing or speaking workspace inside that same surface
-- one minimal inline or bottom feedback placeholder inside that same surface
+- one inline AI feedback area with verdict and dual-action navigation inside that same surface (V1 already auto-loads feedback on save, see "AI Feedback V1 Behavior")
 - minimal, honest product language
 
 V1 Practice should not use:
@@ -38,7 +38,6 @@ V1 Practice should not use:
 - a separate editor card beside another equal-weight panel
 - a nested card stack that makes Practice feel like a dashboard page
 - dedicated history, archive, analytics, rubric, transcript review, or prompt library pages
-- fake AI review flows that are not actually implemented
 - challenges or events as active V1 navigation items
 
 ## V1 Surface Model
@@ -72,7 +71,7 @@ The preferred V1 composition is:
 1. one outer Practice studio surface
 2. one integrated writing and speaking switch at the top
 3. one dominant active workspace area
-4. one minimal feedback or transcript placeholder near the bottom
+4. one inline AI feedback area near the bottom of the active workspace, showing the verdict (pass / retry / needs_work), a short summary, and two navigation actions: Try again (same task) and Next (next task, wrapping to first on the last task)
 
 Small inline metadata is allowed only when it directly helps the task.
 
@@ -87,6 +86,17 @@ Speaking mode should cover prompt-based spoken output work.
 
 Both modes should remain connected to roadmap, recommendations, review, and
 progress without becoming separate top-level product areas.
+
+## AI Feedback V1 Behavior
+
+V1 Practice already has a working inline AI feedback loop, not just a placeholder.
+
+The behavior is:
+
+- Saving a writing or speaking attempt auto-loads AI feedback into the same surface. There is no separate "Get AI feedback" button.
+- The feedback includes a verdict with a one-sentence summary. The verdict is one of: `pass` (ready to move on), `retry` (try again on the same task), `needs_work` (one more pass is worth it).
+- Below the feedback are two navigation actions: Try again (reset the draft or start a new session on the same task) and Next (advance to the next task in the queue, wrapping to the first task when on the last; on the last task Next shows as "Start over").
+- The AI Honesty Rule still applies. If feedback fails to load (network or AI outage), the UI shows an honest error and the learner can still use Try again or Next to move on. The flow must not pretend feedback succeeded when it did not.
 
 ## AI Honesty Rule
 

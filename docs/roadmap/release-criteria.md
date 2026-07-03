@@ -67,6 +67,10 @@ V1 AI is ready when:
 
 - writing feedback works from a writing attempt
 - speaking feedback works from transcript or structured speaking input
+- writing feedback is auto-triggered on save (no manual "Get AI feedback" button)
+- speaking feedback is auto-triggered on save (no manual "Get AI feedback" button)
+- AI feedback returns a `verdict` field (pass / retry / needs_work) with a one-sentence summary
+- after feedback lands, the UI exposes "Try again" and "Next" (or "Start over" on the last task) action buttons
 - AI outputs are structured
 - provider errors are handled
 - API keys are never exposed to the client

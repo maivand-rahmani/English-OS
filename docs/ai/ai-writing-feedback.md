@@ -37,6 +37,8 @@ AI feedback should be structured.
 
 Recommended output fields:
 
+- verdict (`pass` | `retry` | `needs_work`)
+- feedbackSummary (short one-or-two-sentence summary of the verdict for the learner)
 - overall_summary
 - corrected_version
 - key_issues
@@ -47,6 +49,12 @@ Recommended output fields:
 - detected_patterns
 
 Structured output makes it easier to store feedback, build mistake memory, and show consistent UI.
+
+`verdict` is the routing signal that drives the Try again / Next actions in the UI:
+
+- `pass` — fully addresses the task with only minor errors that don't impede meaning; the learner is ready to move on.
+- `retry` — attempts the task but has significant issues (incomplete, off-prompt, major grammar breakdown); the learner should try again on the same task.
+- `needs_work` — between pass and retry; the learner could move on but would benefit from another attempt.
 
 ## Feedback Dimensions
 
@@ -93,12 +101,14 @@ In V1, pattern memory can begin as simple structured tags returned by AI and sto
 
 The writing workspace should support a rewrite flow:
 
-1. learner submits writing
-2. AI gives feedback
-3. learner rewrites
-4. system compares or stores the revised attempt
+1. learner saves writing
+2. AI feedback is auto-triggered on save and returns a `verdict` plus structured `feedbackSummary` and dimensions
+3. learner picks Try again or Next based on the verdict
+4. on retry, the system stores the revised attempt for comparison
 
 This turns feedback into practice rather than passive correction.
+
+In V1, there is no separate "Get AI feedback" button. Feedback is auto-triggered when the learner saves or submits. If the AI call fails (network, timeout, validation), the UI still surfaces the error and allows the user to retry the request or move to the next task.
 
 ## V1 Limits
 

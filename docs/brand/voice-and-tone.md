@@ -96,11 +96,17 @@ Good label patterns:
 - Next resource
 - Current stage
 - Start speaking
-- Get feedback
+- Save writing
+- Save speaking
+- Try again
+- Next
+- Start over
 - Mark complete
 - Needs review
 
 Avoid long labels inside compact controls.
+
+Feedback is no longer a manual action the user takes. Saving a writing or speaking attempt automatically loads the verdict badge and the post-feedback action buttons (Try again, Next, or Start over on the last task in a queue).
 
 ## Status
 
